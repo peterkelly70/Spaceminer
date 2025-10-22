@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=3 uid="uid://pausepopup01"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/popups/BasePopup.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/ui/popups/PausePopup.gd" id="2_script"]
+
+[node name="PausePopup" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+
+[node name="TitleLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="0"]
+text = "PAUSED"
+
+[node name="ContentLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="0"]
+visible = false
+
+[node name="VolumeContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" index="3"]
+layout_mode = 2
+
+[node name="MusicRow" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer"]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
+text = "Music"
+
+[node name="MuteButton" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
+unique_name_in_owner = true
+text = "Mute"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 30)
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 100.0
+value = 80.0
+
+[node name="TrackSelect" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 30)
+size_flags_horizontal = 3
+
+[node name="SfxRow" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer"]
+layout_mode = 2
+
+[node name="SfxLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/SfxRow"]
+text = "SFX"
+
+[node name="SfxSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/SfxRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 30)
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 100.0
+value = 100.0
+
+[node name="CancelButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="0"]
+visible = false
+
+[node name="ConfirmButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="1"]
+visible = false
+
+[node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="2"]
+unique_name_in_owner = true
+text = "Resume"
+
+[node name="ExitButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="3"]
+unique_name_in_owner = true
+text = "Exit to Main Menu"

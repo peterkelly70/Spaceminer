@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bobpwprxqn02q"]
+
+[node name="GameWorld" type="Node2D"]
+
+[node name="WorldMap" type="Node2D" parent="."]
+
+[node name="Buildings" type="Node2D" parent="."]
+
+[node name="Units" type="Node2D" parent="."]

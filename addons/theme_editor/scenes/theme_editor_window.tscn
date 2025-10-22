@@ -1,0 +1,195 @@
+[gd_scene load_steps=2 format=3 uid="uid://dw4jbvnmgqmkk"]
+
+[ext_resource type="Script" path="res://addons/theme_editor/scripts/theme_editor_window.gd" id="1_6qhxk"]
+
+[node name="ThemeEditorWindow" type="Window"]
+title = "Advanced Theme Editor"
+initial_position = 2
+size = Vector2i(1200, 800)
+min_size = Vector2i(800, 600)
+script = ExtResource("1_6qhxk")
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuBar" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+
+[node name="ThemePathLabel" type="Label" parent="MainContainer/MenuBar"]
+layout_mode = 2
+text = "Theme:"
+
+[node name="ThemePathEdit" type="LineEdit" parent="MainContainer/MenuBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Path to theme resource"
+editable = false
+
+[node name="LoadButton" type="Button" parent="MainContainer/MenuBar"]
+layout_mode = 2
+text = "Load"
+
+[node name="CreateButton" type="Button" parent="MainContainer/MenuBar"]
+layout_mode = 2
+text = "New"
+
+[node name="SaveButton" type="Button" parent="MainContainer/MenuBar"]
+layout_mode = 2
+text = "Save"
+
+[node name="RecentLabel" type="Label" parent="MainContainer/MenuBar"]
+layout_mode = 2
+text = "Recent:"
+
+[node name="RecentThemesOption" type="OptionButton" parent="MainContainer/MenuBar"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+item_count = 1
+selected = 0
+popup_hide_on_item_selection = false
+allow_reselect = true
+item_0/text = "Recent Themes"
+item_0/id = 0
+
+[node name="HSeparator" type="HSeparator" parent="MainContainer"]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 400
+
+[node name="LeftPanel" type="PanelContainer" parent="MainContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HSplitContainer/LeftPanel"]
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Fonts" type="Control" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Fonts"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Fonts/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Colors" type="Control" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Colors"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Colors/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Styleboxes" type="Control" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Styleboxes"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Styleboxes/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Constants" type="Control" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Constants"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Constants/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Icons" type="Control" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Icons"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HSplitContainer/LeftPanel/VBoxContainer/TabContainer/Icons/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RightPanel" type="PanelContainer" parent="MainContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HSplitContainer/RightPanel"]
+layout_mode = 2
+
+[node name="PreviewLabel" type="Label" parent="MainContainer/HSplitContainer/RightPanel/VBoxContainer"]
+layout_mode = 2
+text = "Live Preview"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainContainer/HSplitContainer/RightPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/HSplitContainer/RightPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PreviewContainer" type="Control" parent="MainContainer/HSplitContainer/RightPanel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StatusBar" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="MainContainer/StatusBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ready"
+
+[node name="CloseButton" type="Button" parent="MainContainer/StatusBar"]
+layout_mode = 2
+text = "Close"

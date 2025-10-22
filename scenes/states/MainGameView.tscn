@@ -1,0 +1,73 @@
+[gd_scene load_steps=5 format=3 uid="uid://8drsyuamf5dj"]
+
+[ext_resource type="Script" uid="uid://dixvoe07s2nu8" path="res://scripts/controllers/MainGameController.gd" id="1_3rvd4"]
+[ext_resource type="Texture2D" uid="uid://c7ewlyefpihge" path="res://assets/images/background.png" id="2_qvrd3"]
+[ext_resource type="Script" uid="uid://iopkpj7swdt3" path="res://scripts/views/sidebar.gd" id="3_xyxn7"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvh8rgt" path="res://assets/themes/default_theme.tres" id="10_qxs5m"]
+
+[node name="MainGameView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_3rvd4")
+
+[node name="CutsceneLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="CutsceneContainer" type="Control" parent="CutsceneLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 13.0
+offset_top = 5.0
+offset_right = 2.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.993577)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="GameBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_qvrd3")
+expand_mode = 1
+
+[node name="Mainscreen" type="PanelContainer" parent="."]
+layout_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_qxs5m")
+script = ExtResource("3_xyxn7")
+
+[node name="ContentArea" type="MarginContainer" parent="Mainscreen"]
+custom_minimum_size = Vector2(1560, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.8
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Label" type="Label" parent="Mainscreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 45
+text = "Instantiate your game play area in here
+"
+horizontal_alignment = 1
+vertical_alignment = 1

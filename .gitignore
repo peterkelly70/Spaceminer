@@ -1,0 +1,13 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+tools/
+Builds
+
+.git-tools
+Builds/
+tools/genpzl/NN.env/
+*.zip
+*.exe
+*.pck
+

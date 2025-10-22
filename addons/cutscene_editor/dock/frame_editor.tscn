@@ -1,0 +1,348 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3yjnc7qqpvnq"]
+
+[ext_resource type="Script" uid="uid://tuuw0amb7osa" path="res://addons/cutscene_editor/dock/frame_editor.gd" id="1_2yyxl"]
+
+[node name="FrameEditor" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2yyxl")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/TitleSection"]
+layout_mode = 2
+tooltip_text = "Title displayed at the top of the frame (optional)"
+text = "Frame Title:"
+
+[node name="TitleEdit" type="LineEdit" parent="VBoxContainer/TitleSection"]
+layout_mode = 2
+tooltip_text = "Title displayed at the top of the frame (optional)"
+placeholder_text = "Enter frame title (optional)"
+
+[node name="BackgroundSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="BackgroundLabel" type="Label" parent="VBoxContainer/BackgroundSection"]
+layout_mode = 2
+tooltip_text = "Background image for this specific frame (overrides global background)"
+text = "Frame Background Image:"
+
+[node name="BackgroundHBox" type="HBoxContainer" parent="VBoxContainer/BackgroundSection"]
+layout_mode = 2
+
+[node name="BackgroundEdit" type="LineEdit" parent="VBoxContainer/BackgroundSection/BackgroundHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Path to background image for this frame"
+placeholder_text = "Path to background image"
+editable = false
+
+[node name="BrowseBackgroundBtn" type="Button" parent="VBoxContainer/BackgroundSection/BackgroundHBox"]
+layout_mode = 2
+tooltip_text = "Browse for a background image"
+text = "Browse"
+
+[node name="ClearBackgroundBtn" type="Button" parent="VBoxContainer/BackgroundSection/BackgroundHBox"]
+layout_mode = 2
+tooltip_text = "Clear the background image"
+text = "Clear"
+
+[node name="TextSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextLabel" type="Label" parent="VBoxContainer/TextSection"]
+layout_mode = 2
+tooltip_text = "Main text content displayed in the frame"
+text = "Frame Text:"
+
+[node name="TextEdit" type="TextEdit" parent="VBoxContainer/TextSection"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 3
+tooltip_text = "Main text content displayed in the frame"
+placeholder_text = "Enter frame text (supports BBCode)"
+wrap_mode = 1
+
+[node name="TextStyleSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="StyleLabel" type="Label" parent="VBoxContainer/TextStyleSection"]
+layout_mode = 2
+tooltip_text = "Visual style for this frame"
+text = "Text Style:"
+
+[node name="StyleHBox" type="HBoxContainer" parent="VBoxContainer/TextStyleSection"]
+layout_mode = 2
+
+[node name="StyleLabel2" type="Label" parent="VBoxContainer/TextStyleSection/StyleHBox"]
+layout_mode = 2
+tooltip_text = "Visual style for this frame"
+text = "Style:"
+
+[node name="StyleOption" type="OptionButton" parent="VBoxContainer/TextStyleSection/StyleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Visual style for this frame"
+selected = 0
+item_count = 3
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Theme Default"
+popup/item_1/id = 1
+popup/item_2/text = "Custom"
+popup/item_2/id = 2
+
+[node name="BorderCheck" type="CheckBox" parent="VBoxContainer/TextStyleSection/StyleHBox"]
+layout_mode = 2
+tooltip_text = "Show a border around the text"
+text = "Show Border"
+
+[node name="BgColorHBox" type="HBoxContainer" parent="VBoxContainer/TextStyleSection"]
+layout_mode = 2
+
+[node name="BgColorLabel" type="Label" parent="VBoxContainer/TextStyleSection/BgColorHBox"]
+layout_mode = 2
+tooltip_text = "Background color behind the text"
+text = "Text Background:"
+
+[node name="ColorPicker" type="ColorPickerButton" parent="VBoxContainer/TextStyleSection/BgColorHBox"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+tooltip_text = "Background color behind the text"
+color = Color(0, 0, 0, 0.501961)
+
+[node name="AnchorHBox" type="HBoxContainer" parent="VBoxContainer/TextStyleSection"]
+layout_mode = 2
+
+[node name="AnchorLabel" type="Label" parent="VBoxContainer/TextStyleSection/AnchorHBox"]
+layout_mode = 2
+tooltip_text = "Position of the text container"
+text = "Text Position:"
+
+[node name="AnchorLabel2" type="Label" parent="VBoxContainer/TextStyleSection/AnchorHBox"]
+layout_mode = 2
+text = "(e.g. top-left, center, bottom-right)"
+
+[node name="AnchorOption" type="OptionButton" parent="VBoxContainer/TextStyleSection/AnchorHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Position of the text container"
+selected = 0
+item_count = 10
+popup/item_0/text = "Full Screen"
+popup/item_0/id = 0
+popup/item_1/text = "Top Left"
+popup/item_1/id = 1
+popup/item_2/text = "Top Center"
+popup/item_2/id = 2
+popup/item_3/text = "Top Right"
+popup/item_3/id = 3
+popup/item_4/text = "Center Left"
+popup/item_4/id = 4
+popup/item_5/text = "Center"
+popup/item_5/id = 5
+popup/item_6/text = "Center Right"
+popup/item_6/id = 6
+popup/item_7/text = "Bottom Left"
+popup/item_7/id = 7
+popup/item_8/text = "Bottom Center"
+popup/item_8/id = 8
+popup/item_9/text = "Bottom Right"
+popup/item_9/id = 9
+
+[node name="VoiceoverSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="VoiceoverLabel" type="Label" parent="VBoxContainer/VoiceoverSection"]
+layout_mode = 2
+tooltip_text = "Voice audio that plays during this frame"
+text = "Voiceover Audio:"
+
+[node name="VoiceoverHBox" type="HBoxContainer" parent="VBoxContainer/VoiceoverSection"]
+layout_mode = 2
+
+[node name="VoiceoverEdit" type="LineEdit" parent="VBoxContainer/VoiceoverSection/VoiceoverHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Path to voice audio file (MP3, WAV, or OGG)"
+placeholder_text = "Path to voiceover audio"
+editable = false
+
+[node name="BrowseVoiceoverBtn" type="Button" parent="VBoxContainer/VoiceoverSection/VoiceoverHBox"]
+layout_mode = 2
+tooltip_text = "Browse for a voiceover audio file"
+text = "Browse"
+
+[node name="ClearVoiceoverBtn" type="Button" parent="VBoxContainer/VoiceoverSection/VoiceoverHBox"]
+layout_mode = 2
+tooltip_text = "Clear the voiceover audio"
+text = "Clear"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ImagesSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ImagesLabel" type="Label" parent="VBoxContainer/ImagesSection"]
+layout_mode = 2
+tooltip_text = "Additional images to display in this frame"
+text = "Frame Images:"
+
+[node name="ImageList" type="ItemList" parent="VBoxContainer/ImagesSection"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+tooltip_text = "List of additional images in this frame"
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="VBoxContainer/ImagesSection"]
+layout_mode = 2
+
+[node name="AddImageBtn" type="Button" parent="VBoxContainer/ImagesSection/ButtonsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Add a new image to this frame"
+text = "Add Image"
+
+[node name="DeleteImageBtn" type="Button" parent="VBoxContainer/ImagesSection/ButtonsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Delete the selected image"
+text = "Delete Image"
+
+[node name="ImagePropsSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="PathHBox" type="HBoxContainer" parent="VBoxContainer/ImagePropsSection"]
+layout_mode = 2
+
+[node name="PathLabel" type="Label" parent="VBoxContainer/ImagePropsSection/PathHBox"]
+layout_mode = 2
+tooltip_text = "Path to the image file"
+text = "Image Path:"
+
+[node name="PathEdit" type="LineEdit" parent="VBoxContainer/ImagePropsSection/PathHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Path to the image file"
+placeholder_text = "Path to image file"
+editable = false
+
+[node name="BrowseBtn" type="Button" parent="VBoxContainer/ImagePropsSection/PathHBox"]
+layout_mode = 2
+tooltip_text = "Browse for an image file"
+text = "Browse"
+
+[node name="AnchorHBox" type="HBoxContainer" parent="VBoxContainer/ImagePropsSection"]
+layout_mode = 2
+
+[node name="AnchorLabel" type="Label" parent="VBoxContainer/ImagePropsSection/AnchorHBox"]
+layout_mode = 2
+tooltip_text = "Position and scaling of the image"
+text = "Image Position:"
+
+[node name="AnchorOption" type="OptionButton" parent="VBoxContainer/ImagePropsSection/AnchorHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Position and scaling of the image"
+selected = 0
+item_count = 10
+popup/item_0/text = "Full Screen"
+popup/item_0/id = 0
+popup/item_1/text = "Top Left"
+popup/item_1/id = 1
+popup/item_2/text = "Top Center"
+popup/item_2/id = 2
+popup/item_3/text = "Top Right"
+popup/item_3/id = 3
+popup/item_4/text = "Center Left"
+popup/item_4/id = 4
+popup/item_5/text = "Center"
+popup/item_5/id = 5
+popup/item_6/text = "Center Right"
+popup/item_6/id = 6
+popup/item_7/text = "Bottom Left"
+popup/item_7/id = 7
+popup/item_8/text = "Bottom Center"
+popup/item_8/id = 8
+popup/item_9/text = "Bottom Right"
+popup/item_9/id = 9
+
+[node name="FadeHBox" type="HBoxContainer" parent="VBoxContainer/ImagePropsSection"]
+layout_mode = 2
+
+[node name="FadeInLabel" type="Label" parent="VBoxContainer/ImagePropsSection/FadeHBox"]
+layout_mode = 2
+tooltip_text = "Fade-in time in seconds"
+text = "Fade In (sec):"
+
+[node name="FadeInSpin" type="SpinBox" parent="VBoxContainer/ImagePropsSection/FadeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Fade-in time in seconds"
+max_value = 5.0
+step = 0.1
+value = 0.5
+
+[node name="FadeOutLabel" type="Label" parent="VBoxContainer/ImagePropsSection/FadeHBox"]
+layout_mode = 2
+tooltip_text = "Fade-out time in seconds"
+text = "Fade Out (sec):"
+
+[node name="FadeOutSpin" type="SpinBox" parent="VBoxContainer/ImagePropsSection/FadeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Fade-out time in seconds"
+max_value = 5.0
+step = 0.1
+value = 0.5
+
+[node name="DurationSection" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="DurationLabel" type="Label" parent="VBoxContainer/DurationSection"]
+layout_mode = 2
+tooltip_text = "How the frame duration is determined: by text length, voiceover length, or a manual value."
+text = "Frame Duration Mode:"
+
+[node name="DurationModeOption" type="OptionButton" parent="VBoxContainer/DurationSection"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Choose how this frame's duration is calculated."
+selected = 0
+item_count = 3
+popup/item_0/text = "Auto Text"
+popup/item_0/id = 0
+popup/item_1/text = "Auto Voiceover"
+popup/item_1/id = 1
+popup/item_2/text = "Manual"
+popup/item_2/id = 2
+
+[node name="ManualDurationLabel" type="Label" parent="VBoxContainer/DurationSection"]
+layout_mode = 2
+tooltip_text = "If Manual mode is selected, this value will be used."
+text = "Manual Duration (sec):"
+
+[node name="ManualDurationSpin" type="SpinBox" parent="VBoxContainer/DurationSection"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Duration in seconds for this frame if Manual mode is selected."
+min_value = 0.5
+max_value = 30.0
+step = 0.1
+value = 3.0
+editable = false

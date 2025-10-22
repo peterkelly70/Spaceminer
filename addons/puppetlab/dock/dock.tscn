@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/puppetlab/dock/dock.gd" id="1"]
+
+[node name="PuppetLab" type="VBoxContainer"]
+script = ExtResource("1")
+
+[node name="Title" type="Label" parent="."]
+text = "PuppetLab"
+
+[node name="Separator" type="HSeparator" parent="."]
+
+[node name="SourceLabel" type="Label" parent="."]
+text = "Source folder (layers or Aseprite export):"
+
+[node name="Path" type="LineEdit" parent="."]
+placeholder_text = "res://art/knight_layers/"
+
+[node name="Pick" type="Button" parent="."]
+text = "Pick Folder"
+
+[node name="BuildBtn" type="Button" parent="."]
+text = "Build Puppet"
+
+[node name="Options" type="VBoxContainer" parent="."]
+
+[node name="GenIdle" type="CheckBox" parent="Options"]
+text = "Generate Idle preset"
+button_pressed = true
+
+[node name="GenWalk" type="CheckBox" parent="Options"]
+text = "Generate Walk preset"
+
+[node name="PixelSnap" type="CheckBox" parent="Options"]
+text = "Enable Pixel Snap"
+button_pressed = true
+
+[node name="Info" type="RichTextLabel" parent="."]
+caret_blink = true

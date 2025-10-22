@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7jxmjvmk5ywm"]
+
+[ext_resource type="Script" path="res://addons/theme_editor/scripts/stylebox_editor_item.gd" id="1_5jqrb"]
+
+[node name="StyleboxEditorItem" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_5jqrb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeaderContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Type"
+
+[node name="NameLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Name"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TypeContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="VBoxContainer/TypeContainer"]
+layout_mode = 2
+text = "Stylebox Type:"
+
+[node name="StyleboxTypeOption" type="OptionButton" parent="VBoxContainer/TypeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+selected = 0
+popup_hide_on_item_selection = false
+item_0/text = "StyleBoxFlat"
+item_0/id = 0
+item_1/text = "StyleBoxTexture"
+item_1/id = 1
+item_2/text = "StyleBoxLine"
+item_2/id = 2
+item_3/text = "StyleBoxEmpty"
+item_3/id = 3
+
+[node name="PropertiesContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="PreviewContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="PreviewLabel" type="Label" parent="VBoxContainer/PreviewContainer"]
+layout_mode = 2
+text = "Preview:"
+horizontal_alignment = 1
+
+[node name="PreviewPanel" type="Panel" parent="VBoxContainer/PreviewContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2

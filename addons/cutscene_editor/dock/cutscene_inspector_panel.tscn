@@ -1,0 +1,259 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfgv7rlnf2d4i"]
+
+[ext_resource type="Script" uid="uid://ujvq1o23btiu" path="res://addons/cutscene_editor/dock/cutscene_inspector_panel.gd" id="1_script"]
+
+[node name="CutsceneInspectorPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeaderPanel" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HeaderPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HeaderPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cutscene Properties"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PropertiesContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CutsceneNameSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutsceneNameSection"]
+layout_mode = 2
+tooltip_text = "The name of the cutscene, used for identification in the editor and game"
+text = "Cutscene Name:"
+
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutsceneNameSection"]
+layout_mode = 2
+tooltip_text = "The name of the cutscene, used for identification in the editor and game"
+placeholder_text = "Enter cutscene name"
+editable = false
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/PropertiesContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="CutscenePropertiesSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection"]
+layout_mode = 2
+text = "Cutscene Properties:"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection"]
+layout_mode = 2
+columns = 2
+
+[node name="TypingSpeedLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Speed of the typing effect in seconds per character (lower is faster)"
+text = "Typing Speed:"
+
+[node name="TypingSpeedSpinBox" type="SpinBox" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Speed of the typing effect in seconds per character (lower is faster)"
+min_value = 0.01
+max_value = 0.5
+step = 0.01
+value = 0.03
+editable = false
+suffix = "s"
+
+[node name="BackgroundColorLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Default background color for the cutscene (can be overridden by background images)"
+text = "Background Color:"
+
+[node name="BackgroundColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Default background color for the cutscene (can be overridden by background images)"
+disabled = true
+color = Color(0, 0, 0, 0.8)
+
+[node name="BackgroundImageLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Optional global background image for the entire cutscene (PNG or JPG)"
+text = "Background Image:"
+
+[node name="BackgroundImageHBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+
+[node name="BackgroundImageEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer/BackgroundImageHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Optional global background image for the entire cutscene (PNG or JPG)"
+placeholder_text = "Path to image file"
+editable = false
+
+[node name="BrowseImageButton" type="Button" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer/BackgroundImageHBox"]
+layout_mode = 2
+tooltip_text = "Select a background image for the entire cutscene"
+disabled = true
+text = "Browse"
+
+[node name="BackgroundMusicLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Path to background music that will play during the entire cutscene (MP3, OGG, or WAV)"
+text = "Background Music:"
+
+[node name="MusicPathHBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+
+[node name="MusicPathEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer/MusicPathHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Path to background music that will play during the entire cutscene (MP3, OGG, or WAV)"
+placeholder_text = "Path to music file"
+editable = false
+
+[node name="BrowseButton" type="Button" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer/MusicPathHBox"]
+layout_mode = 2
+tooltip_text = "Select a music file to play during the cutscene"
+disabled = true
+text = "Browse"
+
+[node name="MusicVolumeLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Volume of the background music (0.0 to 1.0)"
+text = "Music Volume:"
+
+[node name="MusicVolumeSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Volume of the background music (0.0 to 1.0)"
+max_value = 1.0
+step = 0.01
+value = 1.0
+editable = false
+
+[node name="VoiceoverVolumeLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Volume of the voiceover audio (0.0 to 1.0)"
+text = "Voiceover Volume:"
+
+[node name="VoiceoverVolumeSlider" type="HSlider" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Volume of the voiceover audio (0.0 to 1.0)"
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="UseBBCodeLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Enable BBCode formatting in text (allows formatting like [b]bold[/b], [i]italic[/i], [color=red]colored text[/color])"
+text = "Use BBCode:"
+
+[node name="UseBBCodeCheckBox" type="CheckBox" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Enable BBCode formatting in text (allows formatting like [b]bold[/b], [i]italic[/i], [color=red]colored text[/color])"
+disabled = true
+
+[node name="ThemeLabel" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Theme to apply to the cutscene (e.g., ironhaven, parchment, scroll)"
+text = "Theme:"
+
+[node name="ThemeOptionButton" type="OptionButton" parent="VBoxContainer/ScrollContainer/PropertiesContainer/CutscenePropertiesSection/GridContainer"]
+layout_mode = 2
+tooltip_text = "Theme to apply to the cutscene (e.g., ironhaven, parchment, scroll)"
+disabled = true
+selected = 0
+item_count = 1
+popup/item_0/text = "ironhaven"
+popup/item_0/id = 0
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/ScrollContainer/PropertiesContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="FrameEditorSection" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/PropertiesContainer/FrameEditorSection"]
+layout_mode = 2
+tooltip_text = "Each frame represents a single panel in the cutscene"
+text = "Frame Editor:"
+
+[node name="FrameOrderButtons" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer/FrameEditorSection"]
+layout_mode = 2
+alignment = 1
+
+[node name="MoveUpButton" type="Button" parent="VBoxContainer/ScrollContainer/PropertiesContainer/FrameEditorSection/FrameOrderButtons"]
+layout_mode = 2
+tooltip_text = "Move the selected frame up in the sequence"
+text = "Move Frame Up"
+
+[node name="MoveDownButton" type="Button" parent="VBoxContainer/ScrollContainer/PropertiesContainer/FrameEditorSection/FrameOrderButtons"]
+layout_mode = 2
+tooltip_text = "Move the selected frame down in the sequence"
+text = "Move Frame Down"
+
+[node name="FrameListContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/PropertiesContainer/FrameEditorSection"]
+layout_mode = 2
+
+[node name="AddFrameButton" type="Button" parent="VBoxContainer/ScrollContainer/PropertiesContainer/FrameEditorSection"]
+layout_mode = 2
+tooltip_text = "Add a new frame to the cutscene"
+disabled = true
+text = "Add Frame"
+
+[node name="DeleteFrameButton" type="Button" parent="VBoxContainer/ScrollContainer/PropertiesContainer/FrameEditorSection"]
+layout_mode = 2
+tooltip_text = "Delete the currently selected frame"
+disabled = true
+text = "Delete Frame"
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/ScrollContainer/PropertiesContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SaveButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+tooltip_text = "Save changes to the cutscene"
+disabled = true
+text = "Save"
+
+[node name="PreviewButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+tooltip_text = "Preview the cutscene in the game"
+disabled = true
+text = "Preview"

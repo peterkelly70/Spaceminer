@@ -1,0 +1,18 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://dd61672b8vmdd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cb_focus"]
+
+[resource]
+CheckBox/styles/disabled = SubResource("StyleBoxEmpty_cb")
+CheckBox/styles/focus = SubResource("StyleBoxEmpty_cb_focus")
+CheckBox/styles/hover = SubResource("StyleBoxEmpty_cb")
+CheckBox/styles/pressed = SubResource("StyleBoxEmpty_cb")
+RadioButton/styles/disabled = SubResource("StyleBoxEmpty_cb")
+RadioButton/styles/focus = SubResource("StyleBoxEmpty_cb_focus")
+RadioButton/styles/hover = SubResource("StyleBoxEmpty_cb")
+RadioButton/styles/normal = SubResource("StyleBoxEmpty_cb")
+RadioButton/styles/pressed = SubResource("StyleBoxEmpty_cb")
+label/colors/font_color = Color(0.878, 0.824, 0.6, 1)
+richtextlabel/colors/default_color = Color(0.878, 0.824, 0.6, 1)

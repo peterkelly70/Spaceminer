@@ -1,0 +1,148 @@
+[gd_scene load_steps=19 format=3 uid="uid://c3yl8yvfvtlx3"]
+
+[ext_resource type="PackedScene" uid="uid://c4vq8jfvxrpvw" path="res://scenes/ui/popups/BasePopup.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://ce5w48fmuf3wi" path="res://scripts/ui/popups/MusicSelectionPopup.gd" id="2_music"]
+[ext_resource type="Texture2D" uid="uid://dqo8l33fgyqhr" path="res://assets/images/menu.png" id="3_8toq5"]
+[ext_resource type="Texture2D" uid="uid://bjy1iu0vd7h4w" path="res://assets/images/menu.png" id="4_play"]
+[ext_resource type="Texture2D" uid="uid://bmj2qoa7vsf18" path="res://assets/images/menu.png" id="4_v4cgu"]
+[ext_resource type="Texture2D" uid="uid://6pfw3rod3qwl" path="res://assets/images/menu.png" id="5_qkdb6"]
+[ext_resource type="Texture2D" uid="uid://bhsigbhbilbcx" path="res://assets/images/menu.png" id="5_stop"]
+[ext_resource type="Script" path="res://scripts/ui/ButtonHoverEffect.gd" id="6_hover"]
+[ext_resource type="Texture2D" uid="uid://cim0fsbr20e0i" path="res://assets/images/menu.png" id="8_7m001"]
+[ext_resource type="Texture2D" uid="uid://epkiwpba2ras" path="res://assets/images/menu.png" id="9_sv00s"]
+[ext_resource type="Texture2D" uid="uid://cm0bgtwnbfmn8" path="res://assets/images/menu.png" id="11_8qrv7"]
+[ext_resource type="Texture2D" uid="uid://oyirx3slu1ub" path="res://assets/images/menu.png" id="12_3art0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6"]
+
+[node name="MusicSelectionPopup" instance=ExtResource("1_base")]
+offset_right = 600.0
+offset_bottom = 520.0
+script = ExtResource("2_music")
+
+[node name="PanelContainer" parent="CenterContainer" index="0"]
+custom_minimum_size = Vector2(600, 520)
+
+[node name="TitleLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="0"]
+theme_override_font_sizes/font_size = 28
+text = "SELECT MUSIC TRACK"
+
+[node name="CloseButton" type="TextureButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+texture_normal = ExtResource("3_8toq5")
+texture_pressed = ExtResource("4_v4cgu")
+texture_hover = ExtResource("5_qkdb6")
+stretch_mode = 3
+script = ExtResource("6_hover")
+
+[node name="ContentLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="0"]
+visible = false
+
+[node name="MusicList" type="ItemList" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="1"]
+auto_translate_mode = 2
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/v_separation = 8
+theme_override_font_sizes/font_size = 20
+allow_reselect = true
+item_count = 7
+fixed_icon_size = Vector2i(16, 16)
+item_0/text = "01. The Hall Under the Mountain"
+item_1/text = "02. Enter the Dwarven King"
+item_2/text = "03. Call of War"
+item_3/text = "04. Dwarven Military Elite"
+item_4/text = "05. Studies in Dwarven Magic"
+item_5/text = "06. Hall of the Mountain King"
+item_6/text = "07. Dance of the Sugar Plum Fairies"
+
+[node name="VolumeContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" index="4"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VolumeLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer" index="0"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "VOLUME"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer" index="1"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="MuteButton" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/HBoxContainer" index="0"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.843137, 0, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.843137, 0, 1)
+theme_override_colors/font_focus_color = Color(1, 0.843137, 0, 1)
+theme_override_colors/font_disabled_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_2")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_4")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_5")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6")
+theme_override_font_sizes/font_size = 18
+text = "MUTE"
+
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/HBoxContainer" index="1"]
+custom_minimum_size = Vector2(250, 30)
+layout_mode = 2
+size_flags_vertical = 4
+value = 80.0
+
+[node name="OptionsContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" index="5"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RepeatToggle" type="CheckBox" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/OptionsContainer" index="0"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+button_pressed = true
+text = "REPEAT TRACK"
+
+[node name="ButtonContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" index="6"]
+custom_minimum_size = Vector2(0, 140)
+theme_override_constants/separation = 40
+
+[node name="CancelButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="0"]
+visible = false
+
+[node name="ConfirmButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="1"]
+visible = false
+
+[node name="PlayButton" type="TextureButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="2"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("4_play")
+texture_pressed = ExtResource("8_7m001")
+texture_hover = ExtResource("9_sv00s")
+stretch_mode = 3
+script = ExtResource("6_hover")
+
+[node name="StopButton" type="TextureButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="3"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("5_stop")
+texture_pressed = ExtResource("11_8qrv7")
+texture_hover = ExtResource("12_3art0")
+stretch_mode = 3
+script = ExtResource("6_hover")

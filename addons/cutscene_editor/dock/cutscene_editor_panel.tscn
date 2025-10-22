@@ -1,0 +1,366 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1jtx1xfvgkpq"]
+
+[ext_resource type="Script" path="res://addons/cutscene_editor/editor/cutscene_editor_panel.gd" id="1_script"]
+
+[node name="CutsceneEditorPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeaderPanel" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HeaderPanel/MarginContainer"]
+layout_mode = 2
+text = "Cutscene Editor"
+horizontal_alignment = 1
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftPanel" type="PanelContainer" parent="VBoxContainer/HSplitContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/LeftPanel"]
+layout_mode = 2
+
+[node name="CategoryHeader" type="Label" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+text = "Categories"
+horizontal_alignment = 1
+
+[node name="CategoryList" type="ItemList" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+item_count = 3
+item_0/text = "Introduction"
+item_1/text = "Battle"
+item_2/text = "Lost"
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="AddCategoryButton" type="Button" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+text = "Add"
+
+[node name="EditCategoryButton" type="Button" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+text = "Edit"
+
+[node name="DeleteCategoryButton" type="Button" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+text = "Delete"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="CutsceneHeader" type="Label" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+text = "Cutscenes"
+horizontal_alignment = 1
+
+[node name="CutsceneList" type="ItemList" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+item_count = 1
+item_0/text = "Intro Story"
+
+[node name="ButtonsContainer2" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="AddCutsceneButton" type="Button" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer/ButtonsContainer2"]
+layout_mode = 2
+text = "Add"
+
+[node name="DeleteCutsceneButton" type="Button" parent="VBoxContainer/HSplitContainer/LeftPanel/VBoxContainer/ButtonsContainer2"]
+layout_mode = 2
+text = "Delete"
+
+[node name="RightPanel" type="PanelContainer" parent="VBoxContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel"]
+layout_mode = 2
+
+[node name="ToolBar" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="AddFrameButton" type="Button" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/ToolBar"]
+layout_mode = 2
+text = "Add Frame"
+
+[node name="DeleteFrameButton" type="Button" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/ToolBar"]
+layout_mode = 2
+text = "Delete Frame"
+
+[node name="MoveUpButton" type="Button" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/ToolBar"]
+layout_mode = 2
+text = "Move Up"
+
+[node name="MoveDownButton" type="Button" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/ToolBar"]
+layout_mode = 2
+text = "Move Down"
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer"]
+layout_mode = 2
+text = "Frame List"
+
+[node name="FrameList" type="ItemList" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Properties" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer"]
+layout_mode = 2
+
+[node name="PropertiesPanel" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_properties_script")
+
+[node name="TitleSection" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/TitleSection"]
+layout_mode = 2
+text = "Frame Title"
+
+[node name="TitleEdit" type="LineEdit" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/TitleSection"]
+layout_mode = 2
+placeholder_text = "Enter frame title (optional)"
+
+[node name="TextSection" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/TextSection"]
+layout_mode = 2
+text = "Frame Text"
+
+[node name="TextEdit" type="TextEdit" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/TextSection"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+placeholder_text = "Enter frame text (supports BBCode)"
+wrap_mode = 1
+
+[node name="ImageSection" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/ImageSection"]
+layout_mode = 2
+text = "Frame Image"
+
+[node name="PathHBox" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/ImageSection"]
+layout_mode = 2
+
+[node name="ImagePathEdit" type="LineEdit" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/ImageSection/PathHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Path to image file"
+
+[node name="ImageBrowseButton" type="Button" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/ImageSection/PathHBox"]
+layout_mode = 2
+text = "Browse"
+
+[node name="SoundSection" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/SoundSection"]
+layout_mode = 2
+text = "Sound Effect"
+
+[node name="PathHBox" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/SoundSection"]
+layout_mode = 2
+
+[node name="SoundPathEdit" type="LineEdit" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/SoundSection/PathHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Path to sound file"
+
+[node name="SoundBrowseButton" type="Button" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/SoundSection/PathHBox"]
+layout_mode = 2
+text = "Browse"
+
+[node name="ContinueSection" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/ContinueSection"]
+layout_mode = 2
+text = "Continue Button Text"
+
+[node name="ContinueTextEdit" type="LineEdit" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/ContinueSection"]
+layout_mode = 2
+text = "Continue"
+placeholder_text = "Text for continue button"
+
+[node name="BackgroundSection" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/BackgroundSection"]
+layout_mode = 2
+text = "Frame Background Color"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel/BackgroundSection"]
+layout_mode = 2
+text = "Pick Color"
+
+[node name="ImageDialog" type="FileDialog" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+title = "Open a File"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.webp ; Image Files")
+
+[node name="SoundDialog" type="FileDialog" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Properties/PropertiesPanel"]
+title = "Open a File"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.ogg, *.wav, *.mp3 ; Audio Files")
+
+[node name="Preview" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="FramePreview" type="PanelContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3_preview_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PreviewBackground" type="ColorRect" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.8)
+
+[node name="ImageContainer" type="PanelContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer/VBoxContainer/PreviewBackground"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 200.0
+grow_horizontal = 2
+
+[node name="Image" type="TextureRect" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer/VBoxContainer/PreviewBackground/ImageContainer"]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer/VBoxContainer/PreviewBackground"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -200.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer/VBoxContainer/PreviewBackground/TextContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Frame Title"
+horizontal_alignment = 1
+
+[node name="TextLabel" type="RichTextLabel" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer/VBoxContainer/PreviewBackground/TextContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "Frame text goes here..."
+fit_content = true
+
+[node name="ContinueButton" type="Button" parent="VBoxContainer/HSplitContainer/RightPanel/VBoxContainer/TabContainer/Preview/FramePreview/MarginContainer/VBoxContainer/PreviewBackground"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -40.0
+offset_right = 50.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Continue"
+
+[node name="LoadDialog" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.json ; JSON Files")
+
+[node name="SaveDialog" type="FileDialog" parent="."]
+title = "Save As"
+size = Vector2i(600, 400)
+ok_button_text = "Save"
+file_mode = 0
+filters = PackedStringArray("*.json ; JSON Files")
+
+[node name="ImageDialog" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.webp ; Image Files")
+root_subfolder = "res://assets/images/"
+
+[node name="AudioDialog" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.ogg, *.wav, *.mp3 ; Audio Files")
+root_subfolder = "res://assets/audio/"
+
+[node name="CategoryDialog" type="FileDialog" parent="."]
+title = "Select Category Directory"
+size = Vector2i(600, 400)
+ok_button_text = "Select"
+file_mode = 2
+root_subfolder = "res://assets/"

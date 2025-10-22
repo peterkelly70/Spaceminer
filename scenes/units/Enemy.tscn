@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/fodder.png" id="1_g93k1"]
+[ext_resource type="Script" path="res://scripts/controllers/Enemy.gd" id="2_rq0v2"]
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("2_rq0v2")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_g93k1")
+centered = true
+scale = Vector2(0.25, 0.25)

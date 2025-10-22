@@ -1,0 +1,901 @@
+WorkerThreadPool: 12 threads, 3 max low-priority.
+Godot Engine v4.4.stable.official.4c311cbee - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+JoypadLinux: udev enabled and loaded successfully.
+Xshape 1.1 detected.
+Xinerama 1.1 detected.
+Xrandr 1.6 detected.
+Xrender 0.11 detected.
+Xinput 2.2 detected.
+XInput: Refreshing devices.
+XInput: No touch devices found.
+Detecting GPUs, set DRI_PRIME in the environment to override GPU detection logic.
+Only one GPU found, using default.
+ScreenSaver: DBus 1.14.10 detected.
+PortalDesktop: DBus 1.14.10 detected.
+Using "default" pen tablet driver...
+Shader 'CanvasSdfShaderGLES3' SHA256: 527922df28400669b39b4cdda6b5f4b383df8afd36c31219c04b83a891e5207a
+Shader 'SkeletonShaderGLES3' SHA256: 0b3e594f0cf875b225a770a83ca54826684e542ee9d337602e66cbc388d37a6b
+Shader 'ParticlesShaderGLES3' SHA256: 2de852187412799e817188181676200364bbffc252e79d8d05855b8b190a5616
+Shader 'ParticlesCopyShaderGLES3' SHA256: e6c00d6d9071acf4125d642fa3776cf21ca3a12eda4475cf1870b0ff2b467411
+Shader 'CopyShaderGLES3' SHA256: e2008631ef298ac7119fc960451040455147ff1ce7bebe6c7772c8fea91e62d1
+Shader 'CubemapFilterShaderGLES3' SHA256: f984ef28e1344ca8b3cd1d64d283bbf8e4c8dffa627ee5b491410e4f8851c9e7
+Shader 'GlowShaderGLES3' SHA256: a1bfbebdefeb931096e3b18fda41e303126d6b39ae3ec56602e846759258fc1f
+Shader 'PostShaderGLES3' SHA256: bc9744f1e8c7e80bbea33587a54b17678c60cee2fde471034418af613e639ec7
+Shader 'FeedShaderGLES3' SHA256: 183afc58303f851883bbd496555d7d57696b3dec726edb6b1d45ecb276bd2326
+Shader 'CanvasShaderGLES3' SHA256: ef1f21127f44c79633a576c2c963f534c5bc138a79329a190ec69fe677645fe1
+Shader 'CanvasOcclusionShaderGLES3' SHA256: 9ee78ed6811cd62e27e6e167529145a38afb02cc26218496addc87a974527d13
+Shader 'SceneShaderGLES3' SHA256: 4a569b80b77411152448a6f9523ed6c7cbfeef41431981fb5e463bf69e42fe1e
+Shader 'SkyShaderGLES3' SHA256: 217d4f75565bdc68bac21d8984c354eb9285c4f97a2409c95031c933bd03644c
+OpenGL API 3.3.0 NVIDIA 570.169 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 2060
+PulseAudio 16.1.0 detected.
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context ready
+PulseAudio: Detecting channels for device: alsa_output.pci-0000_00_1f.3.analog-stereo
+PulseAudio: detected 2 output channels
+PulseAudio: audio buffer frames: 512 calculated output latency: 11ms
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 3954330213
+EDITOR API HASH: 1116905369
+Loading resource: res://scripts/autoload/GameState.gd
+Loading resource: res://scripts/autoload/StateManager.gd
+Loading resource: res://scripts/autoload/AudioManager.gd
+Loading resource: res://scripts/autoload/NotificationManager.gd
+Loading resource: res://scripts/autoload/PopupManager.gd
+Loading resource: res://scripts/autoload/SettingsManager.gd
+Loading resource: res://scripts/autoload/TextUtils.gd
+Loading resource: res://scripts/autoload/ScreenManager.gd
+Loading resource: res://scripts/autoload/GameManager.gd
+Loading resource: res://scripts/autoload/ToolTipManager.gd
+Loaded system CA certificates
+Loading resource: res://scenes/MainView.tscn
+Loading resource: res://scripts/main.gd
+Loading resource: res://scenes/states/Splash.tscn
+Loading resource: res://scenes/states/MenuView.tscn
+Loading resource: res://scripts/controllers/MenuController.gd
+Loading resource: res://assets/images/background.png
+Loading resource: res://.godot/imported/background.png-e5ebdd33902457fb65ba6af20f80797b.ctex
+Loading resource: res://assets/images/menu.png
+Loading resource: res://.godot/imported/menu.png-4a73871ba7d618b504d3b4e224dc9d8a.ctex
+Loading resource: res://scenes/states/SettingsView.tscn
+Loading resource: res://scripts/controllers/SettingsController.gd
+Loading resource: res://assets/themes/default_theme.tres
+Loading resource: res://assets/fonts/Oswald/Oswald-VariableFont_wght.ttf
+Loading resource: res://.godot/imported/Oswald-VariableFont_wght.ttf-d7dfcd409cdd0ac56859dc4db92dfbc0.fontdata
+Loading resource: res://assets/fonts/SourceSansPro-Regular.ttf
+Loading resource: res://.godot/imported/SourceSansPro-Regular.ttf-bf74aab35bb0d01947b584137afec66c.fontdata
+Loading resource: res://scenes/states/GameSetupView.tscn
+Loading resource: res://scripts/controllers/GameSetupController.gd
+WARNING: res://scenes/states/GameSetupView.tscn:4 - ext_resource, invalid UID: uid://b4848chopme6f - using text path instead: res://assets/images/background.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/themes/parchment_theme.tres
+Loading resource: res://assets/fonts/Khazad_Dum_Regular.ttf
+Loading resource: res://.godot/imported/Khazad_Dum_Regular.ttf-ee36ab503a674e40579a6c6dab2b70f6.fontdata
+Loading resource: res://assets/fonts/Anglorunic-q44q.ttf
+Loading resource: res://.godot/imported/Anglorunic-q44q.ttf-aefc1cc4a5270911f367019205162d23.fontdata
+Loading resource: res://scenes/states/CreditsView.tscn
+Loading resource: res://scripts/controllers/CreditsController.gd
+Loading resource: res://scenes/states/MainGameView.tscn
+Loading resource: res://scripts/controllers/MainGameController.gd
+WARNING: res://scenes/states/MainGameView.tscn:4 - ext_resource, invalid UID: uid://dgiro3yv0ugbg - using text path instead: res://assets/textures/ui/theme_noborder.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/theme_noborder.png
+Failed loading resource: res://assets/textures/ui/theme_noborder.png
+ERROR: Resource file not found: res://assets/textures/ui/theme_noborder.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:5 - ext_resource, invalid UID: uid://dmwd4ixfssd2b - using text path instead: res://scripts/views/sidebar.gd
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://scripts/views/sidebar.gd
+ERROR: Attempt to open script 'res://scripts/views/sidebar.gd' resulted in error 'File not found'.
+   at: load_source_code (modules/gdscript/gdscript.cpp:1115)
+Failed loading resource: res://scripts/views/sidebar.gd
+ERROR: Failed loading resource: res://scripts/views/sidebar.gd. Make sure resources have been imported by opening the project in the editor at least once.
+   at: _load (core/io/resource_loader.cpp:335)
+WARNING: res://scenes/states/MainGameView.tscn:6 - ext_resource, invalid UID: uid://dsyry3yb8mu4u - using text path instead: res://assets/fonts/Khazad_Dum_Regular.ttf
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://scripts/controllers/phases/phas01.gd
+WARNING: res://scenes/states/MainGameView.tscn:8 - ext_resource, invalid UID: uid://bflwhe5k567f - using text path instead: res://assets/textures/buildings/farm.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/buildings/farm.png
+Failed loading resource: res://assets/textures/buildings/farm.png
+ERROR: Resource file not found: res://assets/textures/buildings/farm.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:9 - ext_resource, invalid UID: uid://b6pynd1xqm1n6 - using text path instead: res://assets/textures/ui/screen/main.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/screen/main.png
+Failed loading resource: res://assets/textures/ui/screen/main.png
+ERROR: Resource file not found: res://assets/textures/ui/screen/main.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:10 - ext_resource, invalid UID: uid://1riwxjbly413 - using text path instead: res://assets/textures/seasons/springl.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/seasons/springl.png
+Failed loading resource: res://assets/textures/seasons/springl.png
+ERROR: Resource file not found: res://assets/textures/seasons/springl.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:11 - ext_resource, invalid UID: uid://baicvd4cu1poy - using text path instead: res://assets/textures/resources/ore.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/ore.png
+Failed loading resource: res://assets/textures/resources/ore.png
+ERROR: Resource file not found: res://assets/textures/resources/ore.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:12 - ext_resource, invalid UID: uid://bqvnotet3nraf - using text path instead: res://assets/textures/buildings/mine.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/buildings/mine.png
+Failed loading resource: res://assets/textures/buildings/mine.png
+ERROR: Resource file not found: res://assets/textures/buildings/mine.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:13 - ext_resource, invalid UID: uid://ht7joqn40q8g - using text path instead: res://assets/textures/resources/stone.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/stone.png
+Failed loading resource: res://assets/textures/resources/stone.png
+ERROR: Resource file not found: res://assets/textures/resources/stone.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:14 - ext_resource, invalid UID: uid://d2dg0iwlpl4jn - using text path instead: res://assets/textures/buildings/lumber.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/buildings/lumber.png
+Failed loading resource: res://assets/textures/buildings/lumber.png
+ERROR: Resource file not found: res://assets/textures/buildings/lumber.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:15 - ext_resource, invalid UID: uid://bfidrcu66gbyg - using text path instead: res://assets/textures/resources/gold.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/gold.png
+Failed loading resource: res://assets/textures/resources/gold.png
+ERROR: Resource file not found: res://assets/textures/resources/gold.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:16 - ext_resource, invalid UID: uid://74t7qt6f8vo3 - using text path instead: res://assets/textures/buildings/quarry.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/buildings/quarry.png
+Failed loading resource: res://assets/textures/buildings/quarry.png
+ERROR: Resource file not found: res://assets/textures/buildings/quarry.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:17 - ext_resource, invalid UID: uid://q2fy4tc2v4ci - using text path instead: res://assets/textures/resources/wood.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/wood.png
+Failed loading resource: res://assets/textures/resources/wood.png
+ERROR: Resource file not found: res://assets/textures/resources/wood.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:18 - ext_resource, invalid UID: uid://de01m6ik7pnts - using text path instead: res://assets/textures/resources/food.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/food.png
+Failed loading resource: res://assets/textures/resources/food.png
+ERROR: Resource file not found: res://assets/textures/resources/food.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:20 - ext_resource, invalid UID: uid://cxiwbhyxd0l2a - using text path instead: res://assets/textures/resources/crystal.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/crystal.png
+Failed loading resource: res://assets/textures/resources/crystal.png
+ERROR: Resource file not found: res://assets/textures/resources/crystal.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:21 - ext_resource, invalid UID: uid://cunkbsahu2qwn - using text path instead: res://assets/textures/workers/logger.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/logger.png
+Failed loading resource: res://assets/textures/workers/logger.png
+ERROR: Resource file not found: res://assets/textures/workers/logger.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:22 - ext_resource, invalid UID: uid://bb4g1u824lkaq - using text path instead: res://assets/textures/resources/mana.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/mana.png
+Failed loading resource: res://assets/textures/resources/mana.png
+ERROR: Resource file not found: res://assets/textures/resources/mana.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:23 - ext_resource, invalid UID: uid://co02r40u23xuv - using text path instead: res://assets/textures/workers/musroomfarmer.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/musroomfarmer.png
+Failed loading resource: res://assets/textures/workers/musroomfarmer.png
+ERROR: Resource file not found: res://assets/textures/workers/musroomfarmer.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:24 - ext_resource, invalid UID: uid://bldmjgr0letrf - using text path instead: res://assets/textures/resources/crown.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/crown.png
+Failed loading resource: res://assets/textures/resources/crown.png
+ERROR: Resource file not found: res://assets/textures/resources/crown.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:25 - ext_resource, invalid UID: uid://cp3me7k8v68o2 - using text path instead: res://assets/textures/workers/miner.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/miner.png
+Failed loading resource: res://assets/textures/workers/miner.png
+ERROR: Resource file not found: res://assets/textures/workers/miner.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:26 - ext_resource, invalid UID: uid://cqxoqffblix8u - using text path instead: res://assets/textures/workers/quarryworker.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/quarryworker.png
+Failed loading resource: res://assets/textures/workers/quarryworker.png
+ERROR: Resource file not found: res://assets/textures/workers/quarryworker.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:27 - ext_resource, invalid UID: uid://de3ky1bvaq0kt - using text path instead: res://assets/textures/resources/lore.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/lore.png
+Failed loading resource: res://assets/textures/resources/lore.png
+ERROR: Resource file not found: res://assets/textures/resources/lore.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:28 - ext_resource, invalid UID: uid://yd2bh70keggx - using text path instead: res://assets/textures/resources/runes.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/runes.png
+Failed loading resource: res://assets/textures/resources/runes.png
+ERROR: Resource file not found: res://assets/textures/resources/runes.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:29 - ext_resource, invalid UID: uid://bivye78lynjaa - using text path instead: res://assets/textures/workers/smith.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/smith.png
+Failed loading resource: res://assets/textures/workers/smith.png
+ERROR: Resource file not found: res://assets/textures/workers/smith.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:30 - ext_resource, invalid UID: uid://d4ev7v8iydn61 - using text path instead: res://assets/textures/resources/tools.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/tools.png
+Failed loading resource: res://assets/textures/resources/tools.png
+ERROR: Resource file not found: res://assets/textures/resources/tools.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:31 - ext_resource, invalid UID: uid://bc2euaq2bjw6i - using text path instead: res://assets/textures/workers/brewer.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/brewer.png
+Failed loading resource: res://assets/textures/workers/brewer.png
+ERROR: Resource file not found: res://assets/textures/workers/brewer.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:32 - ext_resource, invalid UID: uid://bj7nx33ef2kou - using text path instead: res://assets/textures/resources/weapons.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/resources/weapons.png
+Failed loading resource: res://assets/textures/resources/weapons.png
+ERROR: Resource file not found: res://assets/textures/resources/weapons.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:33 - ext_resource, invalid UID: uid://b42x21ma16yy - using text path instead: res://assets/textures/workers/carpenter.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/carpenter.png
+Failed loading resource: res://assets/textures/workers/carpenter.png
+ERROR: Resource file not found: res://assets/textures/workers/carpenter.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:34 - ext_resource, invalid UID: uid://djq622l3mlkbj - using text path instead: res://assets/textures/workers/stonemason.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/stonemason.png
+Failed loading resource: res://assets/textures/workers/stonemason.png
+ERROR: Resource file not found: res://assets/textures/workers/stonemason.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:35 - ext_resource, invalid UID: uid://c6xibjxnx6tqj - using text path instead: res://assets/textures/workers/farmer.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/farmer.png
+Failed loading resource: res://assets/textures/workers/farmer.png
+ERROR: Resource file not found: res://assets/textures/workers/farmer.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:36 - ext_resource, invalid UID: uid://codkjik7iqcuj - using text path instead: res://assets/textures/workers/runesmith.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/runesmith.png
+Failed loading resource: res://assets/textures/workers/runesmith.png
+ERROR: Resource file not found: res://assets/textures/workers/runesmith.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:37 - ext_resource, invalid UID: uid://c5uour26eephh - using text path instead: res://assets/textures/workers/alchemist.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/alchemist.png
+Failed loading resource: res://assets/textures/workers/alchemist.png
+ERROR: Resource file not found: res://assets/textures/workers/alchemist.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:38 - ext_resource, invalid UID: uid://tctlh5thhhdm - using text path instead: res://assets/textures/workers/lorekeeper.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/lorekeeper.png
+Failed loading resource: res://assets/textures/workers/lorekeeper.png
+ERROR: Resource file not found: res://assets/textures/workers/lorekeeper.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:39 - ext_resource, invalid UID: uid://dxjww12iqwkn - using text path instead: res://assets/textures/workers/stonespeaker.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/workers/stonespeaker.png
+Failed loading resource: res://assets/textures/workers/stonespeaker.png
+ERROR: Resource file not found: res://assets/textures/workers/stonespeaker.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+Loading resource: res://scripts/controllers/phases/phas02.gd
+WARNING: res://scenes/states/MainGameView.tscn:41 - ext_resource, invalid UID: uid://hwutslti4317 - using text path instead: res://assets/tiles/Final_Tileset.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/tiles/Final_Tileset.png
+Failed loading resource: res://assets/tiles/Final_Tileset.png
+ERROR: Resource file not found: res://assets/tiles/Final_Tileset.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:42 - ext_resource, invalid UID: uid://dgld0onamsbpa - using text path instead: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_tiny.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_tiny.png
+Failed loading resource: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_tiny.png
+ERROR: Resource file not found: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_tiny.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:43 - ext_resource, invalid UID: uid://crdqyq4fw8d5m - using text path instead: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_pressed.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_pressed.png
+Failed loading resource: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_pressed.png
+ERROR: Resource file not found: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_pressed.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:44 - ext_resource, invalid UID: uid://lgpkwbfw0ru - using text path instead: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_hover.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_hover.png
+Failed loading resource: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_hover.png
+ERROR: Resource file not found: res://assets/textures/ui/gold_buttons/Gold_Arrow_RIGHT_32x32_hover.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:45 - ext_resource, invalid UID: uid://djljq4158k1sx - using text path instead: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32.png
+Failed loading resource: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32.png
+ERROR: Resource file not found: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:46 - ext_resource, invalid UID: uid://c3so1pr7l3ieh - using text path instead: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_pressed.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_pressed.png
+Failed loading resource: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_pressed.png
+ERROR: Resource file not found: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_pressed.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:47 - ext_resource, invalid UID: uid://ceu8yv81n3mky - using text path instead: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_hover.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_hover.png
+Failed loading resource: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_hover.png
+ERROR: Resource file not found: res://assets/textures/ui/stone_buttons/dark_stone_button_32x32_hover.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+WARNING: res://scenes/states/MainGameView.tscn:48 - ext_resource, invalid UID: uid://26yboncoioki - using text path instead: res://assets/textures/ui/phases/phase01.png
+     at: load (scene/resources/resource_format_text.cpp:447)
+Loading resource: res://assets/textures/ui/phases/phase01.png
+Failed loading resource: res://assets/textures/ui/phases/phase01.png
+ERROR: Resource file not found: res://assets/textures/ui/phases/phase01.png (expected type: Texture2D)
+   at: _load (core/io/resource_loader.cpp:344)
+ERROR: res://scenes/states/MainGameView.tscn:51 - Parse Error: [ext_resource] referenced non-existent resource at: res://assets/tiles/Final_Tileset.png.
+   at: _printerr (scene/resources/resource_format_text.cpp:39)
+ERROR: res://scenes/states/MainGameView.tscn:51 - Parse Error: [ext_resource] referenced non-existent resource at: res://assets/tiles/Final_Tileset.png.
+   at: _printerr (scene/resources/resource_format_text.cpp:39)
+Failed loading resource: res://scenes/states/MainGameView.tscn
+ERROR: Failed loading resource: res://scenes/states/MainGameView.tscn. Make sure resources have been imported by opening the project in the editor at least once.
+   at: _load (core/io/resource_loader.cpp:335)
+[GameState] Initialized
+[State_Manager] Initialized
+[AudioManager] Initializing...
+[AudioManager] Setting up audio buses...
+[AudioManager] Created Music bus
+[AudioManager] Created SFX bus
+Loading resource: res://assets/audio/sfx/ui/button.mp3
+Loading resource: res://.godot/imported/button.mp3-8b92c12a0bed14b3e83069890aeadb9c.mp3str
+[AudioManager] Loaded SFX: click from res://assets/audio/sfx/ui/button.mp3
+[AudioManager] Loaded SFX: button_hover from res://assets/audio/sfx/ui/button.mp3
+Loading resource: res://assets/audio/sfx/ui/stone_btn_out.mp3
+Loading resource: res://.godot/imported/stone_btn_out.mp3-5d45ea9b057e0e8785e01e775624670c.mp3str
+[AudioManager] Loaded SFX: button_release from res://assets/audio/sfx/ui/stone_btn_out.mp3
+Loading resource: res://assets/audio/sfx/ui/notification.mp3
+Loading resource: res://.godot/imported/notification.mp3-21e65b1ca6af964a2288b546276f8cfd.mp3str
+[AudioManager] Loaded SFX: button_focus from res://assets/audio/sfx/ui/notification.mp3
+Loading resource: res://assets/audio/sfx/ui/build.mp3
+Loading resource: res://.godot/imported/build.mp3-a00be38032ce539f820be2473dd5679a.mp3str
+[AudioManager] Loaded SFX: build from res://assets/audio/sfx/ui/build.mp3
+Loading resource: res://assets/audio/sfx/ui/error.mp3
+Loading resource: res://.godot/imported/error.mp3-635340ecd7aeead346a29621f8c1fa36.mp3str
+[AudioManager] Loaded SFX: error from res://assets/audio/sfx/ui/error.mp3
+Loading resource: res://assets/audio/sfx/ui/success.mp3
+Loading resource: res://.godot/imported/success.mp3-dbea2199cd4b4f9f057d25efdd0b9a79.mp3str
+[AudioManager] Loaded SFX: success from res://assets/audio/sfx/ui/success.mp3
+[AudioManager] Loaded SFX: notification from res://assets/audio/sfx/ui/notification.mp3
+[AudioManager] Loaded 8 UI sound effects
+[AudioManager] Loaded audio settings
+[AudioManager] Set music bus volume to: 0.8
+[AudioManager] Set music player volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] Set SFX volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] set_mute called with on=false
+[AudioManager] Mute state already matches requested state: false
+[AudioManager] Saved audio settings
+[AudioManager] Applied audio settings
+[AudioManager] Initialized
+[NotificationManager] _ready called
+[NotificationManager] Registered theme: ironhaven (placeholder)
+[NotificationManager] Registered theme: parchment (placeholder)
+[NotificationManager] Registered enum notification type: 0 - Default notifications
+[NotificationManager] Registered enum notification type: 1 - Message notifications
+[NotificationManager] Registered enum notification type: 2 - Warning notifications
+[NotificationManager] Registered enum notification type: 3 - Error notifications
+[NotificationManager] Registered enum notification type: 4 - Success notifications
+[NotificationManager] Registered enum notification type: 5 - Quest notifications
+[NotificationManager] Registered enum notification type: 6 - Achievement notifications
+[NotificationManager] Registered enum notification type: 7 - Resource notifications
+[NotificationManager] Registered enum notification type: 8 - Music notifications
+[NotificationManager] Registered enum notification type: 9 - Tutorial notifications
+[NotificationManager] Registered enum notification type: 10 - System notifications
+[NotificationManager] Registered notification type: default - System notifications
+[NotificationManager] Registered notification type: resource - Resource change notifications
+[NotificationManager] Registered notification type: event - Event notifications
+[NotificationManager] Registered notification type: welcome - Welcome message
+[NotificationManager] Registered notification type: music - Music attribution
+[NotificationManager] Registered notification type: quest - Quest notifications
+[NotificationManager] Registered notification type: achievement - Achievement notifications
+[NotificationManager] Registered notification type: error - Error messages
+ERROR: [NotificationManager] Could not open music attributions file: res://assets/licences/music.json
+   at: push_error (core/variant/variant_utility.cpp:1098)
+[NotificationManager] Available notification types:
+  - enum_0: Default notifications
+    Position: TOP_RIGHT, Animation: FADE, Theme: ironhaven
+  - enum_1: Message notifications
+    Position: TOP_RIGHT, Animation: FADE, Theme: ironhaven
+  - enum_2: Warning notifications
+    Position: TOP_CENTER, Animation: SLIDE_UP, Theme: ironhaven
+  - enum_3: Error notifications
+    Position: TOP_CENTER, Animation: SLIDE_UP, Theme: ironhaven
+  - enum_4: Success notifications
+    Position: BOTTOM_CENTER, Animation: SLIDE_UP, Theme: ironhaven
+  - enum_5: Quest notifications
+    Position: BOTTOM_RIGHT, Animation: SLIDE_UP, Theme: ironhaven
+  - enum_6: Achievement notifications
+    Position: TOP_RIGHT, Animation: SLIDE_LEFT, Theme: ironhaven
+  - enum_7: Resource notifications
+    Position: TOP_RIGHT, Animation: SLIDE_LEFT, Theme: ironhaven
+  - enum_8: Music notifications
+    Position: BOTTOM_LEFT, Animation: SLIDE_LEFT, Theme: parchment
+  - enum_9: Tutorial notifications
+    Position: CENTER, Animation: FADE, Theme: ironhaven
+  - enum_10: System notifications
+    Position: BOTTOM_RIGHT, Animation: SLIDE_RIGHT, Theme: ironhaven
+  - default: System notifications
+    Position: TOP_RIGHT, Animation: FADE, Theme: ironhaven
+  - resource: Resource change notifications
+    Position: TOP_RIGHT, Animation: SLIDE_LEFT, Theme: ironhaven
+  - event: Event notifications
+    Position: BOTTOM_LEFT, Animation: SLIDE_UP, Theme: ironhaven
+  - welcome: Welcome message
+    Position: TOP_RIGHT, Animation: SLIDE_DOWN, Theme: ironhaven
+  - music: Music attribution
+    Position: BOTTOM_LEFT, Animation: SLIDE_LEFT, Theme: parchment
+  - quest: Quest notifications
+    Position: BOTTOM_RIGHT, Animation: SLIDE_UP, Theme: ironhaven
+  - achievement: Achievement notifications
+    Position: TOP_CENTER, Animation: SLIDE_DOWN, Theme: ironhaven
+  - error: Error messages
+    Position: TOP_CENTER, Animation: FADE, Theme: ironhaven
+[PopupManager] Initializing...
+[PopupManager] Initialized successfully
+[SettingsManager] Initializing...
+[SettingsManager] Settings file found, loading values
+[SettingsManager] Applying all settings...
+[SettingsManager] Applying video settings
+[SettingsManager] Set window mode to fullscreen
+[SettingsManager] Applying audio settings
+[AudioManager] set_mute called with on=false
+[AudioManager] Mute state already matches requested state: false
+[SettingsManager] Applied mute setting to AudioManager: false
+[AudioManager] Set music bus volume to: 0.8
+[AudioManager] Set music player volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] Set SFX volume to: 0.8
+[AudioManager] Saved audio settings
+[SettingsManager] Applied settings to AudioManager
+[SettingsManager] Applying gameplay settings
+[SettingsManager] Settings loaded and applied
+[ScreenManager] Initializing...
+[ScreenManager] Window set to: (1920, 1080)
+[ScreenManager] Window mode: 3
+[ScreenManager] Initialized
+[Game_Manager] Initializing...
+ERROR: [Game_Manager] [Fail Fast] Could not open buildings.json!
+   at: push_error (core/variant/variant_utility.cpp:1098)
+ERROR: [Game_Manager] [Fail Fast] Could not open workers.json!
+   at: push_error (core/variant/variant_utility.cpp:1098)
+ERROR: [Game_Manager] [Fail Fast] Could not open seasons.json!
+   at: push_error (core/variant/variant_utility.cpp:1098)
+ERROR: [Game_Manager] [Fail Fast] Could not open resources.json!
+   at: push_error (core/variant/variant_utility.cpp:1098)
+ERROR: [Game_Manager] [Fail Hard] One or more data files failed to load. Game may not function correctly!
+   at: push_error (core/variant/variant_utility.cpp:1098)
+[Game_Manager] Initialization complete
+[ToolTipManager] Initializing...
+[ToolTipManager] Initialized
+[SettingsManager] Initializing...
+[SettingsManager] Settings file found, loading values
+[SettingsManager] Applying all settings...
+[SettingsManager] Applying video settings
+[SettingsManager] Applying audio settings
+[AudioManager] set_mute called with on=false
+[AudioManager] Mute state already matches requested state: false
+[SettingsManager] Applied mute setting to AudioManager: false
+[AudioManager] Set music bus volume to: 0.8
+[AudioManager] Set music player volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] Set SFX volume to: 0.8
+[AudioManager] Saved audio settings
+[SettingsManager] Applied settings to AudioManager
+[SettingsManager] Applying gameplay settings
+[SettingsManager] Settings loaded and applied
+[UIRoot] Instancing scenes...
+[UIRoot] Initializing music system...
+[MusicManager] Initialized
+[MusicManager] Loading music collection: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/karl_casey_collection.tres
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/karl_casey_collection.tres
+ERROR: Cannot get class 'MusicCollection'.
+   at: _instantiate_internal (core/object/class_db.cpp:549)
+ERROR: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/karl_casey_collection.tres:126 - Parse Error: Can't create sub resource of type 'MusicCollection'.
+   at: _printerr (scene/resources/resource_format_text.cpp:39)
+Failed loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/karl_casey_collection.tres
+ERROR: Failed loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/karl_casey_collection.tres. Make sure resources have been imported by opening the project in the editor at least once.
+   at: _load (core/io/resource_loader.cpp:335)
+[MusicManager] Resource file failed to load, creating Karl Casey collection programmatically
+[MusicManager] Creating Karl Casey collection programmatically
+[MusicManager] Created track: Rise of the Machines
+[MusicManager] Created track: Sin City
+[MusicManager] Created track: Mutants of Technology
+[MusicManager] Created track: Assault
+[MusicManager] Created track: Knee Deep in the Dead
+[MusicManager] Created track: Dredd
+[MusicManager] Created track: Neuromancer
+[MusicManager] Created track: Outrun the Reaper
+[MusicManager] Created track: Answer to the Black Orb
+[MusicManager] Created track: Subterranean Terror
+[MusicManager] Created collection with 10 tracks
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 01 Rise of the Machines.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 01 Rise of the Machines.mp3-0f50daddc6cc6077c2dfd4f872ef5163.mp3str
+[AudioManager] Loaded music track: rise_of_machines from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 01 Rise of the Machines.mp3
+[MusicManager] Loaded track: Rise of the Machines
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 02 Sin City.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 02 Sin City.mp3-45083e2565cd191813b5423f39318b2e.mp3str
+[AudioManager] Loaded music track: sin_city from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 02 Sin City.mp3
+[MusicManager] Loaded track: Sin City
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 03 Mutants of Technology.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 03 Mutants of Technology.mp3-9955443dd1197d7634205c616f5520e0.mp3str
+[AudioManager] Loaded music track: mutants_technology from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 03 Mutants of Technology.mp3
+[MusicManager] Loaded track: Mutants of Technology
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 04 Assault.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 04 Assault.mp3-0585944803af34de58e7548a6364482b.mp3str
+[AudioManager] Loaded music track: assault from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 04 Assault.mp3
+[MusicManager] Loaded track: Assault
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 05 Knee Deep in the Dead.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 05 Knee Deep in the Dead.mp3-67f866db1bb6592eafd8d921f37faa62.mp3str
+[AudioManager] Loaded music track: knee_deep_dead from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 05 Knee Deep in the Dead.mp3
+[MusicManager] Loaded track: Knee Deep in the Dead
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 06 Dredd.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 06 Dredd.mp3-06983bea74f6f3c5002282eb6cbc53a9.mp3str
+[AudioManager] Loaded music track: dredd from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 06 Dredd.mp3
+[MusicManager] Loaded track: Dredd
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 07 Neuromancer.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 07 Neuromancer.mp3-802b212c0180cfa1880c87bcccc9cf82.mp3str
+[AudioManager] Loaded music track: neuromancer from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 07 Neuromancer.mp3
+[MusicManager] Loaded track: Neuromancer
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 08 Outrun the Reaper.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 08 Outrun the Reaper.mp3-c7cd7cc2735000035fb5032227a47a7c.mp3str
+[AudioManager] Loaded music track: outrun_reaper from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 08 Outrun the Reaper.mp3
+[MusicManager] Loaded track: Outrun the Reaper
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 09 Answer to the Black Orb.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 09 Answer to the Black Orb.mp3-e29b313379344b8a50a5d438e892ebfd.mp3str
+[AudioManager] Loaded music track: black_orb from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 09 Answer to the Black Orb.mp3
+[MusicManager] Loaded track: Answer to the Black Orb
+Loading resource: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 10 Subterranean Terror.mp3
+Loading resource: res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 10 Subterranean Terror.mp3-7784f04fb5ecee095db70efb951dc4bd.mp3str
+[AudioManager] Loaded music track: subterranean_terror from res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 10 Subterranean Terror.mp3
+[MusicManager] Loaded track: Subterranean Terror
+[MusicManager] Loaded 10 tracks from collection: Karl Casey - Dark Synthwave Collection Vol. 1
+[UIRoot] Karl Casey collection loaded successfully
+[UIRoot] Registering notification settings...
+[NotificationManager] Updated theme mapping for type 8 to DEFAULT
+[NotificationManager] Updated location mapping for type 8 to 3
+[UIRoot] Notification settings registration complete
+ - Instanced:Splash
+[MenuController] _enter_tree()
+[MenuController] *** INITIALIZING MENU CONTROLLER ***
+[MenuController] Button references obtained:
+  - Start button: StartButton:<Button#61756933625>
+  - Load button: LoadButton:<Button#61807265276>
+  - Settings button: SettingsButton:<Button#61857596927>
+  - Credits button: CreditsButton:<Button#61941483012>
+  - Quit button: QuitButton:<Button#61991814663>
+[MenuController] Connected start_button.pressed signal - mouse_filter:0
+[MenuController] Connected load_button.pressed signal - mouse_filter:0
+[MenuController] Connected settings_button.pressed signal - mouse_filter:0
+[MenuController] Connected credits_button.pressed signal - mouse_filter:0
+[MenuController] Connected quit_button.pressed signal - mouse_filter:0
+[MenuController] Set MainContainer mouse_filter to PASS
+[MenuController] Set MainPanelContainer mouse_filter to PASS
+[MenuController] Set MainPanel mouse_filter to PASS
+[MenuController] Set MarginContainer mouse_filter to PASS
+[MenuController] Set VBoxContainer mouse_filter to PASS
+[MenuController] *** MENU CONTROLLER INITIALIZATION COMPLETE ***
+[MenuController] Button diagnostics:
+  - StartButton pos:(0.0, 0.0) size:(200.0, 40.0) visible:true disabled:false mouse_filter:0
+  - LoadButton pos:(0.0, 0.0) size:(200.0, 40.0) visible:true disabled:false mouse_filter:0
+  - SettingsButton pos:(0.0, 0.0) size:(200.0, 40.0) visible:true disabled:false mouse_filter:0
+  - CreditsButton pos:(0.0, 0.0) size:(200.0, 40.0) visible:true disabled:false mouse_filter:0
+  - QuitButton pos:(0.0, 0.0) size:(200.0, 40.0) visible:true disabled:false mouse_filter:0
+[MenuController] Background mouse_filter set to IGNORE
+[MenuController] TitleBackground mouse_filter set to IGNORE
+[ScreenManager] Window resized to: (1920, 1080)
+[ScreenManager] Window resized to: (1920, 1051)
+[ScreenManager] Window resized to: (1920, 1080)
+[AudioManager] Registered all buttons in container: Audio_Manager
+[AudioManager] Registered all buttons in container: Notification_Manager
+[AudioManager] Registered all buttons in container: PopupLayer
+[AudioManager] Registered all buttons in container: Popup_Manager
+[AudioManager] Registered all buttons in container: TooltipLayer
+[AudioManager] Registered all buttons in container: TooltipManager
+[AudioManager] Registered all buttons in container: VBoxContainer
+[AudioManager] Registered all buttons in container: MarginContainer
+[AudioManager] Registered all buttons in container: TitlePanel
+[AudioManager] Registered button with sounds: press=click, release=button_release, hover=button_hover, focus=button_focus
+[AudioManager] Registered button with sounds: press=click, release=button_release, hover=button_hover, focus=button_focus
+[AudioManager] Registered button with sounds: press=click, release=button_release, hover=button_hover, focus=button_focus
+[AudioManager] Registered button with sounds: press=click, release=button_release, hover=button_hover, focus=button_focus
+[AudioManager] Registered button with sounds: press=click, release=button_release, hover=button_hover, focus=button_focus
+[AudioManager] Registered all buttons in container: VBoxContainer
+[AudioManager] Registered all buttons in container: MarginContainer
+[AudioManager] Registered all buttons in container: MainPanel
+[AudioManager] Registered all buttons in container: MainPanelContainer
+[AudioManager] Registered all buttons in container: MainContainer
+[AudioManager] Registered all buttons in container: MenuView
+[AudioManager] Registered all buttons in container: MainView
+[AudioManager] Registered all buttons in container: root
+[StateAwareView] Registering:MenuView
+[State_Manager] Registered view:MenuView
+[StateAwareView] Registering as emitter:MenuView
+[State_Manager] Registered emitter:MenuView
+[StateAwareView]MenuViewreceived state ping:2
+ - Instanced:MenuView
+[SettingsController] Initializing...
+[SettingsController] Loading settings...
+[SettingsController] Fullscreen toggled: true
+[SettingsManager] Applying all settings...
+[SettingsManager] Applying video settings
+[SettingsManager] Applying audio settings
+[AudioManager] set_mute called with on=false
+[AudioManager] Mute state already matches requested state: false
+[SettingsManager] Applied mute setting to AudioManager: false
+[AudioManager] Set music bus volume to: 0.8
+[AudioManager] Set music player volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] Set SFX volume to: 0.8
+[AudioManager] Saved audio settings
+[SettingsManager] Applied settings to AudioManager
+[SettingsManager] Applying gameplay settings
+[SettingsManager] Settings saved successfully
+[SettingsController] VSync toggled: true
+[SettingsManager] Applying all settings...
+[SettingsManager] Applying video settings
+[SettingsManager] Applying audio settings
+[AudioManager] set_mute called with on=false
+[AudioManager] Mute state already matches requested state: false
+[SettingsManager] Applied mute setting to AudioManager: false
+[AudioManager] Set music bus volume to: 0.8
+[AudioManager] Set music player volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] Set SFX volume to: 0.8
+[AudioManager] Saved audio settings
+[SettingsManager] Applied settings to AudioManager
+[SettingsManager] Applying gameplay settings
+[SettingsManager] Settings saved successfully
+[SettingsController] Show welcome notification toggled: true
+[SettingsManager] Applying all settings...
+[SettingsManager] Applying video settings
+[SettingsManager] Applying audio settings
+[AudioManager] set_mute called with on=false
+[AudioManager] Mute state already matches requested state: false
+[SettingsManager] Applied mute setting to AudioManager: false
+[AudioManager] Set music bus volume to: 0.8
+[AudioManager] Set music player volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] Set SFX volume to: 0.8
+[AudioManager] Saved audio settings
+[SettingsManager] Applied settings to AudioManager
+[SettingsManager] Applying gameplay settings
+[SettingsManager] Settings saved successfully
+[SettingsController] Show music notifications toggled: true
+[SettingsManager] Applying all settings...
+[SettingsManager] Applying video settings
+[SettingsManager] Applying audio settings
+[AudioManager] set_mute called with on=false
+[AudioManager] Mute state already matches requested state: false
+[SettingsManager] Applied mute setting to AudioManager: false
+[AudioManager] Set music bus volume to: 0.8
+[AudioManager] Set music player volume to: 0.8
+[AudioManager] Saved audio settings
+[AudioManager] Set SFX volume to: 0.8
+[AudioManager] Saved audio settings
+[SettingsManager] Applied settings to AudioManager
+[SettingsManager] Applying gameplay settings
+[SettingsManager] Settings saved successfully
+[SettingsController] Ready
+[StateAwareView] Registering:SettingsView
+[State_Manager] Registered view:SettingsView
+[StateAwareView] Registering as emitter:SettingsView
+[State_Manager] Registered emitter:SettingsView
+[StateAwareView]SettingsViewreceived state ping:2
+[StateAwareView]SettingsView→ on_exit_state
+[SettingsController] Exiting state
+ - Instanced:SettingsView
+[StateAwareView] Registering:CreditsView
+[State_Manager] Registered view:CreditsView
+[StateAwareView] Registering as emitter:CreditsView
+[State_Manager] Registered emitter:CreditsView
+[StateAwareView]CreditsViewreceived state ping:2
+[StateAwareView]CreditsView→ on_exit_state
+Becoming Invisible
+ - Instanced:CreditsView
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer' for node 'VBoxContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer' for node 'GameSettingsContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'SectionLabel' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'HSeparator' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'KingdomNameContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/KingdomNameContainer' for node 'Label' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/KingdomNameContainer' for node 'KingdomNameEdit' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'DifficultyContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/DifficultyContainer' for node 'Label' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/DifficultyContainer' for node 'DifficultyOption' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'MapSizeContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/MapSizeContainer' for node 'Label' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/MapSizeContainer' for node 'MapSizeOption' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'ResourceRichContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/ResourceRichContainer' for node 'Label' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/ResourceRichContainer' for node 'ResourceRichnessOption' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'TutorialContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/TutorialContainer' for node 'Label' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/TutorialContainer' for node 'TutorialCheck' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer' for node 'IronmanContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/IronmanContainer' for node 'Label' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/IronmanContainer' for node 'IronmanCheck' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer' for node 'ButtonContainer' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonContainer' for node 'BackButton' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+WARNING: Parent path './MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonContainer' for node 'StartGameButton' has vanished when instantiating: 'res://scenes/states/GameSetupView.tscn'.
+     at: instantiate (scene/resources/packed_scene.cpp:178)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/KingdomNameContainer/KingdomNameEdit" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/DifficultyContainer/DifficultyOption" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/MapSizeContainer/MapSizeOption" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/ResourceRichContainer/ResourceRichnessOption" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/TutorialContainer/TutorialCheck" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/GameSettingsContainer/IronmanContainer/IronmanCheck" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonContainer/StartGameButton" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+ERROR: Node not found: "MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonContainer/BackButton" (relative to "/root/MainView/GameSetupView").
+   at: get_node (scene/main/node.cpp:1877)
+[GameSetupController] Initializing...
+ERROR: [GameSetupController] StartGameButton node not found
+   at: push_error (core/variant/variant_utility.cpp:1098)
+ERROR: [GameSetupController] BackButton node not found
+   at: push_error (core/variant/variant_utility.cpp:1098)
+[GameSetupController] Loading default settings...
+[GameSetupController] Ready
+[StateAwareView] Registering:GameSetupView
+[State_Manager] Registered view:GameSetupView
+[StateAwareView] Registering as emitter:GameSetupView
+[State_Manager] Registered emitter:GameSetupView
+[StateAwareView]GameSetupViewreceived state ping:2
+[StateAwareView]GameSetupView→ on_exit_state
+[GameSetupController] Exiting state
+ - Instanced:GameSetupView
+WARNING: [UIRoot] Scene 'MainGameView' failed to load; skipping instantiation
+     at: push_warning (core/variant/variant_utility.cpp:1118)
+[UIRoot] Hide:Splash
+[UIRoot] Hide:MenuView
+[UIRoot] Hide:SettingsView
+[UIRoot] Hide:CreditsView
+[UIRoot] Hide:GameSetupView
+[UIRoot] SHOW MENU EXCLUSIVELY
+[UIRoot] Transitioning to MAIN_MENU state
+[State_Manager] State refreshed: MAIN_MENU (triggering view updates)
+[StateAwareView]MenuViewreceived state ping:2
+[StateAwareView]SettingsViewreceived state ping:2
+[StateAwareView]CreditsViewreceived state ping:2
+[StateAwareView]GameSetupViewreceived state ping:2
+[UIRoot] Child tree state (post-visibility):
+ -GameContainer
+    Class:        MarginContainer
+    In tree:      true
+    Visible:      true
+    Script:       None
+    Is StateAware:false
+ -MusicManager
+    Class:        Node
+    In tree:      true
+    Visible:      N/A (not a Control node)
+    Script:       <GDScript#-9223371996119693931>
+    Is StateAware:false
+ -Splash
+    Class:        Control
+    In tree:      true
+    Visible:      false
+    Script:       None
+    Is StateAware:false
+ -MenuView
+    Class:        Control
+    In tree:      true
+    Visible:      true
+    Script:       <GDScript#-9223372005246499495>
+    Is StateAware:true
+ -SettingsView
+    Class:        Control
+    In tree:      true
+    Visible:      false
+    Script:       <GDScript#-9223372003585555109>
+    Is StateAware:true
+ -CreditsView
+    Class:        Control
+    In tree:      true
+    Visible:      false
+    Script:       <GDScript#-9223371995012397673>
+    Is StateAware:true
+ -GameSetupView
+    Class:        Control
+    In tree:      true
+    Visible:      false
+    Script:       <GDScript#-9223371998653053601>
+    Is StateAware:true
+[MusicManager] Playing track: Karl Casey - Subterranean Terror
+[AudioManager] Attempting to play music track: subterranean_terror
+[AudioManager] Current mute state: false
+[AudioManager] Setting volume to 0.8
+[AudioManager] Started playing music track: subterranean_terror - player.playing=true
+[MusicManager] Emitting track_changed signal for: Subterranean Terror
+[MusicManager] Signal emitted successfully
+[UIRoot] Connected to music_manager.track_changed signal
+Loading resource: res://scenes/ui/NotificationPopupIron.tscn
+Loading resource: res://scripts/ui/NotificationPopupIron.gd
+[NotificationManager] Showing notification: Welcome to Groot!
+Loading resource: res://assets/themes/groot_theme.tres
+[NotificationManager] Instantiating notification scene
+[NotificationManager] Adding notification to scene tree
+[NotificationManager] Showing notification with message: Welcome to Groot!
+[NotificationManager] Position: 0, Animation: 4, Theme: ironhaven
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+PulseAudio: context terminated
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2378)
+Leaked instance: AudioStreamMP3:9223372097990952408 - Resource path: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 10 Subterranean Terror.mp3
+Leaked instance: AudioStreamPlaybackMP3:9223372119298016821
+Leaked instance: SceneTreeTimer:9223372124096301026
+Leaked instance: SceneTreeTimer:9223372119314794477
+Hint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).
+ERROR: 1 resources still in use at exit.
+   at: clear (core/io/resource.cpp:609)
+Resource still in use: res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 10 Subterranean Terror.mp3 (AudioStreamMP3)
+Orphan StringName: _mix (static: 0, total: 1)
+Orphan StringName: _set_path_cache (static: 0, total: 1)
+Orphan StringName: _reset_state (static: 0, total: 1)
+Orphan StringName: _stop (static: 0, total: 1)
+Orphan StringName: _setup_local_to_scene (static: 0, total: 1)
+Orphan StringName: _get_beat_count (static: 0, total: 1)
+Orphan StringName: _mix_resampled (static: 0, total: 1)
+Orphan StringName: _get_stream_sampling_rate (static: 0, total: 1)
+Orphan StringName: _get_playback_position (static: 0, total: 1)
+Orphan StringName: _get_stream_name (static: 0, total: 1)
+Orphan StringName: _get_parameter (static: 0, total: 1)
+Orphan StringName: _start (static: 0, total: 1)
+Orphan StringName: _has_loop (static: 0, total: 1)
+Orphan StringName: _is_playing (static: 0, total: 1)
+Orphan StringName: Music (static: 0, total: 2)
+Orphan StringName: _get_bar_beats (static: 0, total: 1)
+Orphan StringName: timeout (static: 1, total: 3)
+Orphan StringName: _is_monophonic (static: 0, total: 1)
+Orphan StringName: _get_bpm (static: 0, total: 1)
+Orphan StringName: _get_parameter_list (static: 0, total: 1)
+Orphan StringName: _instantiate_playback (static: 0, total: 1)
+Orphan StringName: _set_parameter (static: 0, total: 1)
+Orphan StringName: _tag_used_streams (static: 0, total: 1)
+Orphan StringName: _seek (static: 0, total: 1)
+Orphan StringName: _get_rid (static: 0, total: 1)
+Orphan StringName: _get_length (static: 0, total: 1)
+Orphan StringName: _get_loop_count (static: 0, total: 1)
+StringName: 27 unclaimed string names at exit.

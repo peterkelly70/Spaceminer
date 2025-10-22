@@ -1,0 +1,278 @@
+[gd_scene load_steps=11 format=3 uid="uid://rn1gqpd021ko"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvh8rgt" path="res://assets/themes/default_theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://dnkql3lvj4elh" path="res://scripts/controllers/CreditsController.gd" id="2_controller"]
+[ext_resource type="Texture2D" uid="uid://c7ewlyefpihge" path="res://assets/images/background.png" id="3_bg"]
+[ext_resource type="Texture2D" uid="uid://dei22kos26si2" path="res://assets/images/menu.png" id="4_menu"]
+[ext_resource type="Texture2D" uid="uid://ce52rxcwcjv0o" path="res://assets/images/logo.png" id="5_pd27w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6t7yc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pd27w"]
+
+[sub_resource type="StyleBoxFlat" id="ButtonStyle_Credits"]
+bg_color = Color(0.1, 0.1, 0.1, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.6, 0.2, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="ButtonStyle_Credits_Hover"]
+bg_color = Color(0.18, 0.18, 0.18, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.3, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="ButtonStyle_Credits_Pressed"]
+bg_color = Color(0.08, 0.08, 0.08, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.5, 0.1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="CreditsView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_controller")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TitleBackground" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_menu")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+theme_override_constants/separation = 20
+
+[node name="Header" type="PanelContainer" parent="MainContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme = ExtResource("1_theme")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6t7yc")
+
+[node name="HeaderLabel" type="Label" parent="MainContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_theme")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pd27w")
+text = "Credits"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CreditsContainer" type="VBoxContainer" parent="MainContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="CreditsMargin" type="MarginContainer" parent="MainContainer/ScrollContainer/CreditsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 20
+
+[node name="CreditsContent" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="GameTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
+theme_override_font_sizes/font_size = 32
+text = "Groot"
+horizontal_alignment = 1
+
+[node name="GameSubtitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 24
+text = "A Godot 4 Game"
+horizontal_alignment = 1
+
+[node name="TeamSection" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SectionTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
+theme_override_font_sizes/font_size = 28
+text = "Development Team"
+horizontal_alignment = 1
+
+[node name="TeamMember1" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Lead Developer: Your Name"
+horizontal_alignment = 1
+
+[node name="TeamMember2" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Artist: Your Name"
+horizontal_alignment = 1
+
+[node name="TeamMember3" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Designer: Your Name"
+horizontal_alignment = 1
+
+[node name="MusicSection" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MusicTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
+theme_override_font_sizes/font_size = 28
+text = "Music"
+horizontal_alignment = 1
+
+[node name="MusicCredit" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "Dark Synthwave Collection Vol. 1"
+horizontal_alignment = 1
+
+[node name="MusicArtist" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "by Karl Casey @ White Bat Audio"
+horizontal_alignment = 1
+
+[node name="MusicLink" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "https://www.youtube.com/c/KARLCASEY"
+horizontal_alignment = 1
+
+[node name="MusicTracks" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Featuring tracks: Rise of the Machines, Sin City, Mutants of Technology,
+Assault, Knee Deep in the Dead, Dredd, Neuromancer,
+Outrun the Reaper, Answer to the Black Orb, Subterranean Terror"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="SpecialThanks" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SpecialThanksTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
+theme_override_font_sizes/font_size = 24
+text = "Special Thanks"
+horizontal_alignment = 1
+
+[node name="SpecialThanks1" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Karl Casey for the amazing synthwave soundtrack"
+horizontal_alignment = 1
+
+[node name="SpecialThanks2" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Godot Engine Community"
+horizontal_alignment = 1
+
+[node name="SpecialThanks3" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "All Our Playtesters"
+horizontal_alignment = 1
+
+[node name="Copyright" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = " 2025 Your Company. All rights reserved."
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 20
+
+[node name="Footer" type="HBoxContainer" parent="MainContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+
+[node name="BackButton" type="Button" parent="MainContainer/MarginContainer/Footer"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_theme")
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
+theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("ButtonStyle_Credits")
+theme_override_styles/hover = SubResource("ButtonStyle_Credits_Hover")
+theme_override_styles/pressed = SubResource("ButtonStyle_Credits_Pressed")
+theme_override_styles/normal = SubResource("ButtonStyle_Credits")
+text = "Back "
+
+[node name="Logo" type="Sprite2D" parent="."]
+position = Vector2(1723, 144)
+scale = Vector2(0.276367, 0.22168)
+texture = ExtResource("5_pd27w")

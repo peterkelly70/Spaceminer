@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3h5q4ykxgbg7"]
+
+[ext_resource type="Script" path="res://scenes/ui/OdometerLabel.gd" id="1_5k4jm"]
+[ext_resource type="FontFile" uid="uid://b2ynxrq6vu5nh" path="res://assets/fonts/visitor1.ttf" id="2_vk1r4"]
+
+[node name="OdometerLabel" type="Control"]
+custom_minimum_size = Vector2(80, 30)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 80.0
+offset_bottom = 30.0
+mouse_filter = 2
+script = ExtResource("1_5k4jm")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1

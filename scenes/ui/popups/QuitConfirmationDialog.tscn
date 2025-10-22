@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://bphiv52cx2m04"]
+
+[ext_resource type="PackedScene" uid="uid://c4vq8jfvxrpvw" path="res://scenes/ui/popups/BasePopup.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://demmrujsk01v4" path="res://scripts/ui/popups/QuitConfirmationDialog.gd" id="2_quit"]
+
+[node name="QuitConfirmationDialog" instance=ExtResource("1_base")]
+script = ExtResource("2_quit")
+
+[node name="TitleLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="0"]
+text = "QUIT GAME"
+
+[node name="ContentLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="0"]
+text = "Are you sure you want to quit the game?
+Any unsaved progress will be lost."
+
+[node name="CancelButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="0"]
+text = "NO"
+
+[node name="ConfirmButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="1"]
+text = "YES"

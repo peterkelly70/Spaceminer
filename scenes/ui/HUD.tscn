@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+layer = 10
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="ShieldBar" type="ProgressBar" parent="Margin/VBox"]
+unique_name_in_owner = true
+min_value = 0.0
+max_value = 100.0
+value = 100.0
+size_flags_horizontal = 3
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+text = "Score: 0"

@@ -1,0 +1,129 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/cutscene_editor/dock/settings_panel.gd" id="1_script"]
+
+[node name="SettingsDialog" type="AcceptDialog"]
+title = "Cutscene Editor Settings"
+size = Vector2i(500, 350)
+min_size = Vector2i(400, 300)
+ok_button_text = "Close"
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 492.0
+offset_bottom = 301.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SettingsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CutscenesDir" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/SettingsContainer/CutscenesDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+text = "Cutscenes Directory:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/SettingsContainer/CutscenesDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://assets/cutscenes"
+placeholder_text = "res://assets/cutscenes"
+
+[node name="BrowseButton" type="Button" parent="VBoxContainer/ScrollContainer/SettingsContainer/CutscenesDir"]
+layout_mode = 2
+text = "Browse"
+
+[node name="ImagesDir" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/SettingsContainer/ImagesDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+text = "Images Directory:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/SettingsContainer/ImagesDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://assets/images/cutscenes"
+placeholder_text = "res://assets/images/cutscenes"
+
+[node name="BrowseButton" type="Button" parent="VBoxContainer/ScrollContainer/SettingsContainer/ImagesDir"]
+layout_mode = 2
+text = "Browse"
+
+[node name="MusicDir" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/SettingsContainer/MusicDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+text = "Music Directory:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/SettingsContainer/MusicDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://assets/audio/music"
+placeholder_text = "res://assets/audio/music"
+
+[node name="BrowseButton" type="Button" parent="VBoxContainer/ScrollContainer/SettingsContainer/MusicDir"]
+layout_mode = 2
+text = "Browse"
+
+[node name="SfxDir" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/SettingsContainer/SfxDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+text = "SFX Directory:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/SettingsContainer/SfxDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://assets/audio/sfx"
+placeholder_text = "res://assets/audio/sfx"
+
+[node name="BrowseButton" type="Button" parent="VBoxContainer/ScrollContainer/SettingsContainer/SfxDir"]
+layout_mode = 2
+text = "Browse"
+
+[node name="VoiceoverDir" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/SettingsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/SettingsContainer/VoiceoverDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+text = "Voiceover Directory:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/SettingsContainer/VoiceoverDir"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://assets/audio/voice"
+placeholder_text = "res://assets/audio/voice"
+
+[node name="BrowseButton" type="Button" parent="VBoxContainer/ScrollContainer/SettingsContainer/VoiceoverDir"]
+layout_mode = 2
+text = "Browse"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Save Settings"

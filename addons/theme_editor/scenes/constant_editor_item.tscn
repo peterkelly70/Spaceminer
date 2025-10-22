@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4b3yvxpqwvvw"]
+
+[ext_resource type="Script" path="res://addons/theme_editor/scripts/constant_editor_item.gd" id="1_vvdvs"]
+
+[node name="ConstantEditorItem" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_vvdvs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeaderContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Type"
+
+[node name="NameLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Name"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ValueContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ValueLabel" type="Label" parent="VBoxContainer/ValueContainer"]
+layout_mode = 2
+text = "Value:"
+
+[node name="ValueSpin" type="SpinBox" parent="VBoxContainer/ValueContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -1000.0
+max_value = 1000.0
+value = 1.0
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2

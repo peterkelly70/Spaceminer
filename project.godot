@@ -1,0 +1,53 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Groot"
+run/main_scene="res://scenes/MainView.tscn"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://assets/icons/icon.png"
+
+[autoload]
+
+GameState="*res://scripts/autoload/GameState.gd"
+State_Manager="*res://scripts/autoload/StateManager.gd"
+Audio_Manager="*res://scripts/autoload/AudioManager.gd"
+Notification_Manager="*res://scripts/autoload/NotificationManager.gd"
+Popup_Manager="*res://scripts/autoload/PopupManager.gd"
+Settings_Manager="*res://scripts/autoload/SettingsManager.gd"
+Text_Utils="*res://scripts/autoload/TextUtils.gd"
+Screen_Manager="*res://scripts/autoload/ScreenManager.gd"
+Game_Manager="*res://scripts/autoload/GameManager.gd"
+Logger="*res://scripts/autoload/Logger.gd"
+TooltipManager="*res://scripts/autoload/ToolTipManager.gd"
+SettingsManager="*res://scripts/autoload/SettingsManager.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
+window/size/resizable=false
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_height"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/cutscene_editor/plugin.cfg", "res://addons/godot-sqlite/plugin.cfg", "res://addons/theme_editor/plugin.cfg")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+
+[theme_editor]
+
+recent_themes=["res://assets/themes/groot_theme.tres", "res://assets/themes/parchment_theme.tres"]

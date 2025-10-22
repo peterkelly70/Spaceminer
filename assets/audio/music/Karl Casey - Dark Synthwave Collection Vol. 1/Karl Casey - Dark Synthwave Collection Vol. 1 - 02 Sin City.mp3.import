@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b4e5raqfeeuyu"
+path="res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 02 Sin City.mp3-45083e2565cd191813b5423f39318b2e.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 02 Sin City.mp3"
+dest_files=["res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 02 Sin City.mp3-45083e2565cd191813b5423f39318b2e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

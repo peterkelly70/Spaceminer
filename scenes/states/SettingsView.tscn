@@ -1,0 +1,491 @@
+[gd_scene load_steps=9 format=3 uid="uid://bi0takv8mg1qh"]
+
+[ext_resource type="Script" uid="uid://co4py3i5c6upu" path="res://scripts/controllers/SettingsController.gd" id="1_cqwxl"]
+[ext_resource type="Texture2D" uid="uid://dei22kos26si2" path="res://assets/images/menu.png" id="2_gl1k8"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvh8rgt" path="res://assets/themes/default_theme.tres" id="2_qh4jj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gwgb2"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_panel"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.0627451, 0.0627451, 0.180392, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
+content_margin_left = 30.0
+content_margin_right = 30.0
+bg_color = Color(0.1, 0.2, 0.3, 0.9)
+border_width_top = 2
+border_width_right = 2
+border_color = Color(0.878431, 0.7, 0.3, 1)
+corner_radius_top_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hovered"]
+content_margin_left = 30.0
+content_margin_right = 30.0
+bg_color = Color(0.15, 0.25, 0.4, 0.8)
+border_width_top = 2
+border_width_right = 2
+border_color = Color(1, 0.9, 0.4, 1)
+corner_radius_top_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_unselected"]
+content_margin_left = 30.0
+content_margin_right = 30.0
+bg_color = Color(0.08, 0.12, 0.18, 0.7)
+border_width_top = 2
+border_width_right = 2
+border_color = Color(0.878431, 0.7, 0.3, 0.7)
+corner_radius_top_right = 4
+
+[node name="SettingsView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cqwxl")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -23.0
+offset_right = 8.0
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_gl1k8")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_right = 962.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="TopSpacer" type="Control" parent="MainContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="TitlePanel" type="Panel" parent="MainContainer"]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_qh4jj")
+
+[node name="Label" type="Label" parent="MainContainer/TitlePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_qh4jj")
+theme_override_font_sizes/font_size = 36
+text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CenterContainer" type="MarginContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_right = 300
+theme_override_constants/margin_bottom = 60
+
+[node name="MainPanel" type="Panel" parent="MainContainer/CenterContainer"]
+layout_mode = 2
+theme = ExtResource("2_qh4jj")
+theme_override_styles/panel = SubResource("StyleBoxFlat_gwgb2")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -306.0
+offset_top = 96.0
+offset_right = 247.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TabContainer" type="TabContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("2_qh4jj")
+theme_override_constants/outline_size = 2
+theme_override_constants/side_margin = 20
+theme_override_constants/icon_separation = 10
+theme_override_font_sizes/font_size = 35
+theme_override_styles/panel = SubResource("StyleBoxFlat_tab_panel")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_selected")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hovered")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_unselected")
+current_tab = 2
+
+[node name="Video" type="ScrollContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 0
+
+[node name="VideoSettings" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 25
+
+[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Video Settings"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_right = 60
+
+[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="FullscreenContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/FullscreenContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Fullscreen"
+vertical_alignment = 1
+
+[node name="FullscreenCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/FullscreenContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VsyncContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/VsyncContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "VSync"
+vertical_alignment = 1
+
+[node name="VsyncCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/VsyncContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ResolutionContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/ResolutionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Resolution"
+vertical_alignment = 1
+
+[node name="ResolutionOption" type="OptionButton" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/ResolutionContainer"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+selected = 2
+item_count = 3
+popup/item_0/text = "1280x720"
+popup/item_0/id = 0
+popup/item_1/text = "1600x900"
+popup/item_1/id = 1
+popup/item_2/text = "1920x1080"
+popup/item_2/id = 2
+
+[node name="Audio" type="ScrollContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 1
+
+[node name="AudioSettings" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 25
+
+[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Audio Settings"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_right = 60
+
+[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="MusicEnabledContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicEnabledContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Music Enabled"
+vertical_alignment = 1
+
+[node name="MusicEnabledCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicEnabledContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_vertical = 4
+button_pressed = true
+
+[node name="MusicVolumeContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicVolumeContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Music Volume"
+vertical_alignment = 1
+
+[node name="MusicVolumeSlider" type="HSlider" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicVolumeContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 4
+step = 5.0
+value = 80.0
+
+[node name="SfxEnabledContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxEnabledContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "SFX Enabled"
+vertical_alignment = 1
+
+[node name="SfxEnabledCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxEnabledContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_vertical = 4
+button_pressed = true
+
+[node name="SfxVolumeContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxVolumeContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "SFX Volume"
+vertical_alignment = 1
+
+[node name="SfxVolumeSlider" type="HSlider" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxVolumeContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 4
+step = 5.0
+value = 80.0
+
+[node name="MusicFolderContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicFolderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Music Folder"
+vertical_alignment = 1
+
+[node name="MusicFolderOption" type="OptionButton" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicFolderContainer"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="MusicTrackContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicTrackContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Music Track"
+vertical_alignment = 1
+
+[node name="MusicTrackOption" type="OptionButton" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicTrackContainer"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Gameplay" type="ScrollContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 2
+
+[node name="GameplaySettings" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 25
+
+[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Gameplay Settings"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_right = 60
+
+[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="HideCutscenesContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/HideCutscenesContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Hide Cutscenes"
+vertical_alignment = 1
+
+[node name="HideCutscenesCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/HideCutscenesContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ShowWelcomeNotifContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowWelcomeNotifContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Show Welcome Notification"
+vertical_alignment = 1
+
+[node name="ShowWelcomeNotifCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowWelcomeNotifContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ShowMusicNotifContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowMusicNotifContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Show Music Notifications"
+vertical_alignment = 1
+
+[node name="ShowMusicNotifCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowMusicNotifContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="NotificationDurationContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LabelContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer/LabelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Notification Duration"
+vertical_alignment = 1
+
+[node name="DurationValueLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer/LabelContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "10.0s"
+vertical_alignment = 1
+
+[node name="NotificationDurationSlider" type="HSlider" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 5.0
+max_value = 60.0
+value = 30.0
+
+[node name="ButtonMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 20
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonMargin"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="BackButton" type="Button" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonMargin/ButtonContainer"]
+custom_minimum_size = Vector2(140, 40)
+layout_mode = 2
+theme = ExtResource("2_qh4jj")
+text = "Back"

@@ -1,0 +1,107 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1yvtlqpxbqfm"]
+
+[ext_resource type="Script" path="res://scripts/ui/TurnStartPopup.gd" id="1_qqbxm"]
+[ext_resource type="Theme" uid="uid://c6uu8no3h0aqr" path="res://assets/themes/ironhaven_theme.tres" id="2_wd3ux"]
+
+[node name="TurnStartPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qqbxm")
+
+[node name="BackgroundDimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.501961)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(500, 350)
+layout_mode = 2
+theme = ExtResource("2_wd3ux")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/font_size = 28
+text = "New Turn"
+horizontal_alignment = 1
+
+[node name="SeasonLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/font_size = 32
+text = "SPRING"
+horizontal_alignment = 1
+
+[node name="MonthLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+theme_override_font_sizes/font_size = 24
+text = "Month: Thawing"
+horizontal_alignment = 1
+
+[node name="YearLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Year 1"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SeasonDescription" type="RichTextLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "[center]A time of [color=green]renewal[/color] and [color=yellow]growth[/color]. Plant your crops and prepare for the year ahead.[/center]"
+fit_content = true
+
+[node name="ResourceChangesLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Resource Modifiers:"
+horizontal_alignment = 1
+
+[node name="ResourceChanges" type="RichTextLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[center][color=green]Food: +20%[/color]
+[color=green]Wood: +10%[/color][/center]"
+fit_content = true
+
+[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Begin Turn"
+
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

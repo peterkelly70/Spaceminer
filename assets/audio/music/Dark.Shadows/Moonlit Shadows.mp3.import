@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cuhcrmm2usff7"
+path="res://.godot/imported/Moonlit Shadows.mp3-e0fdbd74d3cbb668cb2ec9bd3ee91de0.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/Dark.Shadows/Moonlit Shadows.mp3"
+dest_files=["res://.godot/imported/Moonlit Shadows.mp3-e0fdbd74d3cbb668cb2ec9bd3ee91de0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqe5s74eqfxae"]
+
+[ext_resource type="PackedScene" uid="uid://c4vq8jfvxrpvw" path="res://scenes/ui/popups/BasePopup.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://kyi2xad56e1t" path="res://scripts/ui/popups/GenericConfirmPopup.gd" id="2_gen"]
+
+[node name="GenericConfirmPopup" instance=ExtResource("1_base")]
+script = ExtResource("2_gen")
+
+[node name="TitleLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="0"]
+text = "CONFIRM ACTION"
+
+[node name="MessageLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="0"]
+layout_mode = 2
+text = "Are you sure?"
+autowrap_mode = 3
+
+[node name="CancelButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="0"]
+text = "NO"
+
+[node name="ConfirmButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="1"]
+text = "YES"

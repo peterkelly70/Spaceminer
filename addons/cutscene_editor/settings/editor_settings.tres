@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CutsceneEditorSettings" load_steps=2 format=3 uid="uid://cqygnth6xuj65"]
+
+[ext_resource type="Script" uid="uid://biu8a5iogy23e" path="res://addons/cutscene_editor/resources/CutsceneEditorSettings.gd" id="1_5e2si"]
+
+[resource]
+script = ExtResource("1_5e2si")
+cutscenes_dir = "res://assets/cutscenes"
+images_dir = "res://assets/images/"
+music_dir = "res://assets/audio/music"
+sfx_dir = "res://assets/audio/sfx"
+voiceover_dir = "res://assets/audio/voice"
+default_typing_speed = 0.05
+default_text_color = Color(1, 1, 1, 1)
+default_text_style = "default"
+default_text_anchor = "bottom"

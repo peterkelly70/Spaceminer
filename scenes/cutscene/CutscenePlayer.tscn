@@ -1,0 +1,136 @@
+[gd_scene load_steps=5 format=3 uid="uid://c8ywqvl8yt3xt"]
+
+[ext_resource type="Theme" uid="uid://dkr5ux3r0shjm" path="res://assets/themes/ironhaven_theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://l0fl5vgv7vmr" path="res://scripts/classes/CutscenePlayer.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://dp8wxsyri0vng" path="res://assets/images/theme_elements/theme_border_toedge_trans.png" id="3_pksfy"]
+[ext_resource type="Texture2D" uid="uid://snglnihk7khw" path="res://assets/images/cutscenes/Introduction/panel6.png" id="4_xj725"]
+
+[node name="CutscenePlayer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 10000
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_pksfy")
+expand_mode = 1
+
+[node name="MainContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 97.0
+offset_top = 71.0
+offset_right = -63.0
+offset_bottom = -113.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 60
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="FrameText" type="Panel" parent="MainContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/HBoxContainer/FrameText"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 22.0
+offset_top = 11.0
+offset_right = -18.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="StoryTextLabel" type="RichTextLabel" parent="MainContainer/HBoxContainer/FrameText/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 26
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/bold_italics_font_size = 26
+bbcode_enabled = true
+fit_content = true
+scroll_following = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="RightSideContainer" type="VBoxContainer" parent="MainContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FrameImage" type="TextureRect" parent="MainContainer/HBoxContainer/RightSideContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_theme")
+texture = ExtResource("4_xj725")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SceneControlContainer" type="MarginContainer" parent="MainContainer/HBoxContainer/RightSideContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/margin_top = 20
+
+[node name="SceneControl" type="HBoxContainer" parent="MainContainer/HBoxContainer/RightSideContainer/SceneControlContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 20
+
+[node name="NextButton" type="Button" parent="MainContainer/HBoxContainer/RightSideContainer/SceneControlContainer/SceneControl"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Next"
+
+[node name="Label" type="Label" parent="MainContainer/HBoxContainer/RightSideContainer/SceneControlContainer/SceneControl"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+
+[node name="SkipButton" type="Button" parent="MainContainer/HBoxContainer/RightSideContainer/SceneControlContainer/SceneControl"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Skip"
+
+[node name="ContinueButton" type="Button" parent="MainContainer/HBoxContainer/RightSideContainer/SceneControlContainer/SceneControl"]
+visible = false
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Continue"
+
+[node name="Label" type="Label" parent="."]
+z_index = 5
+layout_mode = 0
+offset_left = 1016.0
+offset_top = 73.0
+offset_right = 1806.0
+offset_bottom = 222.0
+theme = ExtResource("1_theme")
+theme_override_font_sizes/font_size = 43
+text = "IronHaven
+Forge of Kings"
+horizontal_alignment = 1

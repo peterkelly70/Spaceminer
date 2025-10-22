@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dkfh5438rnosp"
+path="res://.godot/imported/Castle of Shadows.mp3-b54de206ec6e816631b86cd3b27b3059.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/Dark.Shadows/Castle of Shadows.mp3"
+dest_files=["res://.godot/imported/Castle of Shadows.mp3-b54de206ec6e816631b86cd3b27b3059.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/aegis.png" id="1_7m0yd"]
+[ext_resource type="Script" path="res://scripts/controllers/Player.gd" id="2_0xk8p"]
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("2_0xk8p")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_7m0yd")
+centered = true
+scale = Vector2(0.25, 0.25)
+
+[node name="Muzzle" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, 0)

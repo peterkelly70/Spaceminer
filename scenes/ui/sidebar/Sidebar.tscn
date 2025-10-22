@@ -1,0 +1,908 @@
+[gd_scene load_steps=32 format=3 uid="uid://bvoaqbc2utc7p"]
+
+[ext_resource type="Script" uid="uid://c3rgtlljapvvc" path="res://scripts/views/sidebar.gd" id="1_fgqb1"]
+[ext_resource type="Theme" uid="uid://dkr5ux3r0shjm" path="res://assets/themes/ironhaven_theme.tres" id="1_on1ip"]
+[ext_resource type="FontFile" uid="uid://dsyry3yb8mu4u" path="res://assets/fonts/Khazad_Dum_Regular.ttf" id="2_fgqb1"]
+[ext_resource type="Texture2D" uid="uid://1riwxjbly413" path="res://assets/images/menu.png" id="3_cojsx"]
+[ext_resource type="Texture2D" uid="uid://baicvd4cu1poy" path="res://assets/images/menu.png" id="4_nhv7t"]
+[ext_resource type="Texture2D" uid="uid://ht7joqn40q8g" path="res://assets/images/menu.png" id="5_2urip"]
+[ext_resource type="Texture2D" uid="uid://bfidrcu66gbyg" path="res://assets/images/menu.png" id="6_vni8t"]
+[ext_resource type="Texture2D" uid="uid://q2fy4tc2v4ci" path="res://assets/images/menu.png" id="7_cqhic"]
+[ext_resource type="Texture2D" uid="uid://de01m6ik7pnts" path="res://assets/images/menu.png" id="8_xm8nx"]
+[ext_resource type="Texture2D" uid="uid://cxiwbhyxd0l2a" path="res://assets/images/menu.png" id="9_edvbb"]
+[ext_resource type="Texture2D" uid="uid://bb4g1u824lkaq" path="res://assets/images/menu.png" id="10_23ch1"]
+[ext_resource type="Texture2D" uid="uid://bldmjgr0letrf" path="res://assets/images/menu.png" id="11_5xb3i"]
+[ext_resource type="Texture2D" uid="uid://de3ky1bvaq0kt" path="res://assets/images/menu.png" id="12_jhbtk"]
+[ext_resource type="Texture2D" uid="uid://yd2bh70keggx" path="res://assets/images/menu.png" id="13_afub1"]
+[ext_resource type="Texture2D" uid="uid://d4ev7v8iydn61" path="res://assets/images/menu.png" id="14_4fsl6"]
+[ext_resource type="Texture2D" uid="uid://bj7nx33ef2kou" path="res://assets/images/menu.png" id="15_2kvm1"]
+[ext_resource type="Texture2D" uid="uid://cp3me7k8v68o2" path="res://assets/images/menu.png" id="16_kvaml"]
+[ext_resource type="Texture2D" uid="uid://c6xibjxnx6tqj" path="res://assets/images/menu.png" id="17_1xnkt"]
+[ext_resource type="Texture2D" uid="uid://cunkbsahu2qwn" path="res://assets/images/menu.png" id="18_rd3fy"]
+[ext_resource type="Texture2D" uid="uid://cqxoqffblix8u" path="res://assets/images/menu.png" id="19_bdetg"]
+[ext_resource type="Texture2D" uid="uid://bivye78lynjaa" path="res://assets/images/menu.png" id="20_j8duu"]
+[ext_resource type="Texture2D" uid="uid://b42x21ma16yy" path="res://assets/images/menu.png" id="21_qfor3"]
+[ext_resource type="Texture2D" uid="uid://djq622l3mlkbj" path="res://assets/images/menu.png" id="22_m0qqy"]
+[ext_resource type="Texture2D" uid="uid://bc2euaq2bjw6i" path="res://assets/images/menu.png" id="23_vdsiv"]
+[ext_resource type="Texture2D" uid="uid://c5uour26eephh" path="res://assets/images/menu.png" id="24_ma52w"]
+[ext_resource type="Texture2D" uid="uid://codkjik7iqcuj" path="res://assets/images/menu.png" id="25_0x30r"]
+[ext_resource type="Texture2D" uid="uid://tctlh5thhhdm" path="res://assets/images/menu.png" id="26_xcoav"]
+[ext_resource type="Texture2D" uid="uid://dxjww12iqwkn" path="res://assets/images/menu.png" id="27_hmhs3"]
+[ext_resource type="Texture2D" uid="uid://dgld0onamsbpa" path="res://assets/images/menu.png" id="28_vxx53"]
+[ext_resource type="Texture2D" uid="uid://crdqyq4fw8d5m" path="res://assets/images/menu.png" id="29_c61op"]
+[ext_resource type="Texture2D" uid="uid://lgpkwbfw0ru" path="res://assets/images/menu.png" id="30_fupd4"]
+
+[node name="SideBar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fgqb1")
+
+[node name="Container" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -1078.0
+offset_right = 357.0
+grow_vertical = 0
+theme = ExtResource("1_on1ip")
+
+[node name="MarginContainer" type="MarginContainer" parent="Container"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="TitleSection" type="VBoxContainer" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="GameTitle" type="Label" parent="Container/MarginContainer/VBoxContainer/TitleSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "IRONHAVEN"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Container/MarginContainer/VBoxContainer/TitleSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "FORGE OF KINGS"
+horizontal_alignment = 1
+
+[node name="SeasonSection" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Season" type="PanelContainer" parent="Container/MarginContainer/VBoxContainer/SeasonSection"]
+custom_minimum_size = Vector2(120, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/MarginContainer/VBoxContainer/SeasonSection/Season"]
+layout_mode = 2
+tooltip_text = "Current season affects resource generation and events."
+alignment = 1
+
+[node name="SeasonYear" type="Label" parent="Container/MarginContainer/VBoxContainer/SeasonSection/Season/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_fgqb1")
+theme_override_font_sizes/font_size = 18
+text = "SPRING - YEAR 1"
+horizontal_alignment = 1
+
+[node name="SeasonImage" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/SeasonSection/Season/VBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+tooltip_text = "Spring brings new growth. Resource generation is increased for [b]Wood[/b] and [b]Food[/b]."
+texture = ExtResource("3_cojsx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MonthName" type="Label" parent="Container/MarginContainer/VBoxContainer/SeasonSection/Season/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_on1ip")
+text = "Stonehammer"
+horizontal_alignment = 1
+
+[node name="ResourceSection" type="VBoxContainer" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Container/MarginContainer/VBoxContainer/ResourceSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "RESOURCES"
+horizontal_alignment = 1
+
+[node name="ResourceDisplay" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+alignment = 1
+
+[node name="ResourcePanel" type="PanelContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="ResourceGrid" type="GridContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="OreContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Ore: Essential raw material for crafting tools, weapons, and buildings."
+theme_override_constants/separation = 10
+
+[node name="OreIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/OreContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("4_nhv7t")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="OreLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/OreContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="StoneContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Stone: Used for constructing buildings and fortifications."
+theme_override_constants/separation = 10
+
+[node name="StoneIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/StoneContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("5_2urip")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StoneLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/StoneContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="GoldContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Gold: Currency for trading and purchasing luxury items."
+theme_override_constants/separation = 10
+
+[node name="GoldIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/GoldContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("6_vni8t")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GoldLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/GoldContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="WoodContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Wood: Basic building material for structures and tools."
+theme_override_constants/separation = 10
+
+[node name="WoodIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/WoodContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("7_cqhic")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WoodLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/WoodContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="FoodContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Food: Required to sustain your population and army."
+theme_override_constants/separation = 10
+
+[node name="FoodIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/FoodContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("8_xm8nx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FoodLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/FoodContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="GemsContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Gems: Rare magical resource used for advanced enchantments and artifacts."
+theme_override_constants/separation = 10
+
+[node name="GemsIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/GemsContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("9_edvbb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GemsLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/GemsContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="ManaContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Mana: Magical energy used for spells and enchantments."
+theme_override_constants/separation = 10
+
+[node name="ManaIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/ManaContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("10_23ch1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ManaLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/ManaContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="CrownContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Crowns: Royal favor or prestige currency."
+theme_override_constants/separation = 10
+
+[node name="CrownIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/CrownContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("11_5xb3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CrownLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/CrownContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="LoreContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Lore: Knowledge or story points."
+theme_override_constants/separation = 10
+
+[node name="LoreIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/LoreContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("12_jhbtk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LoreLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/LoreContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="RunesContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Runes: Magical symbols used for spells and upgrades."
+theme_override_constants/separation = 10
+
+[node name="RunesIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/RunesContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("13_afub1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RunesLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/RunesContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="ToolsContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Tools: Your stokcpile of tolls"
+theme_override_constants/separation = 10
+
+[node name="ToolsIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/ToolsContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("14_4fsl6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ToolsLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/ToolsContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="WeaponsContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Weapons: Your stockpile of weapons to equip your troops"
+theme_override_constants/separation = 10
+
+[node name="WeaponsTexture" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/WeaponsContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("15_2kvm1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WeaponsLabel" type="RichTextLabel" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay/ResourcePanel/MarginContainer/ResourceGrid/WeaponsContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[font_size=24][b]010/001+[/b][/font_size]"
+fit_content = true
+vertical_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="Container/MarginContainer/VBoxContainer/ResourceSection/ResourceDisplay"]
+layout_mode = 2
+
+[node name="WorkerSection" type="VBoxContainer" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "WORKERS"
+horizontal_alignment = 1
+
+[node name="WorkerDisplay" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/WorkerSection"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+alignment = 1
+
+[node name="WorkerPanel" type="PanelContainer" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="WorkerGrid" type="GridContainer" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 3
+
+[node name="Worker1Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MinerIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker1Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_kvaml")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MinerLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker1Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker2Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FarmerIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker2Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_1xnkt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FarmerLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker2Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker3Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LoggerIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker3Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_rd3fy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LoggerLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker3Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker4Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="QuarryworkerIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker4Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("19_bdetg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QuarryworkerLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker4Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker5Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SmithIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker5Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("20_j8duu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SmithLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker5Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker6Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CarpenterIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker6Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("21_qfor3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CarpenterLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker6Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker7Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StonemasonIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker7Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("22_m0qqy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StonemasonLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker7Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker8Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BrewerIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker8Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_vdsiv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BrewerLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker8Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker9Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AlchemistIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker9Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("24_ma52w")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AlchemistLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker9Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker10Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RunesmithIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker10Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("25_0x30r")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RunesmithLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker10Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker11Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LorekeeperIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker11Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("26_xcoav")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LorekeeperLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker11Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Worker12Container" type="Control" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StonespeakerIcon" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker12Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("27_hmhs3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StonespeakerLabel" type="Label" parent="Container/MarginContainer/VBoxContainer/WorkerSection/WorkerDisplay/WorkerPanel/MarginContainer/WorkerGrid/Worker12Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -20.0
+offset_right = 24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator6" type="HSeparator" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HSeparator5" type="HSeparator" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainMenuSection" type="VBoxContainer" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Container/MarginContainer/VBoxContainer/MainMenuSection"]
+layout_mode = 2
+theme = ExtResource("1_on1ip")
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/font_size = 22
+text = "Menu"
+horizontal_alignment = 1
+
+[node name="MenuButtons" type="GridContainer" parent="Container/MarginContainer/VBoxContainer/MainMenuSection"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 4
+columns = 2
+
+[node name="SaveButton" type="Button" parent="Container/MarginContainer/VBoxContainer/MainMenuSection/MenuButtons"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_fgqb1")
+theme_override_font_sizes/font_size = 18
+text = "SAVE GAME"
+
+[node name="LoadButton2" type="Button" parent="Container/MarginContainer/VBoxContainer/MainMenuSection/MenuButtons"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_fgqb1")
+theme_override_font_sizes/font_size = 18
+text = "LOAD GAME"
+
+[node name="MusicButton" type="Button" parent="Container/MarginContainer/VBoxContainer/MainMenuSection/MenuButtons"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_fgqb1")
+theme_override_font_sizes/font_size = 18
+text = "MUSIC"
+
+[node name="OptionsButton" type="Button" parent="Container/MarginContainer/VBoxContainer/MainMenuSection/MenuButtons"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_fgqb1")
+theme_override_font_sizes/font_size = 18
+text = "OPTIONS"
+
+[node name="MainMenuButton" type="Button" parent="Container/MarginContainer/VBoxContainer/MainMenuSection/MenuButtons"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_fgqb1")
+theme_override_font_sizes/font_size = 18
+text = "MAIN MENU"
+
+[node name="QuitButton" type="Button" parent="Container/MarginContainer/VBoxContainer/MainMenuSection/MenuButtons"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_fgqb1")
+theme_override_font_sizes/font_size = 18
+text = "QUIT GAME"
+
+[node name="HSeparator3" type="HSeparator" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="spacer" type="Control" parent="Container/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(250, 40)
+layout_mode = 2
+
+[node name="NextButton" type="TextureButton" parent="Container/MarginContainer/VBoxContainer/HBoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(60, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("28_vxx53")
+texture_pressed = ExtResource("29_c61op")
+texture_hover = ExtResource("30_fupd4")
+ignore_texture_size = true
+stretch_mode = 0

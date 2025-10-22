@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://da7bkqlrb7hri"
+path="res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 09 Answer to the Black Orb.mp3-e29b313379344b8a50a5d438e892ebfd.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/Karl Casey - Dark Synthwave Collection Vol. 1 - 09 Answer to the Black Orb.mp3"
+dest_files=["res://.godot/imported/Karl Casey - Dark Synthwave Collection Vol. 1 - 09 Answer to the Black Orb.mp3-e29b313379344b8a50a5d438e892ebfd.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

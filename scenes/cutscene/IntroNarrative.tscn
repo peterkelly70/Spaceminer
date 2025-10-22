@@ -1,0 +1,92 @@
+[gd_scene load_steps=4 format=3 uid="uid://cq4lfxo6uxdtc"]
+
+[ext_resource type="Theme" uid="uid://dkr5ux3r0shjm" path="res://assets/themes/ironhaven_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/views/intro_narrative_controller.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://eb0go0aklguj" path="res://assets/images/splash.png" id="3_bg"]
+
+[node name="IntroNarrative" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_bg")
+expand_mode = 1
+
+[node name="BackgroundDim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "The Song of Ironhaven"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="StoryText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
+text = "In the elder days, before the breaking of the high roads and the dimming of the forge-stars, there stood a city hewn from the bones of the world — [color=#ddb222]Ironhaven[/color], greatest of the deep strongholds. Its halls rang with hammers, its vaults glittered with gold and crystal, and its name was spoken with awe by dwarf, elf, and man alike.
+
+But pride is a double-edged axe. In their hunger for the hidden fire, the kings of Ironhaven delved deep — deeper than wisdom allowed, and deeper still. What they found none can say, for Ironhaven did not fall in battle, nor with a cry of warhorns. It was swallowed — by stone, by silence, and by time.
+
+The clans mourned. The line of kings was broken. And the city passed into legend, its name sung only in the old songs.
+
+[b]Until now.[/b]
+
+A map has come to light — old, brittle, marked with runes not spoken in an age. It speaks of sealed gates, of buried forges, and of a crown yet unclaimed. The southern clans, long without a throne, have stirred. They have cast their votes in the ancient way, and chosen [b]you[/b], last scion of the Ironhaven line.
+
+It falls to you to gather your kin, brave the long dark, and rekindle the forges.
+To raise halls from ruin.
+To bind clan to purpose.
+To restore what was lost.
+
+[color=#ddb222]Ironhaven must rise again — not as it was, but as it was always meant to be.[/color]"
+fit_content = true
+
+[node name="ContinueButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "Begin Journey"
