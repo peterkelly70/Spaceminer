@@ -106,6 +106,9 @@ func _ready() -> void:
 	Logger.info(self, "Transitioning to MAIN_MENU state")
 	State_Manager.change_state(GameState.GameState.MAIN_MENU)
 
+	# SAM-style retro speech announcement on game load
+	_speak_intro()
+
 	Logger.debug(self, "Child tree state (post-visibility):")
 	for node in container.get_children():
 		Logger.debug(self, " - %s" % node.name)
@@ -260,6 +263,17 @@ func _register_notification_settings() -> void:
 	)
 	
 	Logger.info(self, "Notification settings registration complete")
+
+# Play the retro speech intro line through a temporary AudioStreamPlayer.
+func _speak_intro() -> void:
+	var speech := RetroSpeech.new()
+	var player := AudioStreamPlayer.new()
+	add_child(player)
+	# VOICE_OLD_COMPUTER: 8 kHz, heavy crunch — classic C64 feel
+	speech.speak("Prepare to Blastoff", player, RetroSpeech.VOICE_OLD_COMPUTER)
+	# Remove the player node once playback finishes
+	player.finished.connect(player.queue_free)
+
 
 # Get a theme by name
 func get_ui_theme(theme_name: String):
