@@ -472,13 +472,18 @@ func _add_link(rooms: Dictionary, from_room_id: String, to_room_id: String, dire
 
 func _make_door(from_room_id: String, target_room_id: String, direction: String, requirement: String, is_forward: bool) -> Dictionary:
 	var position := _door_position(direction, is_forward)
-	var door_label := "Exit" if target_room_id == "campaign_complete" else target_room_id.replace("room_", "R")
 	var requires: Array[String] = []
 	if not requirement.is_empty():
 		requires.append(requirement)
-	door_label = door_label if is_forward else "Back"
+	# Clear, direction-based labels so the player can navigate at a glance
+	var dir_names := {"east": "EAST", "west": "WEST", "north": "UP", "south": "DOWN"}
+	var door_label := ""
 	if target_room_id == "campaign_complete":
-		door_label = "Exit"
+		door_label = "EXIT"
+	elif is_forward:
+		door_label = str(dir_names.get(direction, direction.to_upper()))
+	else:
+		door_label = "BACK"
 	return {
 		"name": "%s_to_%s" % [from_room_id, target_room_id],
 		"label": door_label,
@@ -523,8 +528,8 @@ func _build_room_data(room_info: Dictionary, graph: Dictionary, rng: RandomNumbe
 		})
 
 	var layout := _build_layout(role, room_info, exits, rng, layout_gen)
-	var support_solids := _make_exit_supports(exits)
-	layout["solids"].append_array(support_solids)
+	# Door landing ledges + ladders are now built inside the layout generator
+	# (before its reachability pass), so doors are always reachable.
 	var resolved_pickups := _resolve_pickups(room_info.get("pickups", []), layout["solids"], room_info)
 	var room_name := _room_name_for(room_info, index)
 	return {
@@ -621,16 +626,21 @@ func _build_spawns(exits: Array) -> Dictionary:
 		var dir := str(exit_data.get("direction", ""))
 		if dir.is_empty():
 			continue
+		# Landing ledge top (matches RoomLayoutGenerator._door_stand_y); player
+		# centre sits 16px above it so the feet rest on the ledge.
+		var stand_y := float((int(pos.y) / 16) * 16)
 		match dir:
 			"east":
-				# Player stands on east landing platform
-				spawns["east"] = [ROOM_HALF.x - 40.0, pos.y + sz.y * 0.5 - 8.0]
+				spawns["east"] = [ROOM_HALF.x - 40.0, stand_y - 16.0]
 			"west":
-				spawns["west"] = [-ROOM_HALF.x + 40.0, pos.y + sz.y * 0.5 - 8.0]
+				spawns["west"] = [-ROOM_HALF.x + 40.0, stand_y - 16.0]
 			"north":
 				spawns["north"] = [pos.x, -ROOM_HALF.y + 24.0]
 			"south":
-				spawns["south"] = [pos.x, ROOM_HALF.y - 56.0]
+				# The south doorway is a hole in the floor; arrive on solid floor
+				# beside it (player centre y=128 → feet on the 144 floor surface).
+				var off := -56.0 if pos.x > 0.0 else 56.0
+				spawns["south"] = [pos.x + off, 128.0]
 	return spawns
 
 func _build_main_layout(solids: Array, decor: Array, collectibles: Array, hazards: Array, enemies: Array, tile_layers: Array, room_info: Dictionary, exits: Array, rng: RandomNumberGenerator) -> void:

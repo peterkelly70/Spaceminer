@@ -208,15 +208,18 @@ func _arch_cavern(rng: RandomNumberGenerator, exits: Array) -> Array:
 func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
 	var build := _build_archetype(_pick_archetype(rng, room_index), rng, room_index, exits)
 	var platfs: Array = build["platfs"]
-	var floor_gaps: Array = build.get("floor_gaps", [])
+	var floor_gaps: Array = _merge_south_gaps(build.get("floor_gaps", []), exits)
+	platfs.append_array(_exit_landings(exits))
 	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
+	var ladders := _build_ladders(rng, platfs)
+	ladders.append_array(_exit_ladders(exits))
 	return {
 		"spawn":        [-300, 128],
 		"solids":       solids,
-		"ladders":      _build_ladders(rng, platfs),
+		"ladders":      ladders,
 		"decor":        _build_decor(rng, room_index),
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths, floor_gaps),
 		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
@@ -267,15 +270,18 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	var arche: int = [RoomArchetype.SHAFT, RoomArchetype.TOWERS, RoomArchetype.ISLANDS][rng.randi() % 3]
 	var build := _build_archetype(arche, rng, room_index, exits)
 	var platfs: Array = build["platfs"]
-	var floor_gaps: Array = build.get("floor_gaps", [])
+	var floor_gaps: Array = _merge_south_gaps(build.get("floor_gaps", []), exits)
+	platfs.append_array(_exit_landings(exits))
 	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
+	var ladders := _build_ladders(rng, platfs)
+	ladders.append_array(_exit_ladders(exits))
 	return {
 		"spawn":        [0, 128],
 		"solids":       solids,
-		"ladders":      _build_ladders(rng, platfs),
+		"ladders":      ladders,
 		"decor":        _build_decor(rng, room_index),
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths, floor_gaps),
 		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
@@ -311,6 +317,71 @@ func _build_ladders(rng: RandomNumberGenerator, platfs: Array) -> Array:
 		used_x.append(cx)
 		made += 1
 	return ladders
+
+# ── Door reachability ──────────────────────────────────────────────────────────
+# Every door gets a ledge to stand on, plus a ladder from the floor when it sits
+# high up, so doors are never stranded in mid-air. South doors instead carve a
+# hole in the floor so the player can drop through them.
+
+func _exit_landings(exits: Array) -> Array:
+	var out: Array = []
+	for e in exits:
+		var dir := str((e as Dictionary).get("direction", ""))
+		var pos := _v2((e as Dictionary).get("position", [0, 0]))
+		var sz := _v2((e as Dictionary).get("size", [40, 72]))
+		match dir:
+			"east":
+				out.append(_mk_plat("EastLanding", ROOM_HALF_W - 40, _door_stand_y(pos, dir), 80))
+			"west":
+				out.append(_mk_plat("WestLanding", -(ROOM_HALF_W - 40), _door_stand_y(pos, dir), 80))
+			"north":
+				out.append(_mk_plat("NorthLanding", int(pos.x), _door_stand_y(pos, dir), maxi(80, int(sz.x))))
+			# south doors use a floor gap (see _merge_south_gaps), no ledge
+	return out
+
+# Top-y of the ledge a door is entered onto — at the door's centre height so the
+# validator counts the door as grounded, snapped to the tile grid.
+func _door_stand_y(pos: Vector2, dir: String) -> int:
+	match dir:
+		"north":
+			return -ROOM_HALF_H + 40
+		_:
+			return (int(pos.y) / TILE_SZ) * TILE_SZ
+
+func _exit_ladders(exits: Array) -> Array:
+	var out: Array = []
+	for e in exits:
+		var dir := str((e as Dictionary).get("direction", ""))
+		var pos := _v2((e as Dictionary).get("position", [0, 0]))
+		var sz := _v2((e as Dictionary).get("size", [40, 72]))
+		var top := 0
+		var lx := 0
+		match dir:
+			"east":
+				top = _door_stand_y(pos, dir); lx = ROOM_HALF_W - 40
+			"west":
+				top = _door_stand_y(pos, dir); lx = -(ROOM_HALF_W - 40)
+			"north":
+				top = _door_stand_y(pos, dir); lx = int(pos.x)
+			_:
+				continue
+		if FLOOR_TOP_Y - top > int(float(LEVEL_STEP) * 1.2):
+			var bottom := FLOOR_TOP_Y
+			out.append({
+				"name": "DoorLadder_%s" % dir,
+				"position": [float(lx), float(top + bottom) * 0.5],
+				"size": [14.0, float(bottom - top)],
+			})
+	return out
+
+func _merge_south_gaps(gaps: Array, exits: Array) -> Array:
+	var out: Array = gaps.duplicate()
+	for e in exits:
+		if str((e as Dictionary).get("direction", "")) == "south":
+			var pos := _v2((e as Dictionary).get("position", [0, 0]))
+			var sz := _v2((e as Dictionary).get("size", [40, 72]))
+			out.append([pos.x - sz.x * 0.5 - 10.0, pos.x + sz.x * 0.5 + 10.0])
+	return out
 
 # ── Platform reachability depth (difficulty) ───────────────────────────────────
 # Hop-distance of each platform from the floor, using the same jump reach the
