@@ -138,74 +138,80 @@ func get_room_data(manifest: Dictionary, room_id: String) -> Dictionary:
 		return {}
 	return parsed
 
+const DIR_OFFSETS := {
+	"east": Vector2i(1, 0),
+	"west": Vector2i(-1, 0),
+	"north": Vector2i(0, -1),
+	"south": Vector2i(0, 1),
+}
+
+# Builds a non-linear, Metroidvania-style room graph on a 2D grid:
+#  - a snaking self-avoiding critical spine (room_000 .. room_019)
+#  - branches growing into free grid cells in any direction
+#  - occasional loop links between adjacent rooms (backtracking routes)
+#  - locked doors gated by abilities, verified winnable by a reachability BFS
 func _build_graph(seed: String, rng: RandomNumberGenerator) -> Dictionary:
 	var rooms: Dictionary = {}
 	var room_order: Array[String] = []
 	var critical_path: Array[String] = []
-	var map_links: Array = []
+	var pos_to_room: Dictionary = {}   # Vector2i -> room_id
 
-	for i in range(MAIN_PATH_ROOMS):
+	# 1. Critical spine — snaking self-avoiding walk
+	var path := _carve_path(rng, MAIN_PATH_ROOMS)
+	for i in range(path.size()):
+		var p: Vector2i = path[i]
 		var room_id := _room_id(i)
 		rooms[room_id] = {
-			"room_id": room_id,
-			"index": i,
-			"role": "critical",
+			"room_id": room_id, "index": i, "role": "critical",
 			"is_resupply": i in RESUPPLY_ROOM_INDICES,
-			"depth": i,
-			"branch_id": -1,
-			"branch_step": -1,
-			"branch_direction": "",
-			"map_pos": [i * 3, 0],
-			"doors": [],
-			"pickups": [],
+			"depth": i, "branch_id": -1, "branch_step": -1, "branch_direction": "",
+			"map_pos": [p.x, p.y], "doors": [], "pickups": [],
 		}
+		pos_to_room[p] = room_id
 		room_order.append(room_id)
 		critical_path.append(room_id)
+	for i in range(path.size() - 1):
+		_link_pos(rooms, pos_to_room, path[i], path[i + 1], "")
 
-	var next_room_index := MAIN_PATH_ROOMS
-	for branch_id in range(BRANCH_ATTACHMENTS.size()):
-		var attach_index := int(BRANCH_ATTACHMENTS[branch_id])
-		var attach_room_id := _room_id(attach_index)
-		var direction := str(BRANCH_DIRECTIONS[branch_id])
-		var gate := str(BRANCH_GATES[branch_id])
-		var length := int(BRANCH_LENGTHS[branch_id])
-		var parent_room_id := attach_room_id
-		for step in range(length):
-			var room_id := _room_id(next_room_index)
-			rooms[room_id] = {
-				"room_id": room_id,
-				"index": next_room_index,
-				"role": "branch",
-				"depth": attach_index + step + 1,
-				"branch_id": branch_id,
-				"branch_step": step,
-				"branch_direction": direction,
-				"map_pos": [attach_index * 3, (step + 1) * (-1 if direction == "north" else 1)],
-				"doors": [],
-				"pickups": [],
-			}
-			room_order.append(room_id)
-			_add_link(rooms, parent_room_id, room_id, direction, gate if step == 0 else "")
-			map_links.append({
-				"from": parent_room_id,
-				"to": room_id,
-				"direction": direction,
-				"requires": [gate] if step == 0 and not gate.is_empty() else [],
-			})
-			parent_room_id = room_id
-			next_room_index += 1
+	# 2. Branches into free cells, attached at spread-out spine rooms
+	var next_index := MAIN_PATH_ROOMS
+	var branch_id := 0
+	var remaining := TOTAL_ROOMS - MAIN_PATH_ROOMS
+	var attach_order := _shuffled_range(rng, 2, MAIN_PATH_ROOMS - 1)
+	for attach_index in attach_order:
+		if remaining <= 0:
+			break
+		var blen := mini(remaining, rng.randi_range(2, 5))
+		var gate := _branch_gate(rng, attach_index)
+		var grew := _grow_branch(rng, rooms, pos_to_room, room_order, _room_id(attach_index), attach_index, next_index, branch_id, blen, gate)
+		next_index += grew
+		remaining -= grew
+		if grew > 0:
+			branch_id += 1
 
-	for i in range(MAIN_PATH_ROOMS - 1):
-		var from_id := _room_id(i)
-		var to_id := _room_id(i + 1)
-		_add_link(rooms, from_id, to_id, "east", "")
-		map_links.append({
-			"from": from_id,
-			"to": to_id,
-			"direction": "east",
-			"requires": [],
-		})
+	# Fill pass — keep growing from any room with a free neighbour until we hit
+	# TOTAL_ROOMS, so the campaign always has the promised number of rooms.
+	while remaining > 0:
+		var host_id := _room_with_free_neighbor(rng, rooms, pos_to_room)
+		if host_id.is_empty():
+			break
+		var host_index := int((rooms[host_id] as Dictionary).get("index", 0))
+		var blen2 := mini(remaining, rng.randi_range(1, 4))
+		var gate2 := _branch_gate(rng, mini(host_index, MAIN_PATH_ROOMS - 1))
+		var grew2 := _grow_branch(rng, rooms, pos_to_room, room_order, host_id, host_index, next_index, branch_id, blen2, gate2)
+		if grew2 <= 0:
+			break
+		next_index += grew2
+		remaining -= grew2
+		branch_id += 1
 
+	# 3. Loop links between adjacent unlinked rooms (creates backtracking routes)
+	_add_loops(rng, rooms, pos_to_room)
+
+	# 4. Lock a couple of spine doors behind abilities obtained earlier
+	_assign_spine_gates(rooms, critical_path)
+
+	# 5. Equipment pickups along the spine
 	for room_id in rooms.keys():
 		var room_index := int((rooms[room_id] as Dictionary).get("index", 0))
 		if EQUIPMENT_PICKUPS.has(room_index):
@@ -217,12 +223,244 @@ func _build_graph(seed: String, rng: RandomNumberGenerator) -> Dictionary:
 				"scene": "res://scenes/prototype/EquipmentPickup.tscn",
 			})
 
+	# 6. Guarantee every room is reachable (open gates that would soft-lock)
+	_ensure_winnable(rooms)
+
 	return {
 		"rooms": rooms,
 		"room_order": room_order,
 		"critical_path": critical_path,
-		"map_links": map_links,
+		"map_links": _build_map_links(rooms),
 	}
+
+# ── Grid graph helpers ─────────────────────────────────────────────────────────
+
+# Randomized self-avoiding walk with an eastward bias and backtracking.
+func _carve_path(rng: RandomNumberGenerator, count: int) -> Array:
+	var dirs := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1)]
+	var path: Array = [Vector2i.ZERO]
+	var blocked: Dictionary = {Vector2i.ZERO: true}
+	while path.size() < count:
+		var cur: Vector2i = path[path.size() - 1]
+		var opts: Array = []
+		for d in dirs:
+			var n: Vector2i = cur + d
+			if not blocked.has(n):
+				opts.append(n)
+		if opts.is_empty():
+			if path.size() <= 1:
+				break
+			path.pop_back()
+			continue
+		var pick: Vector2i = opts[rng.randi() % opts.size()]
+		# Bias toward continuing eastward so the campaign trends in one direction
+		if rng.randf() < 0.45:
+			for o in opts:
+				if o.x > cur.x:
+					pick = o
+					break
+		blocked[pick] = true
+		path.append(pick)
+	return path
+
+func _dir_string(from: Vector2i, to: Vector2i) -> String:
+	var d := to - from
+	for key in DIR_OFFSETS:
+		if DIR_OFFSETS[key] == d:
+			return str(key)
+	return "east"
+
+func _has_door_dir(rooms: Dictionary, room_id: String, direction: String) -> bool:
+	for door in (rooms[room_id] as Dictionary).get("doors", []):
+		if str((door as Dictionary).get("direction", "")) == direction:
+			return true
+	return false
+
+func _link_pos(rooms: Dictionary, pos_to_room: Dictionary, a: Vector2i, b: Vector2i, gate: String) -> void:
+	if not pos_to_room.has(a) or not pos_to_room.has(b):
+		return
+	var from_id := str(pos_to_room[a])
+	var to_id := str(pos_to_room[b])
+	var dir := _dir_string(a, b)
+	if _has_door_dir(rooms, from_id, dir):
+		return
+	_add_link(rooms, from_id, to_id, dir, gate)
+
+func _free_neighbors(pos_to_room: Dictionary, p: Vector2i) -> Array:
+	var out: Array = []
+	for key in DIR_OFFSETS:
+		var n: Vector2i = p + DIR_OFFSETS[key]
+		if not pos_to_room.has(n):
+			out.append(n)
+	return out
+
+func _room_with_free_neighbor(rng: RandomNumberGenerator, rooms: Dictionary, pos_to_room: Dictionary) -> String:
+	var hosts: Array = []
+	for room_id in rooms.keys():
+		var p := _as_vec2i((rooms[room_id] as Dictionary).get("map_pos", [0, 0]))
+		if not _free_neighbors(pos_to_room, p).is_empty():
+			hosts.append(room_id)
+	if hosts.is_empty():
+		return ""
+	return str(hosts[rng.randi() % hosts.size()])
+
+func _grow_branch(rng: RandomNumberGenerator, rooms: Dictionary, pos_to_room: Dictionary, room_order: Array, attach_id: String, attach_index: int, start_index: int, branch_id: int, length: int, gate: String) -> int:
+	if not rooms.has(attach_id):
+		return 0
+	var cur_pos := _as_vec2i((rooms[attach_id] as Dictionary).get("map_pos", [0, 0]))
+	var grown := 0
+	for step in range(length):
+		var free := _free_neighbors(pos_to_room, cur_pos)
+		if free.is_empty():
+			break
+		var n: Vector2i = free[rng.randi() % free.size()]
+		var rid := _room_id(start_index + grown)
+		var attach_depth := int((rooms[attach_id] as Dictionary).get("depth", attach_index))
+		rooms[rid] = {
+			"room_id": rid, "index": start_index + grown, "role": "branch",
+			"is_resupply": false,
+			"depth": attach_depth + step + 1, "branch_id": branch_id, "branch_step": step,
+			"branch_direction": _dir_string(cur_pos, n),
+			"map_pos": [n.x, n.y], "doors": [], "pickups": [],
+		}
+		pos_to_room[n] = rid
+		room_order.append(rid)
+		_link_pos(rooms, pos_to_room, cur_pos, n, gate if step == 0 else "")
+		cur_pos = n
+		grown += 1
+	return grown
+
+func _add_loops(rng: RandomNumberGenerator, rooms: Dictionary, pos_to_room: Dictionary) -> void:
+	for p in pos_to_room.keys():
+		# Only check east and south to avoid considering each pair twice
+		for dir in ["east", "south"]:
+			var n: Vector2i = p + DIR_OFFSETS[dir]
+			if not pos_to_room.has(n):
+				continue
+			var from_id := str(pos_to_room[p])
+			if _has_door_dir(rooms, from_id, dir):
+				continue
+			if rng.randf() < 0.18:
+				_link_pos(rooms, pos_to_room, p, n, "")
+
+func _assign_spine_gates(rooms: Dictionary, critical_path: Array) -> void:
+	# Lock a few spine doors behind abilities the player already has by that point.
+	var gates := {9: "magnetic_boots", 13: "laser_pistol", 16: "shield"}
+	for k in gates:
+		if k + 1 >= critical_path.size():
+			continue
+		var ability := str(gates[k])
+		var pickup_index := _pickup_index_of(ability)
+		if pickup_index < 0 or pickup_index >= k:
+			continue
+		_set_gate(rooms, str(critical_path[k]), str(critical_path[k + 1]), ability)
+
+func _set_gate(rooms: Dictionary, from_id: String, to_id: String, ability: String) -> void:
+	for door in (rooms[from_id] as Dictionary).get("doors", []):
+		if str((door as Dictionary).get("target_room_id", "")) == to_id:
+			(door as Dictionary)["requires"] = [ability]
+			return
+
+func _branch_gate(rng: RandomNumberGenerator, attach_index: int) -> String:
+	# Gate ~60% of branches behind an ability obtainable before the attach point.
+	if rng.randf() > 0.6:
+		return ""
+	var available: Array = []
+	for key in EQUIPMENT_PICKUPS.keys():
+		if int(key) < attach_index:
+			available.append(str(EQUIPMENT_PICKUPS[key]))
+	if available.is_empty():
+		return ""
+	return str(available[rng.randi() % available.size()])
+
+func _pickup_index_of(ability: String) -> int:
+	for key in EQUIPMENT_PICKUPS.keys():
+		if str(EQUIPMENT_PICKUPS[key]) == ability:
+			return int(key)
+	return -1
+
+# Reachability with ability gating; opens any gate that would otherwise isolate a room.
+func _ensure_winnable(rooms: Dictionary) -> void:
+	for _pass in range(rooms.size()):
+		var reachable := _reachable_set(rooms)
+		if reachable.size() >= rooms.size():
+			return
+		# Find a locked door from a reachable room to an unreachable one and open it
+		var opened := false
+		for room_id in rooms.keys():
+			if not reachable.has(room_id):
+				continue
+			for door in (rooms[room_id] as Dictionary).get("doors", []):
+				var target := str((door as Dictionary).get("target_room_id", ""))
+				if target.is_empty() or reachable.has(target):
+					continue
+				if not (door as Dictionary).get("requires", []).is_empty():
+					(door as Dictionary)["requires"] = []
+					opened = true
+					break
+			if opened:
+				break
+		if not opened:
+			return
+
+func _reachable_set(rooms: Dictionary) -> Dictionary:
+	var reachable := {"room_000": true}
+	var have: Dictionary = {}
+	var changed := true
+	while changed:
+		changed = false
+		# Collect abilities from reachable rooms
+		for room_id in reachable.keys():
+			for pickup in (rooms[room_id] as Dictionary).get("pickups", []):
+				var item := str((pickup as Dictionary).get("item_id", ""))
+				if not item.is_empty() and not have.has(item):
+					have[item] = true
+					changed = true
+		# Expand through openable doors
+		for room_id in reachable.keys():
+			for door in (rooms[room_id] as Dictionary).get("doors", []):
+				var target := str((door as Dictionary).get("target_room_id", ""))
+				if target.is_empty() or target == "campaign_complete" or reachable.has(target):
+					continue
+				var ok := true
+				for req in (door as Dictionary).get("requires", []):
+					if not have.has(str(req)):
+						ok = false
+						break
+				if ok:
+					reachable[target] = true
+					changed = true
+	return reachable
+
+func _build_map_links(rooms: Dictionary) -> Array:
+	var links: Array = []
+	for room_id in rooms.keys():
+		for door in (rooms[room_id] as Dictionary).get("doors", []):
+			if not bool((door as Dictionary).get("forward", false)):
+				continue
+			links.append({
+				"from": room_id,
+				"to": str((door as Dictionary).get("target_room_id", "")),
+				"direction": str((door as Dictionary).get("direction", "")),
+				"requires": (door as Dictionary).get("requires", []),
+			})
+	return links
+
+func _shuffled_range(rng: RandomNumberGenerator, from: int, to: int) -> Array:
+	var arr: Array = []
+	for i in range(from, to):
+		arr.append(i)
+	for i in range(arr.size() - 1, 0, -1):
+		var j := rng.randi() % (i + 1)
+		var tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
+	return arr
+
+func _as_vec2i(value) -> Vector2i:
+	if value is Array and value.size() >= 2:
+		return Vector2i(int(value[0]), int(value[1]))
+	return Vector2i.ZERO
 
 func _add_link(rooms: Dictionary, from_room_id: String, to_room_id: String, direction: String, requirement: String) -> void:
 	var from_room: Dictionary = rooms[from_room_id]
@@ -251,6 +489,7 @@ func _make_door(from_room_id: String, target_room_id: String, direction: String,
 		"size": [40, 72],
 		"target_room_id": target_room_id,
 		"requires": requires,
+		"forward": is_forward,
 		"scene": "res://scenes/prototype/DoorZone.tscn",
 	}
 
@@ -263,11 +502,20 @@ func _build_room_data(room_info: Dictionary, graph: Dictionary, rng: RandomNumbe
 		var door: Dictionary = door_variant
 		exits.append(door.duplicate(true))
 	if room_id == "room_019":
+		# Place the campaign exit on whichever wall isn't already used by a door
+		var used_dirs := {}
+		for e in exits:
+			used_dirs[str((e as Dictionary).get("direction", ""))] = true
+		var exit_dir := "east"
+		for d in ["east", "west", "north", "south"]:
+			if not used_dirs.has(d):
+				exit_dir = d
+				break
 		exits.append({
 			"name": "campaign_exit",
 			"label": "EXIT",
-			"direction": "east",
-			"position": [320, -56],
+			"direction": exit_dir,
+			"position": _door_position(exit_dir, true),
 			"size": [40, 72],
 			"target_room_id": "campaign_complete",
 			"requires": [],
