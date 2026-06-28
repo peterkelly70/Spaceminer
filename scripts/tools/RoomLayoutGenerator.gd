@@ -633,6 +633,9 @@ func _build_solids(platfs: Array, exits: Array, floor_gaps: Array = []) -> Array
 			"position": [(sx0 + sx1) * 0.5, fy], "size": [sx1 - sx0, 16]})
 		idx += 1
 	_add_walls(solids, exits)
+	# Ceiling at the top
+	solids.append({"name": "Ceiling", "kind": "ceiling", "anchor": "bottom",
+		"position": [0, -float(ROOM_HALF_H)], "size": [660, 16]})
 	for p in platfs:
 		solids.append({
 			"name":     p["name"],
