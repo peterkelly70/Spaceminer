@@ -50,15 +50,131 @@ const HAZARD_SCENE   := "res://scenes/prototype/HazardZone.tscn"
 
 enum LayoutTheme { ASCENT, DESCENT, VALLEY, PEAK, PLATEAU, ZIGZAG }
 
+# Distinct structural room shapes — each builds a different kind of space.
+enum RoomArchetype { STAIRCASE, SHAFT, ISLANDS, TOWERS, VAULT, PIT, CAVERN }
+
+# ── Room archetypes ────────────────────────────────────────────────────────────
+
+func _pick_archetype(rng: RandomNumberGenerator, room_index: int) -> int:
+	if room_index == 0:
+		return RoomArchetype.STAIRCASE   # gentle intro room
+	var pool := [
+		RoomArchetype.STAIRCASE, RoomArchetype.SHAFT, RoomArchetype.ISLANDS,
+		RoomArchetype.TOWERS, RoomArchetype.VAULT, RoomArchetype.PIT,
+		RoomArchetype.CAVERN,
+	]
+	return pool[rng.randi() % pool.size()]
+
+# Returns { "platfs": Array, "floor_gaps": Array[[x0,x1]] }
+func _build_archetype(arche: int, rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
+	match arche:
+		RoomArchetype.SHAFT:     return {"platfs": _arch_shaft(rng)}
+		RoomArchetype.ISLANDS:   return {"platfs": _arch_islands(rng)}
+		RoomArchetype.TOWERS:    return {"platfs": _arch_towers(rng)}
+		RoomArchetype.VAULT:     return {"platfs": _arch_vault(rng)}
+		RoomArchetype.PIT:       return _arch_pit(rng)
+		RoomArchetype.CAVERN:    return {"platfs": _arch_cavern(rng, exits)}
+		_:                       return {"platfs": _arch_staircase(rng)}
+
+# Helper: a platform dict with derived cy/level, snapped to the tile grid.
+func _mk_plat(name: String, cx: int, top_y: int, width: int) -> Dictionary:
+	var sx := (cx / TILE_SZ) * TILE_SZ
+	var sy := (top_y / TILE_SZ) * TILE_SZ
+	var sw := maxi(TILE_SZ * 2, (width / TILE_SZ) * TILE_SZ)
+	return {
+		"name": name, "kind": "platform", "anchor": "top",
+		"cx": sx, "cy": sy + PLAT_THICK, "top_y": sy,
+		"width": sw, "level": _level_of(sy),
+	}
+
+func _level_of(top_y: int) -> int:
+	return clampi(int(round(float(FLOOR_TOP_Y - top_y) / float(LEVEL_STEP))) - 1, 0, LEVEL_COUNT - 1)
+
+# Diagonal flight of steps climbing across the room, with the odd back-step.
+func _arch_staircase(rng: RandomNumberGenerator) -> Array:
+	var out: Array = []
+	var dir := 1 if rng.randf() < 0.5 else -1
+	var steps := rng.randi_range(5, 7)
+	var lvl := 0
+	for i in range(steps):
+		var cx := -260 * dir + dir * int(round(float(i) * 520.0 / float(steps - 1)))
+		lvl = clampi(lvl + rng.randi_range(0, 1), 0, LEVEL_COUNT - 1)
+		var w: int = [64, 64, 80][rng.randi() % 3]
+		out.append(_mk_plat("Step%d" % i, cx, _level_top_y(lvl), w))
+	return out
+
+# A vertical climbing shaft: zig-zag rungs up one side, a wide landing on top.
+func _arch_shaft(rng: RandomNumberGenerator) -> Array:
+	var out: Array = []
+	var side := -1 if rng.randf() < 0.5 else 1
+	for k in range(1, LEVEL_COUNT):
+		var cx := side * (40 if k % 2 == 0 else 150)
+		out.append(_mk_plat("Rung%d" % k, cx, _level_top_y(k), 80))
+	out.append(_mk_plat("ShaftTop", side * 200, _level_top_y(LEVEL_COUNT - 1), 128))
+	# a lower platform on the opposite side to start the climb
+	out.append(_mk_plat("ShaftBase", -side * 180, _level_top_y(0), 96))
+	return out
+
+# Scattered floating islands at varied heights with deliberate gaps.
+func _arch_islands(rng: RandomNumberGenerator) -> Array:
+	var out: Array = []
+	var n := rng.randi_range(6, 9)
+	for i in range(n):
+		var cx := rng.randi_range(-280, 280)
+		var lvl := rng.randi_range(0, LEVEL_COUNT - 1)
+		var w: int = [48, 48, 64, 80][rng.randi() % 4]
+		out.append(_mk_plat("Isle%d" % i, cx, _level_top_y(lvl), w))
+	return out
+
+# Two or three vertical stacks separated by gaps, crossable near the top.
+func _arch_towers(rng: RandomNumberGenerator) -> Array:
+	var out: Array = []
+	var count := rng.randi_range(2, 3)
+	for t in range(count):
+		var tx := -240 + t * int(480.0 / float(maxi(count - 1, 1)))
+		var height := rng.randi_range(2, LEVEL_COUNT)
+		for k in range(height):
+			out.append(_mk_plat("Tower%d_%d" % [t, k], tx, _level_top_y(k), 64))
+	return out
+
+# A guarded reward: a climb leading to a high corner alcove (rich, deep loot).
+func _arch_vault(rng: RandomNumberGenerator) -> Array:
+	var out: Array = []
+	var corner := 1 if rng.randf() < 0.5 else -1
+	# stepping platforms climbing toward the corner
+	for k in range(LEVEL_COUNT):
+		var cx := -corner * 220 + corner * int(round(float(k) * 440.0 / float(LEVEL_COUNT - 1)))
+		out.append(_mk_plat("Climb%d" % k, cx, _level_top_y(k), 72))
+	# the vault ledge tucked in the top corner
+	out.append(_mk_plat("Vault", corner * 270, _level_top_y(LEVEL_COUNT - 1), 96))
+	return out
+
+# A chasm in the floor with a narrow bridge across and side ledges.
+func _arch_pit(rng: RandomNumberGenerator) -> Dictionary:
+	var out: Array = []
+	var half := rng.randi_range(96, 144)
+	out.append(_mk_plat("Bridge", 0, _level_top_y(1), 96))
+	out.append(_mk_plat("LedgeL", -240, _level_top_y(0), 96))
+	out.append(_mk_plat("LedgeR", 240, _level_top_y(0), 96))
+	out.append(_mk_plat("PerchL", -120, _level_top_y(2), 64))
+	out.append(_mk_plat("PerchR", 120, _level_top_y(2), 64))
+	return {"platfs": out, "floor_gaps": [[-half, half]]}
+
+# Organic scatter — the original height-walk plus extra shelves, more size variety.
+func _arch_cavern(rng: RandomNumberGenerator, exits: Array) -> Array:
+	var target := _exit_target_level(exits, "east")
+	var levels := _gen_levels(rng, _pick_theme(rng, 1), target)
+	var out := _levels_to_platforms(levels)
+	out.append_array(_extra_platforms(rng, out, exits))
+	return out
+
 # ── Public API ─────────────────────────────────────────────────────────────────
 
 func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
-	var target := _exit_target_level(exits, "east")
-	var theme   := _pick_theme(rng, room_index)
-	var levels  := _gen_levels(rng, theme, target)
-	var platfs  := _levels_to_platforms(levels)
-	platfs.append_array(_extra_platforms(rng, platfs, exits))
-	var solids  := _build_solids(platfs, exits)
+	var build := _build_archetype(_pick_archetype(rng, room_index), rng, room_index, exits)
+	var platfs: Array = build["platfs"]
+	var floor_gaps: Array = build.get("floor_gaps", [])
+	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
@@ -67,10 +183,10 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 		"solids":       solids,
 		"ladders":      _build_ladders(rng, platfs),
 		"decor":        _build_decor(rng, room_index),
-		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths),
-		"hazards":      _place_hazards(rng, platfs, room_index),
+		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths, floor_gaps),
+		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
 		"enemies":      enemy_result[0],
-		"tile_layers":  _build_tiles(platfs, room_index),
+		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
 	}
 
 func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
@@ -112,8 +228,12 @@ func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array
 	}
 
 func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
-	var platfs := _branch_platforms(rng, exits)
-	var solids := _build_solids(platfs, exits)
+	# Branches use the vertical-friendly archetypes (shaft / towers / islands)
+	var arche: int = [RoomArchetype.SHAFT, RoomArchetype.TOWERS, RoomArchetype.ISLANDS][rng.randi() % 3]
+	var build := _build_archetype(arche, rng, room_index, exits)
+	var platfs: Array = build["platfs"]
+	var floor_gaps: Array = build.get("floor_gaps", [])
+	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
@@ -122,10 +242,10 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 		"solids":       solids,
 		"ladders":      _build_ladders(rng, platfs),
 		"decor":        _build_decor(rng, room_index),
-		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths),
-		"hazards":      _place_hazards(rng, platfs, room_index),
+		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths, floor_gaps),
+		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
 		"enemies":      enemy_result[0],
-		"tile_layers":  _build_tiles(platfs, room_index),
+		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
 	}
 
 # ── Ladders ──────────────────────────────────────────────────────────────────
@@ -351,9 +471,19 @@ func _branch_platforms(rng: RandomNumberGenerator, _exits: Array) -> Array:
 
 # ── Solids (floor + walls + platforms) ────────────────────────────────────────
 
-func _build_solids(platfs: Array, exits: Array) -> Array:
+func _build_solids(platfs: Array, exits: Array, floor_gaps: Array = []) -> Array:
 	var solids: Array = []
-	solids.append({"name": "Floor", "kind": "floor", "anchor": "top", "position": [0, FLOOR_Y_CTR - PLAT_THICK], "size": [660, 16]})
+	# Floor built as segments so archetypes can carve chasms into it
+	var fy := FLOOR_Y_CTR - PLAT_THICK
+	var idx := 0
+	for seg in _floor_segments(floor_gaps, -330, 330):
+		var sx0: float = seg[0]
+		var sx1: float = seg[1]
+		if sx1 - sx0 < 8.0:
+			continue
+		solids.append({"name": "Floor%d" % idx, "kind": "floor", "anchor": "top",
+			"position": [(sx0 + sx1) * 0.5, fy], "size": [sx1 - sx0, 16]})
+		idx += 1
 	_add_walls(solids, exits)
 	for p in platfs:
 		solids.append({
@@ -365,6 +495,30 @@ func _build_solids(platfs: Array, exits: Array) -> Array:
 			"one_way":  true,
 		})
 	return solids
+
+# Returns the solid x-spans of the floor with the given gaps carved out.
+func _floor_segments(gaps: Array, left: float, right: float) -> Array:
+	if gaps.is_empty():
+		return [[left, right]]
+	var sorted := gaps.duplicate()
+	sorted.sort_custom(func(a, b): return float(a[0]) < float(b[0]))
+	var segs: Array = []
+	var cursor := left
+	for g in sorted:
+		var g0: float = maxf(left, float(g[0]))
+		var g1: float = minf(right, float(g[1]))
+		if g0 > cursor:
+			segs.append([cursor, g0])
+		cursor = maxf(cursor, g1)
+	if cursor < right:
+		segs.append([cursor, right])
+	return segs
+
+func _in_gaps(x: float, gaps: Array) -> bool:
+	for g in gaps:
+		if x >= float(g[0]) and x <= float(g[1]):
+			return true
+	return false
 
 func _add_walls(solids: Array, exits: Array) -> void:
 	for side in ["east", "west", "north", "south"]:
@@ -538,7 +692,7 @@ func _item_rest_offset(scene: String) -> float:
 		AIR_SCENE:     return 4.0    # SpaceMiner 16px × 0.5 = 8 → half 4
 	return 8.0
 
-func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enemy_plat_names: Array = [], depths: Dictionary = {}) -> Array:
+func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enemy_plat_names: Array = [], depths: Dictionary = {}, floor_gaps: Array = []) -> Array:
 	var items: Array = []
 	var idx := 0
 	for p in platfs:
@@ -573,13 +727,16 @@ func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enem
 			idx += 1
 	for i in range(rng.randi_range(1, 3)):
 		var scene := AIR_SCENE if rng.randf() < 0.3 else ORE_SCENE
+		var fx := float(rng.randi_range(-280, 280))
+		if _in_gaps(fx, floor_gaps):
+			continue
 		items.append({"name": "Floor_%02d" % i, "scene": scene,
-			"position": [float(rng.randi_range(-280, 280)), float(FLOOR_TOP_Y) - _item_rest_offset(scene)]})
+			"position": [fx, float(FLOOR_TOP_Y) - _item_rest_offset(scene)]})
 	return items
 
 # ── Hazards ────────────────────────────────────────────────────────────────────
 
-func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int) -> Array:
+func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int, floor_gaps: Array = []) -> Array:
 	if room_index < 3:
 		return []
 	var hz: Array = []
@@ -588,6 +745,9 @@ func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int) 
 		if rng.randf() < chance:
 			# Offset spike from platform centre so it's a gap hazard, not an item blocker
 			var hx := float(p["cx"]) + rng.randi_range(-24, 24)
+			# Don't place floor spikes over a chasm (they'd float in mid-air)
+			if _in_gaps(hx, floor_gaps):
+				continue
 			hz.append({"name": "Spikes_%s" % p["name"], "scene": HAZARD_SCENE,
 				"position": [hx, float(FLOOR_Y_CTR - PLAT_THICK - 8)]})
 	return hz
@@ -628,7 +788,7 @@ func _place_enemies(rng: RandomNumberGenerator, platfs: Array, room_index: int) 
 
 # ── Tile layers ────────────────────────────────────────────────────────────────
 
-func _build_tiles(platfs: Array, room_index: int) -> Array:
+func _build_tiles(platfs: Array, room_index: int, floor_gaps: Array = []) -> Array:
 	var layers: Array = []
 	var floor_col     := _room_color(room_index)
 
@@ -636,11 +796,15 @@ func _build_tiles(platfs: Array, room_index: int) -> Array:
 	# so shape top (walkable surface) = 160-16 = 144 = 9×16 → tile row 9.
 	var floor_tile_y  := (FLOOR_Y_CTR - PLAT_THICK) / TILE_SZ   # = 9
 
-	# Floor strip — full room width wall-to-wall (44 tiles: x=-22..21)
+	# Floor strip — full room width wall-to-wall, minus any carved chasms
 	var fc: Array = []
 	var wall_tx := WALL_X / TILE_SZ   # = 22
 	for i in range(wall_tx * 2):
-		fc.append({"x": i - wall_tx, "y": floor_tile_y, "tile": [175, 176, 177, 178][i % 4]})
+		var tx := i - wall_tx
+		var world_cx := float(tx) * TILE_SZ + TILE_SZ * 0.5
+		if _in_gaps(world_cx, floor_gaps):
+			continue
+		fc.append({"x": tx, "y": floor_tile_y, "tile": [175, 176, 177, 178][i % 4]})
 	layers.append({"name": "FloorTiles", "modulate": floor_col, "z_index": 1, "cells": fc})
 
 	# Platform strips — tile row matches the collision surface precisely.
