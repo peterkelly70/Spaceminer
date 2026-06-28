@@ -60,13 +60,14 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 	platfs.append_array(_extra_platforms(rng, platfs, exits))
 	var solids  := _build_solids(platfs, exits)
 	_ensure_path(solids, rng)
-	var enemy_result := _place_enemies_tracked(rng, platfs, room_index)
+	var depths := _platform_depths(platfs)
+	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
 	return {
 		"spawn":        [-300, 128],
 		"solids":       solids,
 		"ladders":      _build_ladders(rng, platfs),
 		"decor":        _build_decor(rng, room_index),
-		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1]),
+		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths),
 		"hazards":      _place_hazards(rng, platfs, room_index),
 		"enemies":      enemy_result[0],
 		"tile_layers":  _build_tiles(platfs, room_index),
@@ -114,13 +115,14 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	var platfs := _branch_platforms(rng, exits)
 	var solids := _build_solids(platfs, exits)
 	_ensure_path(solids, rng)
-	var enemy_result := _place_enemies_tracked(rng, platfs, room_index)
+	var depths := _platform_depths(platfs)
+	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
 	return {
 		"spawn":        [0, 128],
 		"solids":       solids,
 		"ladders":      _build_ladders(rng, platfs),
 		"decor":        _build_decor(rng, room_index),
-		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1]),
+		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths),
 		"hazards":      _place_hazards(rng, platfs, room_index),
 		"enemies":      enemy_result[0],
 		"tile_layers":  _build_tiles(platfs, room_index),
@@ -154,6 +156,59 @@ func _build_ladders(rng: RandomNumberGenerator, platfs: Array) -> Array:
 		used_x.append(cx)
 		made += 1
 	return ladders
+
+# ── Platform reachability depth (difficulty) ───────────────────────────────────
+# Hop-distance of each platform from the floor, using the same jump reach the
+# player has. Higher depth = harder to get to = more rewarding loot, and the
+# platforms that gate access to deeper ones make good enemy posts.
+func _platform_depths(platfs: Array) -> Dictionary:
+	var n := platfs.size()
+	var depth: Dictionary = {}   # index -> hop count
+	var queue: Array = []
+	# Seed: platforms the player can jump to directly from the floor
+	for i in range(n):
+		var top := float(platfs[i]["top_y"])
+		if float(FLOOR_TOP_Y) - top <= MAX_JUMP_UP and top <= float(FLOOR_TOP_Y):
+			depth[i] = 1
+			queue.append(i)
+	# BFS across jumpable platform pairs
+	while not queue.is_empty():
+		var cur: int = queue.pop_front()
+		for j in range(n):
+			if j == cur or depth.has(j):
+				continue
+			if _platforms_jumpable(platfs[cur], platfs[j]):
+				depth[j] = int(depth[cur]) + 1
+				queue.append(j)
+	var out: Dictionary = {}
+	for i in range(n):
+		# Unreachable platforms (rare; _ensure_path bridges most) count as deep
+		out[str(platfs[i]["name"])] = int(depth.get(i, 6))
+	return out
+
+func _platforms_jumpable(a: Dictionary, b: Dictionary) -> bool:
+	var ahw := float(a["width"]) * 0.5
+	var bhw := float(b["width"]) * 0.5
+	var ax := float(a["cx"])
+	var bx := float(b["cx"])
+	var hg := 0.0
+	if ax + ahw < bx - bhw:
+		hg = (bx - bhw) - (ax + ahw)
+	elif bx + bhw < ax - ahw:
+		hg = (ax - ahw) - (bx + bhw)
+	var vg := absf(float(a["top_y"]) - float(b["top_y"]))
+	return hg <= MAX_JUMP_GAP and vg <= MAX_JUMP_UP
+
+# A platform is a "gateway" if it can reach a strictly deeper platform — i.e. it
+# guards the route to harder-to-reach loot, so it's a natural enemy post.
+func _is_gateway(p: Dictionary, platfs: Array, depths: Dictionary) -> bool:
+	var my_depth := int(depths.get(str(p["name"]), 6))
+	for other in platfs:
+		if other["name"] == p["name"]:
+			continue
+		if int(depths.get(str(other["name"]), 6)) > my_depth and _platforms_jumpable(p, other):
+			return true
+	return false
 
 # ── Extra platforms for JSW variety and door connectivity ─────────────────────
 # Adds 2-4 narrow "shelf" platforms between the main grid columns, and a
@@ -483,31 +538,38 @@ func _item_rest_offset(scene: String) -> float:
 		AIR_SCENE:     return 4.0    # SpaceMiner 16px × 0.5 = 8 → half 4
 	return 8.0
 
-func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enemy_plat_names: Array = []) -> Array:
+func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enemy_plat_names: Array = [], depths: Dictionary = {}) -> Array:
 	var items: Array = []
 	var idx := 0
 	for p in platfs:
 		# Skip platforms with enemies — player must navigate around them to reach adjacent items
 		if p["name"] in enemy_plat_names:
 			continue
-		var count := 1 + (1 if p["level"] >= 2 else 0)
+		# Difficulty tier = how hard the platform is to reach. Deeper = richer loot.
+		var depth := int(depths.get(str(p["name"]), 1))
+		var tier := maxi(int(p["level"]), depth - 1)
+		var count := 1 + (1 if tier >= 2 else 0) + (1 if tier >= 4 else 0)
 		for j in range(count):
 			var ox := float(p["cx"]) + float(j) * 20.0 - 10.0
 			var roll := rng.randf()
 			var scene := ORE_SCENE
 			var name_prefix := "Ore"
-			if p["level"] >= 3 and roll < 0.25:
+			if tier >= 3 and roll < 0.25:
 				scene = AIR_SCENE
 				name_prefix = "Air"
-			elif p["level"] >= 2 and roll < 0.15:
+			elif tier >= 2 and roll < 0.15:
 				scene = FUEL_SCENE
 				name_prefix = "Fuel"
-			elif p["level"] >= 2 and roll < 0.08:
+			elif tier >= 2 and roll < 0.08:
 				scene = BATTERY_SCENE
 				name_prefix = "Bat"
 			var oy := float(p["top_y"]) - _item_rest_offset(scene)
-			items.append({"name": "%s_%02d" % [name_prefix, idx],
-				"scene": scene, "position": [ox, oy]})
+			var entry := {"name": "%s_%02d" % [name_prefix, idx],
+				"scene": scene, "position": [ox, oy]}
+			# Deeper ore is worth more
+			if scene == ORE_SCENE and depth >= 2:
+				entry["props"] = {"amount": 1 + mini(depth - 1, 4)}
+			items.append(entry)
 			idx += 1
 	for i in range(rng.randi_range(1, 3)):
 		var scene := AIR_SCENE if rng.randf() < 0.3 else ORE_SCENE
@@ -533,13 +595,18 @@ func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int) 
 # ── Enemies ────────────────────────────────────────────────────────────────────
 
 # Returns [enemies_array, enemy_platform_name_array]
-func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_index: int) -> Array:
+func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_index: int, depths: Dictionary = {}) -> Array:
 	if room_index < 2:
 		return [[], []]
 	var enm: Array = []
 	var enemy_names: Array = []
-	var chance := minf(0.4, float(room_index) * 0.02)
+	var base_chance := minf(0.4, float(room_index) * 0.02)
 	for p in platfs:
+		# Gateways (platforms guarding the route to deeper loot) are prime enemy
+		# posts, so they get a much higher spawn chance.
+		var chance := base_chance
+		if _is_gateway(p, platfs, depths):
+			chance = minf(0.8, base_chance + 0.35)
 		if rng.randf() < chance:
 			var pw := float(p["width"])
 			enm.append({
