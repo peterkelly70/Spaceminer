@@ -264,6 +264,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 		"enemies":      enemy_result[0],
 		"mechanisms":   mechanisms,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
+		"exits":        exits,
 	}
 
 func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
@@ -329,6 +330,7 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 		"enemies":      enemy_result[0],
 		"mechanisms":   mechanisms,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
+		"exits":        exits,
 	}
 
 # ── Ladders ──────────────────────────────────────────────────────────────────
