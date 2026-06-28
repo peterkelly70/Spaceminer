@@ -892,12 +892,14 @@ func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int, 
 				hz.append({"name": "Spikes_%d" % idx, "scene": HAZARD_SCENE,
 					"position": [hx, float(FLOOR_Y_CTR - PLAT_THICK - 8)]})
 			elif roll < 0.85:
+				var fire_dirs := ["up", "down", "left", "right"]
 				hz.append({"name": "FirePipe_%d" % idx, "scene": FIRE_PIPE_SCENE,
 					"position": [hx, float(p["top_y"]) - 24.0],
 					"props": {
 						"period": rng.randf_range(1.5, 2.5),
 						"on_time": rng.randf_range(0.5, 0.9),
 						"phase": rng.randf_range(0.0, 2.0),
+						"direction": fire_dirs[rng.randi() % fire_dirs.size()],
 					}})
 			else:
 				hz.append({"name": "MovingSpike_%d" % idx, "scene": MOVING_SPIKE_SCENE,

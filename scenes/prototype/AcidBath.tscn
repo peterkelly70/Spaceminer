@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://scripts/prototype/hazard_zone.gd" id="1_hz"]
+[ext_resource type="Script" path="res://scripts/prototype/acid_bath.gd" id="1_acid"]
 [ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0175.png" id="2_acid"]
 
 [sub_resource type="RectangleShape2D" id="1_shape"]
@@ -10,7 +10,7 @@ size = Vector2(96, 12)
 collision_layer = 0
 collision_mask = 1
 monitorable = true
-script = ExtResource("1_hz")
+script = ExtResource("1_acid")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -6)
