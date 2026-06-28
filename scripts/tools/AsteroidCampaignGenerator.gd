@@ -42,24 +42,106 @@ const MAIN_ROOM_NAMES := [
 	"Exit Chamber"
 ]
 
-# Room names drawn from sci-fi episode titles (Star Trek, Star Wars, Blake's 7,
-# Doctor Who, Stargate). Assigned by room index so each room is distinct.
+# Room names drawn from a large pool of sci-fi episode/film titles (Star Trek,
+# Star Wars, Blake's 7, Doctor Who, Stargate). The pool is shuffled per seed so
+# each campaign names its rooms differently.
 const EPISODE_NAMES := [
-	"Where No Man Has Gone Before", "Balance of Terror", "The Menagerie",
-	"Space Seed", "The Doomsday Machine", "Mirror, Mirror", "Amok Time",
-	"The Trouble with Tribbles", "The Best of Both Worlds", "Yesterday's Enterprise",
-	"The Inner Light", "Cause and Effect", "Darmok",
+	# Star Trek (TOS / TNG / DS9 / VOY / ENT)
+	"The Man Trap", "Charlie X", "The Naked Time", "The Enemy Within",
+	"Where No Man Has Gone Before", "The Corbomite Maneuver", "The Menagerie",
+	"Balance of Terror", "Shore Leave", "The Galileo Seven", "Arena",
+	"Tomorrow Is Yesterday", "Space Seed", "This Side of Paradise",
+	"The Devil in the Dark", "Errand of Mercy", "The City on the Edge of Forever",
+	"Amok Time", "The Changeling", "Mirror, Mirror", "The Doomsday Machine",
+	"Journey to Babel", "The Trouble with Tribbles", "A Piece of the Action",
+	"The Immunity Syndrome", "Return to Tomorrow", "The Ultimate Computer",
+	"Encounter at Farpoint", "Where No One Has Gone Before", "Datalore",
+	"Heart of Glory", "Conspiracy", "The Measure of a Man", "Q Who",
+	"The Best of Both Worlds", "Family", "Brothers", "Reunion", "The Wounded",
+	"First Contact", "The Drumhead", "Redemption", "Darmok", "Cause and Effect",
+	"The Inner Light", "Chain of Command", "Tapestry", "The Chase",
+	"Lower Decks", "All Good Things", "Emissary", "Duet", "The Maquis",
+	"The Wire", "The Jem'Hadar", "The Search", "Past Tense",
+	"The Way of the Warrior", "Trials and Tribble-ations", "In the Pale Moonlight",
+	"Far Beyond the Stars", "Sacrifice of Angels", "What You Leave Behind",
+	"Caretaker", "Deadlock", "Scorpion", "Year of Hell", "Timeless",
+	"Dark Frontier", "Equinox", "Blink of an Eye", "Endgame",
+	"Broken Bow", "Shuttlepod One", "Dead Stop", "The Expanse", "Similitude",
+	"Azati Prime", "In a Mirror, Darkly",
+	# Star Wars (films + Clone Wars + Rebels + Mandalorian + Andor)
 	"A New Hope", "The Empire Strikes Back", "Return of the Jedi",
-	"Rogue One", "Shadow of Malevolence", "Storm Over Ryloth", "Twilight",
+	"The Phantom Menace", "Attack of the Clones", "Revenge of the Sith",
+	"The Force Awakens", "The Last Jedi", "Rogue One", "Solo",
+	"Ambush", "Rising Malevolence", "Shadow of Malevolence", "Rookies",
+	"Lair of Grievous", "Storm Over Ryloth", "Innocents of Ryloth",
+	"Liberty on Ryloth", "Landing at Point Rain", "Legacy of Terror",
+	"Brain Invaders", "Grievous Intrigue", "The Deserter", "The Mandalore Plot",
+	"Voyage of Temptation", "Duchess of Mandalore", "Lethal Trackdown",
+	"Spark of Rebellion", "Rise of the Old Masters", "Call to Action",
+	"Twilight of the Apprentice", "Steps Into Shadow", "Twin Suns", "Zero Hour",
+	"Chapter 1: The Mandalorian", "Sanctuary", "The Reckoning", "Redemption",
+	"Kassa", "One Way Out", "Rix Road",
+	# Blake's 7
 	"The Way Back", "Spacefall", "Cygnus Alpha", "Time Squad", "The Web",
-	"Seek-Locate-Destroy", "Orac", "Redemption", "Star One", "Aftermath",
-	"Rumours of Death", "Death-Watch", "Blake",
-	"An Unearthly Child", "The Daleks", "Genesis of the Daleks", "City of Death",
-	"The Caves of Androzani", "Blink", "The Empty Child", "Dalek",
-	"Silence in the Library", "Heaven Sent", "Midnight", "The Eleventh Hour",
-	"Children of the Gods", "The Nox", "The Fifth Race", "Window of Opportunity",
-	"Heroes", "Lost City", "Threads", "Unending", "Continuum", "Moebius",
-	"Beachhead", "The Pegasus Galaxy", "Rising", "Trinity", "The Siege",
+	"Seek-Locate-Destroy", "Mission to Destiny", "Duel", "Project Avalon",
+	"Breakdown", "Bounty", "Deliverance", "Orac", "Shadow", "Weapon",
+	"Horizon", "Pressure Point", "Trial", "Killer", "Hostage", "Countdown",
+	"Gambit", "The Keeper", "Star One", "Aftermath", "Powerplay", "Volcano",
+	"Dawn of the Gods", "The Harvest of Kairos", "City at the Edge of the World",
+	"Children of Auron", "Rumours of Death", "Sarcophagus", "Ultraworld",
+	"Moloch", "Death-Watch", "Terminal", "Rescue", "Power", "Traitor",
+	"Stardrive", "Animals", "Headhunter", "Assassin", "Games", "Sand", "Gold",
+	"Orbit", "Warlord", "Blake",
+	# Doctor Who (classic + modern)
+	"An Unearthly Child", "The Daleks", "The Edge of Destruction", "The Aztecs",
+	"The Dalek Invasion of Earth", "The Chase", "The Time Meddler",
+	"The Tenth Planet", "The Power of the Daleks", "The Moonbase",
+	"The Evil of the Daleks", "The Tomb of the Cybermen", "The Ice Warriors",
+	"The Web of Fear", "The Mind Robber", "The Invasion", "The War Games",
+	"Spearhead from Space", "Inferno", "Terror of the Autons", "The Claws of Axos",
+	"The Daemons", "Day of the Daleks", "The Sea Devils", "The Three Doctors",
+	"Carnival of Monsters", "Frontier in Space", "Planet of the Daleks",
+	"The Green Death", "The Time Warrior", "Death to the Daleks",
+	"Planet of the Spiders", "The Ark in Space", "Genesis of the Daleks",
+	"Pyramids of Mars", "The Brain of Morbius", "The Seeds of Doom",
+	"The Deadly Assassin", "The Robots of Death", "The Talons of Weng-Chiang",
+	"Horror of Fang Rock", "City of Death", "Full Circle", "Warriors' Gate",
+	"The Keeper of Traken", "Logopolis", "Castrovalva", "Kinda", "Earthshock",
+	"The Caves of Androzani", "The Five Doctors", "Vengeance on Varos",
+	"Remembrance of the Daleks", "The Curse of Fenric", "Survival",
+	"Rose", "The End of the World", "Dalek", "Father's Day", "The Empty Child",
+	"The Doctor Dances", "The Parting of the Ways", "The Girl in the Fireplace",
+	"Army of Ghosts", "Doomsday", "Human Nature", "Blink", "Utopia",
+	"The Sound of Drums", "Silence in the Library", "Forest of the Dead",
+	"Midnight", "Turn Left", "Journey's End", "The Eleventh Hour",
+	"The Time of Angels", "Vincent and the Doctor", "The Pandorica Opens",
+	"The Big Bang", "The Doctor's Wife", "A Good Man Goes to War",
+	"The God Complex", "Asylum of the Daleks", "The Angels Take Manhattan",
+	"The Day of the Doctor", "Listen", "Dark Water", "Death in Heaven",
+	"Heaven Sent", "Hell Bent", "World Enough and Time", "The Doctor Falls",
+	# Stargate (SG-1 / Atlantis / Universe)
+	"Children of the Gods", "Cold Lazarus", "The Nox", "Thor's Hammer",
+	"The Torment of Tantalus", "Fire and Water", "Solitudes", "Tin Man",
+	"There But for the Grace of God", "Within the Serpent's Grasp",
+	"The Serpent's Lair", "The Tok'ra", "The Fifth Race", "Serpent's Song",
+	"Into the Fire", "Fair Game", "Point of View", "A Hundred Days",
+	"Nemesis", "Small Victories", "Window of Opportunity", "The First Ones",
+	"Beneath the Surface", "Tangent", "The Serpent's Venom", "2010",
+	"Absolute Power", "Exodus", "Enemies", "Threshold", "Abyss",
+	"The Other Guys", "Prometheus", "Disclosure", "Full Circle", "Fallen",
+	"Homecoming", "Evolution", "Heroes", "Lost City", "New Order",
+	"Reckoning", "Threads", "Moebius", "Avalon", "Origin", "Beachhead",
+	"Prototype", "The Fourth Horseman", "Ripple Effect", "The Quest",
+	"The Road Not Taken", "The Shroud", "Unending",
+	"Rising", "Thirty-Eight Minutes", "Home", "The Storm", "The Eye",
+	"The Defiant One", "Hot Zone", "Before I Sleep", "The Gift", "The Siege",
+	"Trinity", "Aurora", "The Lost Boys", "Michael", "Allies", "No Man's Land",
+	"The Return", "Sunday", "First Strike", "Adrift", "Lifeline", "Reunion",
+	"The Last Man", "Search and Rescue", "The Daedalus Variations", "The Shrine",
+	"First Contact", "The Lost Tribe", "Brain Storm", "Vegas", "Enemy at the Gate",
+	"Air", "Darkness", "Light", "Water", "Earth", "Time", "Life", "Space",
+	"Human", "Lost", "Subversion", "Incursion", "Intervention", "Twin Destinies",
+	"The Greater Good", "Common Descent", "Epilogue", "Blockade", "Gauntlet",
 ]
 
 const BRANCH_ATTACHMENTS := [3, 5, 7, 9, 11, 13, 14, 16, 17]
@@ -78,6 +160,8 @@ const EQUIPMENT_PICKUPS := {
 # Critical path rooms that act as Metroid-style resupply save points
 const RESUPPLY_ROOM_INDICES := [4, 9, 14]
 
+var _name_pool: Array = []
+
 func generate_campaign(seed_text: String, room_count: int = TOTAL_ROOMS) -> Dictionary:
 	var seed := seed_text.strip_edges()
 	if seed.is_empty():
@@ -91,6 +175,14 @@ func generate_campaign(seed_text: String, room_count: int = TOTAL_ROOMS) -> Dict
 	var campaign_dir := SAVE_ROOT.path_join(campaign_slug)
 	var room_dir := campaign_dir.path_join("rooms")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(room_dir))
+
+	# Shuffle the room-name pool for this seed so each campaign names rooms differently
+	_name_pool = EPISODE_NAMES.duplicate()
+	for i in range(_name_pool.size() - 1, 0, -1):
+		var j := rng.randi() % (i + 1)
+		var tmp = _name_pool[i]
+		_name_pool[i] = _name_pool[j]
+		_name_pool[j] = tmp
 
 	var graph := _build_graph(seed, rng)
 	var layout_gen := ROOM_LAYOUT_GENERATOR_SCRIPT.new()
@@ -924,9 +1016,10 @@ func _is_walkable_solid_name(solid_name: String) -> bool:
 	return solid_name.find("floor") >= 0 or solid_name.find("step") >= 0 or solid_name.find("ledge") >= 0 or solid_name.find("platform") >= 0 or solid_name.find("pedestal") >= 0 or solid_name.find("bridge") >= 0 or solid_name.find("run") >= 0 or solid_name.find("exit") >= 0
 
 func _room_name_for(room_info: Dictionary, index: int) -> String:
-	# Sci-fi episode titles, one per room index (wraps if the campaign is larger)
-	if EPISODE_NAMES.size() > 0:
-		return str(EPISODE_NAMES[index % EPISODE_NAMES.size()])
+	# Sci-fi episode titles from the per-seed shuffled pool, unique per room
+	var pool: Array = _name_pool if not _name_pool.is_empty() else EPISODE_NAMES
+	if pool.size() > 0:
+		return str(pool[index % pool.size()])
 	return "Sector %02d" % index
 
 func _room_id(index: int) -> String:
