@@ -8,6 +8,7 @@ signal level_built(level_data: Dictionary)
 
 const TILESET_PATH := "res://assets/tiles/space_miner_tileset.tres"
 const TILE_ATLAS_SIZE := 20
+const LADDER_SCRIPT := preload("res://scripts/prototype/ladder.gd")
 
 var _last_level_data: Dictionary = {}
 
@@ -47,6 +48,7 @@ func build_from_json(json_path: String) -> void:
 
 	_build_tile_layers(data, tile_set)
 	_build_solids(data)
+	_build_ladders(data)
 	_build_decor(data)
 	_build_spawn_and_exit(data)
 	_build_collectibles(data)
@@ -104,6 +106,17 @@ func _build_solids(data: Dictionary) -> void:
 		shape_node.one_way_collision_margin = 2.0
 		body.add_child(shape_node)
 
+func _build_ladders(data: Dictionary) -> void:
+	for ladder_variant in data.get("ladders", []):
+		var ladder_data: Dictionary = ladder_variant
+		var size := _as_vec2(ladder_data.get("size", [14, 64]))
+		var ladder := LADDER_SCRIPT.new()
+		ladder.name = str(ladder_data.get("name", "Ladder"))
+		ladder.width = size.x
+		ladder.height = size.y
+		ladder.position = _as_vec2(ladder_data.get("position", [0, 0]))
+		add_child(ladder)
+
 func _build_decor(data: Dictionary) -> void:
 	var decor: Array = data.get("decor", [])
 	for decor_variant in decor:
@@ -148,11 +161,11 @@ func _build_spawn_and_exit(data: Dictionary) -> void:
 
 	var respawn: Marker2D = room.get_node_or_null("RespawnPoint")
 	if respawn:
-		respawn.position = _as_vec2(data.get("spawn", [-208, 112]))
+		respawn.position = _as_vec2(data.get("spawn", [-208, 112])) + Vector2(0, -2)
 
 	var player: Node2D = room.get_node_or_null("Player")
 	if player:
-		player.position = _as_vec2(data.get("spawn", [-208, 112]))
+		player.position = _as_vec2(data.get("spawn", [-208, 112])) + Vector2(0, -2)
 
 func _build_collectibles(data: Dictionary) -> void:
 	var room := get_parent()

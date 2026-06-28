@@ -280,6 +280,7 @@ func _build_room_data(room_info: Dictionary, graph: Dictionary, rng: RandomNumbe
 		"room_size":  [ROOM_SIZE.x, ROOM_SIZE.y],
 		"tile_layers": layout["tile_layers"],
 		"solids":     layout["solids"],
+		"ladders":    layout.get("ladders", []),
 		"decor":      layout["decor"],
 		"collectibles": layout["collectibles"],
 		"pickups":    resolved_pickups,

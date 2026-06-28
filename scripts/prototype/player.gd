@@ -54,6 +54,12 @@ var _jetpack_hold_time := 0.0
 var _jump_active := false
 var _jump_lock_dir := 1.0
 
+# Ladder climbing
+const CLIMB_SPEED := 110.0
+const FEET_OFFSET := 16.0          # half of the 32px collision box
+var _climbing := false
+var _climb_saved_mask := 0
+
 var _laser_line      : Line2D = null
 var _laser_timer     : float  = 0.0
 var _jetpack_rig     : Node2D = null
@@ -86,6 +92,9 @@ func respawn(at_position: Vector2) -> void:
 	_jetpack_hold_time = 0.0
 	_jump_active = false
 	_jump_lock_dir = 1.0
+	if _climbing:
+		collision_mask = _climb_saved_mask
+		_climbing = false
 	_grounded_last_frame = false
 	_fall_origin_y = at_position.y
 	if _grapple_line:
@@ -183,10 +192,23 @@ func _physics_process(delta: float) -> void:
 		if _grapple_reeling:
 			_grapple_reel_timer = maxf(_grapple_reel_timer, 0.02)
 
-	var thrusting := _apply_jetpack_thrust(thrust_held, has_jetpack, delta)
+	# Ladder climbing — up/down move along a ladder; jetpack is disabled while climbing
+	var ladder := _current_ladder()
+	var climb_up := Input.is_action_pressed("thrust") or Input.is_action_pressed("ui_up")
+	var climb_down := Input.is_action_pressed("ui_down") or Input.is_action_pressed("interact")
+	if ladder and not _climbing and (climb_up or climb_down):
+		_begin_climb()
+	if _climbing and ladder == null:
+		_end_climb()
+
+	# Suppress jetpack thrust while climbing (up is repurposed to climb)
+	var thrusting := _apply_jetpack_thrust(thrust_held and not _climbing, has_jetpack, delta)
 	_update_jetpack_visuals(has_jetpack, thrusting)
-	_apply_horizontal_move(h, grounded, thrusting, delta)
-	_apply_vertical_move(jump_pressed, grounded, has_jetpack, thrusting, delta)
+	_apply_horizontal_move(h, grounded and not _climbing, thrusting, delta)
+	if _climbing:
+		_apply_ladder_climb(ladder, h, jump_pressed, climb_up, climb_down, delta)
+	else:
+		_apply_vertical_move(jump_pressed, grounded, has_jetpack, thrusting, delta)
 
 	# Grapple pull
 	if _grappling:
@@ -285,6 +307,67 @@ func _apply_vertical_move(jump_pressed: bool, grounded: bool, has_jetpack: bool,
 		if global_position.y - _fall_origin_y > 120.0:
 			_play_fall_sfx()
 			_fall_sfx_played = true
+
+# ── Ladder climbing ────────────────────────────────────────────────────────────
+
+func _current_ladder() -> Node:
+	for l in get_tree().get_nodes_in_group("ladder"):
+		if l.has_method("contains_point") and l.contains_point(global_position):
+			return l
+	return null
+
+func _begin_climb() -> void:
+	_climbing = true
+	_jump_active = false
+	_grappling = false
+	_grapple_reeling = false
+	_grapple_aiming = false
+	_clear_grapple_aim_visuals()
+	# Pass freely through one-way platforms while on the ladder
+	_climb_saved_mask = collision_mask
+	collision_mask = 0
+
+func _end_climb() -> void:
+	if not _climbing:
+		return
+	_climbing = false
+	collision_mask = _climb_saved_mask
+
+func _apply_ladder_climb(ladder: Node, h: float, jump_pressed: bool, up: bool, down: bool, delta: float) -> void:
+	# Jump off the ladder
+	if jump_pressed:
+		_end_climb()
+		_jump_active = true
+		_jump_lock_dir = h if h != 0.0 else facing_dir
+		velocity.y = -JUMP_SPEED
+		velocity.x = _jump_lock_dir * JUMP_HORIZONTAL_SPEED
+		_play_jump_sfx()
+		return
+	# Step off sideways when not actively climbing
+	if h != 0.0 and not up and not down:
+		_end_climb()
+		return
+	# Snap horizontally onto the ladder centre
+	global_position.x = move_toward(global_position.x, ladder.center_x(), 160.0 * delta)
+	velocity.x = 0.0
+	velocity.y = 0.0
+
+	var feet := global_position.y + FEET_OFFSET
+	var top: float = ladder.top_y()
+	var bottom: float = ladder.bottom_y()
+	if up:
+		if feet <= top + 1.0:
+			# Reached the top — step onto the platform
+			global_position.y = top - FEET_OFFSET
+			_end_climb()
+			return
+		velocity.y = -CLIMB_SPEED
+	elif down:
+		if feet >= bottom - 1.0:
+			global_position.y = bottom - FEET_OFFSET
+			_end_climb()
+			return
+		velocity.y = CLIMB_SPEED
 
 # ── Grappling hook ────────────────────────────────────────────────────────────
 

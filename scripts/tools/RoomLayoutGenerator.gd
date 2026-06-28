@@ -64,6 +64,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 	return {
 		"spawn":        [-300, 128],
 		"solids":       solids,
+		"ladders":      _build_ladders(rng, platfs),
 		"decor":        _build_decor(rng, room_index),
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1]),
 		"hazards":      _place_hazards(rng, platfs, room_index),
@@ -117,12 +118,42 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	return {
 		"spawn":        [0, 128],
 		"solids":       solids,
+		"ladders":      _build_ladders(rng, platfs),
 		"decor":        _build_decor(rng, room_index),
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1]),
 		"hazards":      _place_hazards(rng, platfs, room_index),
 		"enemies":      enemy_result[0],
 		"tile_layers":  _build_tiles(platfs, room_index),
 	}
+
+# ── Ladders ──────────────────────────────────────────────────────────────────
+# Connect the floor to the tallest platform columns so the player can reach high
+# ledges without precise multi-jump chains. Climbed with up/down.
+func _build_ladders(rng: RandomNumberGenerator, platfs: Array) -> Array:
+	var ladders: Array = []
+	var sorted := platfs.duplicate()
+	sorted.sort_custom(func(a, b): return float(a["top_y"]) < float(b["top_y"]))
+	var used_x: Array = []
+	var made := 0
+	for p in sorted:
+		if made >= 2:
+			break
+		var cx := int(p["cx"])
+		if cx in used_x:
+			continue
+		var top := float(p["top_y"])
+		# Only worth a ladder when the platform is more than ~1.5 jumps up
+		if float(FLOOR_TOP_Y) - top < float(LEVEL_STEP) * 1.5:
+			continue
+		var bottom := float(FLOOR_TOP_Y)
+		ladders.append({
+			"name": "Ladder_%s" % str(p["name"]),
+			"position": [float(cx), (top + bottom) * 0.5],
+			"size": [14.0, bottom - top],
+		})
+		used_x.append(cx)
+		made += 1
+	return ladders
 
 # ── Extra platforms for JSW variety and door connectivity ─────────────────────
 # Adds 2-4 narrow "shelf" platforms between the main grid columns, and a
