@@ -55,6 +55,7 @@ const ACID_BATH_SCENE    := "res://scenes/prototype/AcidBath.tscn"
 const CONVEYOR_SCENE     := "res://scenes/prototype/ConveyorBelt.tscn"
 const MOVING_PLAT_SCENE  := "res://scenes/prototype/MovingPlatform.tscn"
 const SLIDING_WALL_SCENE := "res://scenes/prototype/SlidingWall.tscn"
+const TELEPORTER_SCENE   := "res://scenes/prototype/Teleporter.tscn"
 
 enum LayoutTheme { ASCENT, DESCENT, VALLEY, PEAK, PLATEAU, ZIGZAG }
 
@@ -254,6 +255,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 	var ladders := _build_ladders(rng, platfs)
 	ladders.append_array(_exit_ladders(exits))
 	var mechanisms := _place_mechanisms(rng, platfs, room_index)
+	var teleporters := _place_teleporters(rng, platfs, room_index)
 	return {
 		"spawn":        [-300, 128],
 		"solids":       solids,
@@ -263,6 +265,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
 		"enemies":      enemy_result[0],
 		"mechanisms":   mechanisms,
+		"teleporters":  teleporters,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
 	}
 
@@ -319,6 +322,7 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	var ladders := _build_ladders(rng, platfs)
 	ladders.append_array(_exit_ladders(exits))
 	var mechanisms := _place_mechanisms(rng, platfs, room_index)
+	var teleporters := _place_teleporters(rng, platfs, room_index)
 	return {
 		"spawn":        [0, 128],
 		"solids":       solids,
@@ -328,6 +332,7 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
 		"enemies":      enemy_result[0],
 		"mechanisms":   mechanisms,
+		"teleporters":  teleporters,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
 	}
 
@@ -1091,6 +1096,56 @@ func _place_mechanisms(rng: RandomNumberGenerator, platfs: Array, room_index: in
 		idx += 1
 
 	return mech
+
+# Place pairs of teleporters in rooms (room 3+, 1-2 pairs)
+func _place_teleporters(rng: RandomNumberGenerator, platfs: Array, room_index: int) -> Array:
+	if room_index < 3 or platfs.size() < 2:
+		return []
+	var tps: Array = []
+	var pair_count := rng.randi_range(1, 2) if room_index >= 4 else 1
+	var colors := [Color.CYAN, Color("#FF00FF"), Color("#FFFF00"), Color("#00FF00"), Color("#FF6600"), Color("#00FFFF")]
+	var idx := 0
+
+	for p in range(pair_count):
+		if platfs.size() < 2:
+			break
+		# Pick 2 random platforms for the pair
+		var p1_idx := rng.randi() % platfs.size()
+		var p2_idx := rng.randi() % platfs.size()
+		while p2_idx == p1_idx and platfs.size() > 1:
+			p2_idx = rng.randi() % platfs.size()
+
+		var p1: Dictionary = platfs[p1_idx]
+		var p2: Dictionary = platfs[p2_idx]
+		var color: Color = colors[p % colors.size()]
+		var tp_id_1 := "tp_%d_a" % p
+		var tp_id_2 := "tp_%d_b" % p
+
+		# Teleporter 1
+		tps.append({
+			"name": "Teleporter_%d_A" % p,
+			"scene": TELEPORTER_SCENE,
+			"position": [float(p1["cx"]), float(p1["top_y"]) - 24.0],
+			"props": {
+				"teleporter_id": tp_id_1,
+				"target_id": tp_id_2,
+				"color_tint": color,
+			},
+		})
+
+		# Teleporter 2
+		tps.append({
+			"name": "Teleporter_%d_B" % p,
+			"scene": TELEPORTER_SCENE,
+			"position": [float(p2["cx"]), float(p2["top_y"]) - 24.0],
+			"props": {
+				"teleporter_id": tp_id_2,
+				"target_id": tp_id_1,
+				"color_tint": color,
+			},
+		})
+
+	return tps
 
 func _is_door_landing_platform(p: Dictionary) -> bool:
 	var name := str(p.get("name", "")).to_lower()

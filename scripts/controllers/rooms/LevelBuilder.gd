@@ -57,6 +57,7 @@ func build_from_json(json_path: String) -> void:
 	_build_hazards(data)
 	_build_enemies(data)
 	_build_mechanisms(data)
+	_build_teleporters(data)
 	_build_exits(data)
 	level_built.emit(_last_level_data.duplicate(true))
 
@@ -91,7 +92,8 @@ func _build_solids(data: Dictionary) -> void:
 		var body := StaticBody2D.new()
 		body.name = str(solid.get("name", "Solid"))
 		var size := _as_vec2(solid.get("size", [32, 16]))
-		var solid_type := str(solid.get("type", "")).to_lower()
+		# Generated rooms tag the kind on "kind"; older authored rooms use "type".
+		var solid_type := str(solid.get("type", solid.get("kind", ""))).to_lower()
 		var anchor := str(solid.get("anchor", ""))
 		if anchor.is_empty():
 			anchor = _default_solid_anchor(solid_type, body.name, size)
@@ -104,10 +106,13 @@ func _build_solids(data: Dictionary) -> void:
 		shape_node.shape = rect
 		shape_node.position = Vector2.ZERO
 		var solid_name := body.name.to_lower()
-		# "type" field is authoritative: "platform" = one-way, everything else blocks all movement
-		var is_platform := solid_type == "platform"
+		# "platform" kind (or an explicit one_way flag) = one-way; everything else blocks all movement
+		var is_platform := solid_type == "platform" or bool(solid.get("one_way", false))
 		shape_node.one_way_collision = is_platform
 		shape_node.one_way_collision_margin = 1.0
+		# One-way platforms get their own collision layer (2) so the player can
+		# drop through them on demand without falling through solid floor/walls (1).
+		body.collision_layer = 2 if is_platform else 1
 		body.add_child(shape_node)
 
 func _build_ladders(data: Dictionary) -> void:
@@ -257,6 +262,24 @@ func _build_mechanisms(data: Dictionary) -> void:
 	for item_variant in data.get("mechanisms", []):
 		var item: Dictionary = item_variant
 		_add_instance(root, item)
+
+func _build_teleporters(data: Dictionary) -> void:
+	var room := get_parent()
+	if not room:
+		return
+	var root: Node = room.get_node_or_null("Teleporters")
+	if not root:
+		root = Node.new()
+		root.name = "Teleporters"
+		room.add_child(root)
+	_clear_node_children(root)
+	for item_variant in data.get("teleporters", []):
+		var item: Dictionary = item_variant
+		var node := _add_instance(root, item)
+		if node and item.has("props"):
+			var props: Dictionary = item["props"]
+			for key in props.keys():
+				node.set(str(key), props[key])
 
 func _build_exits(data: Dictionary) -> void:
 	var room := get_parent()
