@@ -37,7 +37,7 @@ const MAX_JUMP_GAP := 96.0
 const COL_COUNT    := 6
 const COL_X        := [-280, -168, -56, 56, 168, 280]
 const PLAT_W       := 80    # 5 tiles wide; with centres above, both edges on 16 px grid
-const LEVEL_COUNT  := 5     # levels 0..4
+const LEVEL_COUNT  := 6     # levels 0..5 — use more of the room's vertical space
 const LEVEL_STEP   := 48    # 3 tiles per step — clearance for the 32px-tall player
 
 const ORE_SCENE      := "res://scenes/prototype/OreFragment.tscn"
@@ -862,10 +862,10 @@ func _has_headroom(x: float, surface_y: float, platfs: Array) -> bool:
 # ── Hazards ────────────────────────────────────────────────────────────────────
 
 func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int, floor_gaps: Array = []) -> Array:
-	if room_index < 3:
+	if room_index < 2:
 		return []
 	var hz: Array = []
-	var chance := minf(0.45, float(room_index) * 0.022)
+	var chance := clampf(0.12 + float(room_index) * 0.03, 0.12, 0.55)
 	for p in platfs:
 		if rng.randf() < chance:
 			# Offset spike from platform centre so it's a gap hazard, not an item blocker
@@ -881,11 +881,11 @@ func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int, 
 
 # Returns [enemies_array, enemy_platform_name_array]
 func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_index: int, depths: Dictionary = {}) -> Array:
-	if room_index < 2:
+	if room_index < 1:
 		return [[], []]
 	var enm: Array = []
 	var enemy_names: Array = []
-	var base_chance := minf(0.4, float(room_index) * 0.02)
+	var base_chance := clampf(0.15 + float(room_index) * 0.025, 0.15, 0.55)
 	for p in platfs:
 		# Gateways (platforms guarding the route to deeper loot) are prime enemy
 		# posts, so they get a much higher spawn chance.

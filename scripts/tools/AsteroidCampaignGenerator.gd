@@ -42,6 +42,26 @@ const MAIN_ROOM_NAMES := [
 	"Exit Chamber"
 ]
 
+# Room names drawn from sci-fi episode titles (Star Trek, Star Wars, Blake's 7,
+# Doctor Who, Stargate). Assigned by room index so each room is distinct.
+const EPISODE_NAMES := [
+	"Where No Man Has Gone Before", "Balance of Terror", "The Menagerie",
+	"Space Seed", "The Doomsday Machine", "Mirror, Mirror", "Amok Time",
+	"The Trouble with Tribbles", "The Best of Both Worlds", "Yesterday's Enterprise",
+	"The Inner Light", "Cause and Effect", "Darmok",
+	"A New Hope", "The Empire Strikes Back", "Return of the Jedi",
+	"Rogue One", "Shadow of Malevolence", "Storm Over Ryloth", "Twilight",
+	"The Way Back", "Spacefall", "Cygnus Alpha", "Time Squad", "The Web",
+	"Seek-Locate-Destroy", "Orac", "Redemption", "Star One", "Aftermath",
+	"Rumours of Death", "Death-Watch", "Blake",
+	"An Unearthly Child", "The Daleks", "Genesis of the Daleks", "City of Death",
+	"The Caves of Androzani", "Blink", "The Empty Child", "Dalek",
+	"Silence in the Library", "Heaven Sent", "Midnight", "The Eleventh Hour",
+	"Children of the Gods", "The Nox", "The Fifth Race", "Window of Opportunity",
+	"Heroes", "Lost City", "Threads", "Unending", "Continuum", "Moebius",
+	"Beachhead", "The Pegasus Galaxy", "Rising", "Trinity", "The Siege",
+]
+
 const BRANCH_ATTACHMENTS := [3, 5, 7, 9, 11, 13, 14, 16, 17]
 const BRANCH_LENGTHS := [5, 4, 4, 4, 4, 4, 4, 4, 3]
 const BRANCH_DIRECTIONS := ["north", "south", "north", "south", "north", "south", "north", "south", "north"]
@@ -904,12 +924,10 @@ func _is_walkable_solid_name(solid_name: String) -> bool:
 	return solid_name.find("floor") >= 0 or solid_name.find("step") >= 0 or solid_name.find("ledge") >= 0 or solid_name.find("platform") >= 0 or solid_name.find("pedestal") >= 0 or solid_name.find("bridge") >= 0 or solid_name.find("run") >= 0 or solid_name.find("exit") >= 0
 
 func _room_name_for(room_info: Dictionary, index: int) -> String:
-	var role := str(room_info.get("role", "critical"))
-	if role == "critical":
-		if index >= 0 and index < MAIN_ROOM_NAMES.size():
-			return MAIN_ROOM_NAMES[index]
-		return "Main Spine %02d" % index
-	return "Branch %02d-%02d" % [int(room_info.get("branch_id", 0)) + 1, int(room_info.get("branch_step", 0)) + 1]
+	# Sci-fi episode titles, one per room index (wraps if the campaign is larger)
+	if EPISODE_NAMES.size() > 0:
+		return str(EPISODE_NAMES[index % EPISODE_NAMES.size()])
+	return "Sector %02d" % index
 
 func _room_id(index: int) -> String:
 	return "room_%03d" % index
