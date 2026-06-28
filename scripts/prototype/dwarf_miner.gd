@@ -73,11 +73,25 @@ func _open() -> void:
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_dialog_layer.add_child(center)
 
+	var border_rect := TextureRect.new()
+	border_rect.texture = load("res://assets/images/ui/border_01.png")
+	border_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	border_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	border_rect.stretch_mode = TextureRect.STRETCH_SCALE
+	border_rect.custom_minimum_size = Vector2(768, 280)
+	border_rect.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	border_rect.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	center.add_child(border_rect)
+
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(640, 200)
 	if theme:
 		panel.theme = theme
-	center.add_child(panel)
+	border_rect.add_child(panel)
+	panel.anchor_left = 0.5
+	panel.anchor_top = 0.5
+	panel.offset_left = -320
+	panel.offset_top = -100
 
 	var margin := MarginContainer.new()
 	for side in ["left", "top", "right", "bottom"]:
@@ -89,8 +103,8 @@ func _open() -> void:
 	margin.add_child(row)
 
 	var portrait := TextureRect.new()
-	portrait.texture = load("res://assets/tiles/Transparent/tile_0096.png")
-	portrait.custom_minimum_size = Vector2(96, 96)
+	portrait.texture = load("res://assets/images/dwarf.png")
+	portrait.custom_minimum_size = Vector2(120, 120)
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	portrait.size_flags_vertical = Control.SIZE_SHRINK_CENTER
