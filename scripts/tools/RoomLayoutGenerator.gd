@@ -942,9 +942,12 @@ func _build_tiles(platfs: Array, room_index: int, floor_gaps: Array = []) -> Arr
 		var tx0   := (int(p["cx"]) - int(p["width"]) / 2) / TILE_SZ
 		var count := int(p["width"]) / TILE_SZ
 		for j in range(count):
-			pc.append({"x": tx0 + j, "y": ty, "tile": [170, 171, 172, 173][j % 4]})
+			# Use the solid block tiles (same family as the floor) so platforms
+			# read as solid ledges instead of dashed outlines
+			pc.append({"x": tx0 + j, "y": ty, "tile": [175, 176, 177, 178][j % 4]})
 	if not pc.is_empty():
-		layers.append({"name": "PlatTiles", "modulate": "#F4F4F4", "z_index": 2, "cells": pc})
+		# Cool steel tint so platforms are clearly distinct from the coloured floor
+		layers.append({"name": "PlatTiles", "modulate": "#9FB4D8", "z_index": 2, "cells": pc})
 
 	# Wall accents — full height, at actual wall tile column (±22).
 	var wc: Array = []
