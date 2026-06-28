@@ -109,6 +109,34 @@ func _declutter_platforms(platfs: Array) -> Array:
 			kept.append(p)
 	return kept
 
+# Ensure spawn area (around x=-300 or x=0, y=128) has clearance for player.
+# Player is 32px tall; needs at least 50px headroom above floor.
+func _ensure_spawn_clearance(platfs: Array) -> Array:
+	var spawn_xs := [-300.0, 0.0]  # both main and branch spawn x coords
+	var spawn_y := 128.0
+	var min_clearance := 50.0     # minimum space above floor for player
+
+	var filtered: Array = []
+	for p in platfs:
+		var px := float(p["cx"])
+		var py_top := float(p["top_y"])
+		var pw := float(p["width"]) * 0.5
+
+		# Check if platform overlaps spawn zone horizontally
+		var overlaps_spawn := false
+		for sx in spawn_xs:
+			if absf(px - sx) < pw + 20.0:  # 20px margin around spawn
+				overlaps_spawn = true
+				break
+
+		# If overlaps and would trap player, skip it
+		if overlaps_spawn and py_top < spawn_y - min_clearance:
+			continue
+
+		filtered.append(p)
+
+	return filtered if filtered.size() > 0 else platfs
+
 func _x_overlap(a: Dictionary, b: Dictionary) -> bool:
 	var ahw := float(a["width"]) * 0.5
 	var bhw := float(b["width"]) * 0.5
@@ -218,6 +246,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 	var platfs: Array = build["platfs"]
 	var floor_gaps: Array = _merge_south_gaps(build.get("floor_gaps", []), exits)
 	platfs.append_array(_exit_landings(exits))
+	platfs = _ensure_spawn_clearance(platfs)
 	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
@@ -282,6 +311,7 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	var platfs: Array = build["platfs"]
 	var floor_gaps: Array = _merge_south_gaps(build.get("floor_gaps", []), exits)
 	platfs.append_array(_exit_landings(exits))
+	platfs = _ensure_spawn_clearance(platfs)
 	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
