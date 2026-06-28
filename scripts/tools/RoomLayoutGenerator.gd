@@ -823,6 +823,9 @@ func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enem
 			elif tier >= 2 and roll < 0.08:
 				scene = BATTERY_SCENE
 				name_prefix = "Bat"
+			# Don't place a pickup where the player can't fit to grab it
+			if not _has_headroom(ox, float(p["top_y"]), platfs):
+				continue
 			var oy := float(p["top_y"]) - _item_rest_offset(scene)
 			var entry := {"name": "%s_%02d" % [name_prefix, idx],
 				"scene": scene, "position": [ox, oy]}
@@ -836,9 +839,25 @@ func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enem
 		var fx := float(rng.randi_range(-280, 280))
 		if _in_gaps(fx, floor_gaps):
 			continue
+		# Skip floor pickups tucked under a low platform with no head-room
+		if not _has_headroom(fx, float(FLOOR_TOP_Y), platfs):
+			continue
 		items.append({"name": "Floor_%02d" % i, "scene": scene,
 			"position": [fx, float(FLOOR_TOP_Y) - _item_rest_offset(scene)]})
 	return items
+
+# True if the player (32px tall) can stand at x on surface_y without a platform
+# directly overhead blocking access to a pickup placed there.
+const PICKUP_HEADROOM := 44.0
+func _has_headroom(x: float, surface_y: float, platfs: Array) -> bool:
+	for p in platfs:
+		if absf(x - float(p["cx"])) > float(p["width"]) * 0.5 + 10.0:
+			continue
+		var p_bottom := float(p["top_y"]) + PLAT_THICK
+		# platform sits above the surface, with too little clearance
+		if p_bottom <= surface_y and surface_y - p_bottom < PICKUP_HEADROOM:
+			return false
+	return true
 
 # ── Hazards ────────────────────────────────────────────────────────────────────
 
