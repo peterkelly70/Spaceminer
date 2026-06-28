@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/prototype/door_zone.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0175.png" id="2_door_sprite"]
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0056.png" id="2_door_sprite"]
 
 [sub_resource type="RectangleShape2D" id="1_shape"]
 size = Vector2(16, 48)
