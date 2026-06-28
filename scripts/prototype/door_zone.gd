@@ -60,9 +60,6 @@ func configure(data: Dictionary) -> void:
 	if body_visual:
 		body_visual.position = _art_offset
 		body_visual.scale = Vector2.ONE
-		# Rotate sprite for horizontal doors (north/south/up/down)
-		if _door_direction in ["north", "south", "up", "down"]:
-			body_visual.rotation = PI / 2.0  # 90 degrees for horizontal
 	if panel_left:
 		panel_left.position = _art_offset
 		panel_left.scale = size / Vector2(40.0, 72.0)
