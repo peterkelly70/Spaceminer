@@ -621,10 +621,10 @@ func _branch_platforms(rng: RandomNumberGenerator, _exits: Array) -> Array:
 
 func _build_solids(platfs: Array, exits: Array, floor_gaps: Array = []) -> Array:
 	var solids: Array = []
-	# Floor built as segments so archetypes can carve chasms into it
+	# Floor is solid everywhere (no gaps/chasms) — spikes placed on gaps instead
 	var fy := FLOOR_Y_CTR - PLAT_THICK
 	var idx := 0
-	for seg in _floor_segments(floor_gaps, -330, 330):
+	for seg in _floor_segments([], -330, 330):
 		var sx0: float = seg[0]
 		var sx1: float = seg[1]
 		if sx1 - sx0 < 8.0:
@@ -636,6 +636,8 @@ func _build_solids(platfs: Array, exits: Array, floor_gaps: Array = []) -> Array
 	# Ceiling at the top
 	solids.append({"name": "Ceiling", "kind": "ceiling", "anchor": "bottom",
 		"position": [0, -float(ROOM_HALF_H)], "size": [660, 16]})
+	# Door protection walls
+	_add_door_walls(solids, exits)
 	for p in platfs:
 		solids.append({
 			"name":     p["name"],
@@ -674,6 +676,28 @@ func _in_gaps(x: float, gaps: Array) -> bool:
 func _add_walls(solids: Array, exits: Array) -> void:
 	for side in ["east", "west", "north", "south"]:
 		_wall_segment(solids, side, _find_exit(exits, side))
+
+# Add protective walls around door positions so player can't walk off edges
+func _add_door_walls(solids: Array, exits: Array) -> void:
+	for exit_variant in exits:
+		var exit: Dictionary = exit_variant
+		var direction := str(exit.get("direction", ""))
+		var door_pos := _v2(exit.get("position", [0, 0]))
+		match direction:
+			"east", "west":
+				# Vertical doors: add walls above and below
+				var wall_x := door_pos.x
+				solids.append({"name": "DoorWallTop_%s" % direction, "kind": "wall", "anchor": "center",
+					"position": [wall_x, door_pos.y - 80.0], "size": [16.0, 80.0]})
+				solids.append({"name": "DoorWallBot_%s" % direction, "kind": "wall", "anchor": "center",
+					"position": [wall_x, door_pos.y + 80.0], "size": [16.0, 80.0]})
+			"north", "south":
+				# Horizontal doors: add walls left and right
+				var wall_y := door_pos.y
+				solids.append({"name": "DoorWallLeft_%s" % direction, "kind": "wall", "anchor": "center",
+					"position": [door_pos.x - 80.0, wall_y], "size": [80.0, 16.0]})
+				solids.append({"name": "DoorWallRight_%s" % direction, "kind": "wall", "anchor": "center",
+					"position": [door_pos.x + 80.0, wall_y], "size": [80.0, 16.0]})
 
 func _wall_segment(solids: Array, side: String, gap: Dictionary) -> void:
 	if side in ["east", "west"]:
@@ -944,14 +968,16 @@ func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int, 
 					}})
 			idx += 1
 
-	# Acid baths in some floor gaps (chasms)
+	# Spikes in floor gaps instead of holes (solid floor everywhere)
 	for gap in floor_gaps:
-		if rng.randf() < 0.3:
-			var gap_x := (float(gap[0]) + float(gap[1])) * 0.5
-			hz.append({"name": "AcidBath_%d" % idx, "scene": ACID_BATH_SCENE,
-				"position": [gap_x, float(FLOOR_Y_CTR - 8)],
-				"size": [float(gap[1]) - float(gap[0]), 16.0],
-				"anchor": "top"})
+		var gap_x := (float(gap[0]) + float(gap[1])) * 0.5
+		var gap_width := float(gap[1]) - float(gap[0])
+		# Place several spikes across the gap
+		var spike_count := maxi(1, int(gap_width / 48.0))
+		for s in range(spike_count):
+			var sx: float = float(gap[0]) + (float(s) + 0.5) * (gap_width / float(spike_count))
+			hz.append({"name": "GapSpike_%d" % idx, "scene": HAZARD_SCENE,
+				"position": [sx, float(FLOOR_Y_CTR - PLAT_THICK - 8)]})
 			idx += 1
 
 	return hz
