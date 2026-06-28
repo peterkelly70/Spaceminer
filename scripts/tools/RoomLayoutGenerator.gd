@@ -49,9 +49,12 @@ const DRONE_SCENE    := "res://scenes/units/PatrolDrone.tscn"
 const DALEK_SCENE    := "res://scenes/units/Dalek.tscn"
 const UFO_SCENE      := "res://scenes/units/Ufo.tscn"
 const HAZARD_SCENE      := "res://scenes/prototype/HazardZone.tscn"
-const FIRE_PIPE_SCENE   := "res://scenes/prototype/FirePipe.tscn"
+const FIRE_PIPE_SCENE    := "res://scenes/prototype/FirePipe.tscn"
 const MOVING_SPIKE_SCENE := "res://scenes/prototype/MovingSpike.tscn"
-const ACID_BATH_SCENE   := "res://scenes/prototype/AcidBath.tscn"
+const ACID_BATH_SCENE    := "res://scenes/prototype/AcidBath.tscn"
+const CONVEYOR_SCENE     := "res://scenes/prototype/ConveyorBelt.tscn"
+const MOVING_PLAT_SCENE  := "res://scenes/prototype/MovingPlatform.tscn"
+const SLIDING_WALL_SCENE := "res://scenes/prototype/SlidingWall.tscn"
 
 enum LayoutTheme { ASCENT, DESCENT, VALLEY, PEAK, PLATEAU, ZIGZAG }
 
@@ -221,6 +224,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
 	var ladders := _build_ladders(rng, platfs)
 	ladders.append_array(_exit_ladders(exits))
+	var mechanisms := _place_mechanisms(rng, platfs, room_index)
 	return {
 		"spawn":        [-300, 128],
 		"solids":       solids,
@@ -229,6 +233,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths, floor_gaps),
 		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
 		"enemies":      enemy_result[0],
+		"mechanisms":   mechanisms,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
 	}
 
@@ -283,6 +288,7 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index, depths)
 	var ladders := _build_ladders(rng, platfs)
 	ladders.append_array(_exit_ladders(exits))
+	var mechanisms := _place_mechanisms(rng, platfs, room_index)
 	return {
 		"spawn":        [0, 128],
 		"solids":       solids,
@@ -291,6 +297,7 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1], depths, floor_gaps),
 		"hazards":      _place_hazards(rng, platfs, room_index, floor_gaps),
 		"enemies":      enemy_result[0],
+		"mechanisms":   mechanisms,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
 	}
 
@@ -964,6 +971,65 @@ func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_inde
 			},
 		})
 	return [enm, enemy_names]
+
+func _place_mechanisms(rng: RandomNumberGenerator, platfs: Array, room_index: int) -> Array:
+	if room_index < 3:
+		return []
+	var mech: Array = []
+	var idx := 0
+	var mech_chance := clampf(0.08 + float(room_index) * 0.02, 0.08, 0.35)
+
+	for p in platfs:
+		if _is_door_landing_platform(p):
+			continue
+		if rng.randf() >= mech_chance:
+			continue
+
+		var roll := rng.randf()
+		if roll < 0.6:
+			# 60% conveyor belt (left or right)
+			var direction := 1 if rng.randf() < 0.5 else -1
+			mech.append({
+				"name": "Conveyor_%d" % idx,
+				"scene": CONVEYOR_SCENE,
+				"position": [float(p["cx"]), float(p["top_y"]) - 8.0],
+				"props": {
+					"direction": direction,
+					"speed": 100.0 + float(room_index) * 10.0,
+					"width": float(p["width"]),
+				},
+			})
+		elif roll < 0.85:
+			# 25% moving platform (vertical movement)
+			var travel_dist := float(rng.randi_range(60, 140))
+			mech.append({
+				"name": "MovingPlat_%d" % idx,
+				"scene": MOVING_PLAT_SCENE,
+				"position": [float(p["cx"]), float(p["top_y"]) - 8.0],
+				"props": {
+					"target_pos": [0.0, -travel_dist],
+					"speed": 30.0 + float(room_index) * 3.0,
+					"pause_time": 0.5,
+				},
+			})
+		else:
+			# 15% sliding wall (gating mechanic)
+			var wall_dir := "horizontal" if rng.randf() < 0.5 else "vertical"
+			mech.append({
+				"name": "SlidingWall_%d" % idx,
+				"scene": SLIDING_WALL_SCENE,
+				"position": [float(p["cx"]), float(p["top_y"]) - 24.0],
+				"props": {
+					"direction": wall_dir,
+					"slide_distance": 80.0,
+					"speed": 50.0,
+					"open_time": 2.0,
+					"closed_time": 1.0,
+				},
+			})
+		idx += 1
+
+	return mech
 
 func _is_door_landing_platform(p: Dictionary) -> bool:
 	var name := str(p.get("name", "")).to_lower()

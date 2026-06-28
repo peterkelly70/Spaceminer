@@ -56,6 +56,7 @@ func build_from_json(json_path: String) -> void:
 	_build_pickups(data)
 	_build_hazards(data)
 	_build_enemies(data)
+	_build_mechanisms(data)
 	_build_exits(data)
 	level_built.emit(_last_level_data.duplicate(true))
 
@@ -90,7 +91,10 @@ func _build_solids(data: Dictionary) -> void:
 		var body := StaticBody2D.new()
 		body.name = str(solid.get("name", "Solid"))
 		var size := _as_vec2(solid.get("size", [32, 16]))
+		var solid_type := str(solid.get("type", "")).to_lower()
 		var anchor := str(solid.get("anchor", ""))
+		if anchor.is_empty():
+			anchor = _default_solid_anchor(solid_type, body.name, size)
 		body.position = _solid_body_position(_as_vec2(solid.get("position", [0, 0])), size, anchor)
 		add_child(body)
 
@@ -101,10 +105,9 @@ func _build_solids(data: Dictionary) -> void:
 		shape_node.position = Vector2.ZERO
 		var solid_name := body.name.to_lower()
 		# "type" field is authoritative: "platform" = one-way, everything else blocks all movement
-		var solid_type := str(solid.get("type", ""))
 		var is_platform := solid_type == "platform"
 		shape_node.one_way_collision = is_platform
-		shape_node.one_way_collision_margin = 2.0
+		shape_node.one_way_collision_margin = 1.0
 		body.add_child(shape_node)
 
 func _build_ladders(data: Dictionary) -> void:
@@ -226,8 +229,11 @@ func _build_enemies(data: Dictionary) -> void:
 	if not root:
 		return
 	_clear_node_children(root)
+	var door_rects := _collect_door_rects(data)
 	for item_variant in data.get("enemies", []):
 		var item: Dictionary = item_variant
+		if _enemy_overlaps_door(item, door_rects):
+			continue
 		var node := _add_instance(root, item)
 		if node and item.has("props"):
 			var props: Dictionary = item["props"]
@@ -237,6 +243,20 @@ func _build_enemies(data: Dictionary) -> void:
 					node.set(key, PackedVector2Array(_array_to_vector2_array(value)))
 				else:
 					node.set(key, value)
+
+func _build_mechanisms(data: Dictionary) -> void:
+	var room := get_parent()
+	if not room:
+		return
+	var root: Node = room.get_node_or_null("Mechanisms")
+	if not root:
+		root = Node.new()
+		root.name = "Mechanisms"
+		room.add_child(root)
+	_clear_node_children(root)
+	for item_variant in data.get("mechanisms", []):
+		var item: Dictionary = item_variant
+		_add_instance(root, item)
 
 func _build_exits(data: Dictionary) -> void:
 	var room := get_parent()
@@ -256,6 +276,33 @@ func _build_exits(data: Dictionary) -> void:
 	for item_variant in exit_entries:
 		var item: Dictionary = item_variant
 		_add_instance(root, item)
+
+func _collect_door_rects(data: Dictionary) -> Array:
+	var door_rects: Array = []
+	var entries: Array = []
+	if data.has("exits"):
+		entries = data.get("exits", [])
+	elif data.has("exit"):
+		entries = [data.get("exit", {})]
+	for item_variant in entries:
+		var item: Dictionary = item_variant
+		var pos := _as_vec2(item.get("position", [0, 0]))
+		var size := _door_size_for_exit(item)
+		# Expand slightly so enemies do not sit directly in the door opening or
+		# on the tiny landing just outside it.
+		var rect := Rect2(pos - (size * 0.5) - Vector2(16, 12), size + Vector2(32, 24))
+		door_rects.append(rect)
+	return door_rects
+
+func _enemy_overlaps_door(item: Dictionary, door_rects: Array) -> bool:
+	if door_rects.is_empty():
+		return false
+	var pos := _as_vec2(item.get("position", [0, 0]))
+	for rect_variant in door_rects:
+		var rect: Rect2 = rect_variant
+		if rect.has_point(pos):
+			return true
+	return false
 
 func _add_instance(parent: Node, item: Dictionary) -> Node2D:
 	var scene_path := str(item.get("scene", ""))
@@ -302,6 +349,19 @@ func _solid_body_position(position: Vector2, size: Vector2, anchor: String) -> V
 		_:
 			return position
 
+func _default_solid_anchor(solid_type: String, solid_name: String, size: Vector2) -> String:
+	if solid_type in ["floor", "platform", "step", "ledge"]:
+		return "top"
+	if solid_type == "ceiling":
+		return "bottom"
+	if solid_type == "wall":
+		return "center"
+	# Fall back to a simple shape heuristic for authored solids that did not
+	# specify an anchor explicitly.
+	if size.x >= size.y * 1.5:
+		return "top"
+	return "center"
+
 func _is_one_way_solid(kind: String, solid_name: String, anchor: String) -> bool:
 	if kind in ["floor", "platform", "ceiling", "step", "ledge"]:
 		return true
@@ -323,6 +383,12 @@ func _as_color(value) -> Color:
 	if value is Color:
 		return value
 	return Color(str(value))
+
+func _door_size_for_exit(item: Dictionary) -> Vector2:
+	var direction := str(item.get("direction", "")).to_lower()
+	if direction in ["north", "south", "up", "down"]:
+		return _as_vec2(item.get("size", Vector2(48, 16)))
+	return _as_vec2(item.get("size", Vector2(16, 48)))
 
 func _array_to_vector2_array(values: Array) -> Array[Vector2]:
 	var result: Array[Vector2] = []
