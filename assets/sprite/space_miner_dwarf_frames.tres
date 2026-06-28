@@ -1,0 +1,34 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://c8dwarfminer01a"]
+
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/dwarf1.png" id="1_d1"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/dwarf2.png" id="2_d2"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/dwarf3.png" id="3_d3"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/dwarf4.png" id="4_d4"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/dwarf5.png" id="5_d5"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/dwarf6.png" id="6_d6"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_d1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_d2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_d3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_d4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_d5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_d6")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+}]

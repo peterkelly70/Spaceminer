@@ -8,6 +8,15 @@ const TOTAL_ROOMS := 56
 const MAIN_PATH_ROOMS := 20
 const ROOM_SIZE := Vector2(720, 400)
 const ROOM_HALF := Vector2(360, 200)
+const DWARF_SCENE := "res://scenes/prototype/DwarfMiner.tscn"
+const FLOOR_SURFACE_Y := 144   # matches RoomLayoutGenerator floor surface
+const DWARF_LINES := [
+	"Arr! Another spaceman in me tunnels. Mind the spikes, lad!",
+	"Dig deep, dig safe. The ore's richer the further ye go.",
+	"Watch yer oxygen out here. These rocks don't breathe for ye.",
+	"I lost me pickaxe three caverns back. If ye see it, it's mine!",
+	"Them floatin' drones? Give 'em a wide berth, spaceman.",
+]
 const SAVE_ROOT := "user://saves/spaceminer/campaigns"
 
 const MAIN_ROOM_NAMES := [
@@ -281,6 +290,7 @@ func _build_room_data(room_info: Dictionary, graph: Dictionary, rng: RandomNumbe
 		"tile_layers": layout["tile_layers"],
 		"solids":     layout["solids"],
 		"ladders":    layout.get("ladders", []),
+		"npcs":       _build_npcs(role, index, room_info, rng),
 		"decor":      layout["decor"],
 		"collectibles": layout["collectibles"],
 		"pickups":    resolved_pickups,
@@ -299,6 +309,23 @@ func _build_layout(role: String, room_info: Dictionary, exits: Array, rng: Rando
 	if bool(room_info.get("is_resupply", false)):
 		return layout_gen.generate_resupply(room_rng, index, exits)
 	return layout_gen.generate_main(room_rng, index, exits)
+
+# Place a dwarf miner NPC in roughly every third non-resupply room, standing on
+# the floor away from the spawn corner.
+func _build_npcs(role: String, index: int, room_info: Dictionary, rng: RandomNumberGenerator) -> Array:
+	if role == "branch" or bool(room_info.get("is_resupply", false)):
+		return []
+	if index == 0 or index % 3 != 0:
+		return []
+	var dwarf_x := float(rng.randi_range(40, 240))
+	return [{
+		"scene": DWARF_SCENE,
+		"name": "Dwarf",
+		"position": [dwarf_x, float(FLOOR_SURFACE_Y - 16)],
+		"props": {
+			"dialogue": str(DWARF_LINES[rng.randi() % DWARF_LINES.size()]),
+		},
+	}]
 
 func _make_exit_supports(exits: Array) -> Array:
 	var supports: Array = []

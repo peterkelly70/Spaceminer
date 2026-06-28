@@ -49,6 +49,7 @@ func build_from_json(json_path: String) -> void:
 	_build_tile_layers(data, tile_set)
 	_build_solids(data)
 	_build_ladders(data)
+	_build_npcs(data)
 	_build_decor(data)
 	_build_spawn_and_exit(data)
 	_build_collectibles(data)
@@ -116,6 +117,20 @@ func _build_ladders(data: Dictionary) -> void:
 		ladder.height = size.y
 		ladder.position = _as_vec2(ladder_data.get("position", [0, 0]))
 		add_child(ladder)
+
+func _build_npcs(data: Dictionary) -> void:
+	for npc_variant in data.get("npcs", []):
+		var npc_data: Dictionary = npc_variant
+		var scene := load(str(npc_data.get("scene", "")))
+		if not scene:
+			continue
+		var inst: Node2D = scene.instantiate()
+		inst.name = str(npc_data.get("name", "Npc"))
+		inst.position = _as_vec2(npc_data.get("position", [0, 0]))
+		var props: Dictionary = npc_data.get("props", {})
+		for key in props.keys():
+			inst.set(str(key), props[key])
+		add_child(inst)
 
 func _build_decor(data: Dictionary) -> void:
 	var decor: Array = data.get("decor", [])

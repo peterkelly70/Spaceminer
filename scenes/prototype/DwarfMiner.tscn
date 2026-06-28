@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/dwarf_miner.gd" id="1_dwarf_script"]
+[ext_resource type="SpriteFrames" path="res://assets/sprite/space_miner_dwarf_frames.tres" id="2_dwarf_frames"]
+
+[sub_resource type="RectangleShape2D" id="1_shape"]
+size = Vector2(28, 32)
+
+[node name="DwarfMiner" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+monitorable = true
+script = ExtResource("1_dwarf_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1_shape")
+
+[node name="Body" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = ExtResource("2_dwarf_frames")
+animation = &"idle"
+autoplay = "idle"
+scale = Vector2(2, 2)
+
+[node name="Prompt" type="Label" parent="."]
+offset_left = -48.0
+offset_top = -56.0
+offset_right = 48.0
+offset_bottom = -34.0
+text = "[S] Talk"
+horizontal_alignment = 1
