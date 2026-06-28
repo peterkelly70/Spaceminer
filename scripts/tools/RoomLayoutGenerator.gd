@@ -48,7 +48,10 @@ const STATION_SCENE  := "res://scenes/prototype/ResupplyStation.tscn"
 const DRONE_SCENE    := "res://scenes/units/PatrolDrone.tscn"
 const DALEK_SCENE    := "res://scenes/units/Dalek.tscn"
 const UFO_SCENE      := "res://scenes/units/Ufo.tscn"
-const HAZARD_SCENE   := "res://scenes/prototype/HazardZone.tscn"
+const HAZARD_SCENE      := "res://scenes/prototype/HazardZone.tscn"
+const FIRE_PIPE_SCENE   := "res://scenes/prototype/FirePipe.tscn"
+const MOVING_SPIKE_SCENE := "res://scenes/prototype/MovingSpike.tscn"
+const ACID_BATH_SCENE   := "res://scenes/prototype/AcidBath.tscn"
 
 enum LayoutTheme { ASCENT, DESCENT, VALLEY, PEAK, PLATEAU, ZIGZAG }
 
@@ -867,16 +870,48 @@ func _place_hazards(rng: RandomNumberGenerator, platfs: Array, room_index: int, 
 	if room_index < 2:
 		return []
 	var hz: Array = []
-	var chance := clampf(0.12 + float(room_index) * 0.03, 0.12, 0.55)
+	var spike_chance := clampf(0.12 + float(room_index) * 0.03, 0.12, 0.55)
+	var idx := 0
+
 	for p in platfs:
-		if rng.randf() < chance:
-			# Offset spike from platform centre so it's a gap hazard, not an item blocker
+		if rng.randf() < spike_chance:
+			var roll := rng.randf()
 			var hx := float(p["cx"]) + rng.randi_range(-24, 24)
-			# Don't place floor spikes over a chasm (they'd float in mid-air)
 			if _in_gaps(hx, floor_gaps):
 				continue
-			hz.append({"name": "Spikes_%s" % p["name"], "scene": HAZARD_SCENE,
-				"position": [hx, float(FLOOR_Y_CTR - PLAT_THICK - 8)]})
+
+			# 70% spikes, 15% fire pipes, 15% moving spikes
+			if roll < 0.70:
+				hz.append({"name": "Spikes_%d" % idx, "scene": HAZARD_SCENE,
+					"position": [hx, float(FLOOR_Y_CTR - PLAT_THICK - 8)]})
+			elif roll < 0.85:
+				hz.append({"name": "FirePipe_%d" % idx, "scene": FIRE_PIPE_SCENE,
+					"position": [hx, float(p["top_y"]) - 24.0],
+					"props": {
+						"period": rng.randf_range(1.5, 2.5),
+						"on_time": rng.randf_range(0.5, 0.9),
+						"phase": rng.randf_range(0.0, 2.0),
+					}})
+			else:
+				hz.append({"name": "MovingSpike_%d" % idx, "scene": MOVING_SPIKE_SCENE,
+					"position": [hx, float(p["top_y"]) - 32.0],
+					"props": {
+						"travel": rng.randf_range(48.0, 80.0),
+						"speed": rng.randf_range(40.0, 80.0),
+						"vertical": rng.randf() < 0.7,
+					}})
+			idx += 1
+
+	# Acid baths in some floor gaps (chasms)
+	for gap in floor_gaps:
+		if rng.randf() < 0.3:
+			var gap_x := (float(gap[0]) + float(gap[1])) * 0.5
+			hz.append({"name": "AcidBath_%d" % idx, "scene": ACID_BATH_SCENE,
+				"position": [gap_x, float(FLOOR_Y_CTR - 8)],
+				"size": [float(gap[1]) - float(gap[0]), 16.0],
+				"anchor": "top"})
+			idx += 1
+
 	return hz
 
 # ── Enemies ────────────────────────────────────────────────────────────────────
@@ -891,6 +926,8 @@ func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_inde
 	var idx := 0
 	# Daleks patrol platforms (gateways get a higher chance)
 	for p in platfs:
+		if _is_door_landing_platform(p):
+			continue
 		var chance := base_chance
 		if _is_gateway(p, platfs, depths):
 			chance = minf(0.8, base_chance + 0.35)
@@ -927,6 +964,10 @@ func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_inde
 			},
 		})
 	return [enm, enemy_names]
+
+func _is_door_landing_platform(p: Dictionary) -> bool:
+	var name := str(p.get("name", "")).to_lower()
+	return name.find("landing") >= 0 or name.find("door") >= 0 or name.find("exit") >= 0
 
 func _place_enemies(rng: RandomNumberGenerator, platfs: Array, room_index: int) -> Array:
 	return _place_enemies_tracked(rng, platfs, room_index)[0]
