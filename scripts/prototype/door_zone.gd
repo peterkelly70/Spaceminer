@@ -11,7 +11,7 @@ signal door_blocked(required_items: Array[String])
 @export var interact_hold_seconds: float = 0.28
 
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
-@onready var body_visual: Polygon2D = $BodyVisual
+@onready var body_visual: Sprite2D = $BodyVisual
 @onready var panel_left: Polygon2D = $PanelLeft if has_node("PanelLeft") else null
 @onready var panel_right: Polygon2D = $PanelRight if has_node("PanelRight") else null
 @onready var title_label: Label = $Label
@@ -59,7 +59,7 @@ func configure(data: Dictionary) -> void:
 		collision_shape.position = _art_offset
 	if body_visual:
 		body_visual.position = _art_offset
-		body_visual.scale = size / Vector2(40.0, 72.0)
+		body_visual.scale = Vector2.ONE
 		# Rotate sprite for horizontal doors (north/south/up/down)
 		if _door_direction in ["north", "south", "up", "down"]:
 			body_visual.rotation = PI / 2.0  # 90 degrees for horizontal
@@ -70,7 +70,7 @@ func configure(data: Dictionary) -> void:
 		panel_right.position = _art_offset
 		panel_right.scale = size / Vector2(40.0, 72.0)
 	if title_label:
-		title_label.position = _art_offset + Vector2(-size.x * 0.5, -size.y * 0.5 - 20.0)
+		title_label.position = _art_offset + _label_offset(size)
 	if hold_bar:
 		hold_bar.position = _art_offset + Vector2(-24.0, -size.y * 0.5 - 42.0)
 		hold_bar.custom_minimum_size = Vector2(48.0, 10.0)
@@ -121,12 +121,14 @@ func _refresh_visual() -> void:
 
 	if body_visual:
 		body_visual.position = _art_offset
-		var open := requires.is_empty() and _player_near
-		var color := Color.WHITE if open else GLOW_COLOR.darkened(0.35)
+		var color := Color.WHITE
+		# Tint based on lock requirement (subtle overlay)
 		if target_room_id == "campaign_complete":
-			color = EXIT_COLOR if _player_near else EXIT_COLOR.darkened(0.35)
+			color = EXIT_COLOR
 		elif not requires.is_empty():
-			color = _requirement_color().lightened(0.1) if _player_near else _requirement_color().darkened(0.25)
+			# Subtle tint: darken the requirement color and blend with white
+			var req_color := _requirement_color()
+			color = Color.WHITE.lerp(req_color, 0.25)  # 25% tint towards requirement color
 		body_visual.color = color
 		body_visual.self_modulate = color
 	if panel_left:
@@ -229,6 +231,25 @@ func _normalize_size(size: Vector2) -> Vector2:
 	return Vector2(minf(size.x, expected.x), minf(size.y, expected.y))
 
 func _art_offset_for_direction(size: Vector2) -> Vector2:
-	if _door_direction in ["east", "west"]:
-		return Vector2(0.0, -size.y * 0.5)
-	return Vector2.ZERO
+	# Anchor each door to its wall edge so the art sits in the wall opening
+	# instead of poking into the floor / ceiling band.
+	match _door_direction:
+		"east", "west":
+			# Rise up out of the landing ledge the door stands on.
+			return Vector2(0.0, -size.y * 0.5)
+		"north", "up":
+			# Hug the ceiling.
+			return Vector2(0.0, -size.y * 0.5)
+		"south", "down":
+			# Drop below the floor band so it doesn't overlap the floor border.
+			return Vector2(0.0, size.y * 0.5)
+		_:
+			return Vector2.ZERO
+
+# Places the label clear of the door art: above the door for every direction
+# except south/down, whose door sits at the bottom edge (label goes below it).
+# The label box is 128 px wide, so -64 centres it horizontally over the door.
+func _label_offset(size: Vector2) -> Vector2:
+	if _door_direction in ["south", "down"]:
+		return Vector2(-64.0, size.y * 0.5 + 8.0)
+	return Vector2(-64.0, -size.y * 0.5 - 24.0)

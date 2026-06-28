@@ -685,19 +685,19 @@ func _add_door_walls(solids: Array, exits: Array) -> void:
 		var door_pos := _v2(exit.get("position", [0, 0]))
 		match direction:
 			"east", "west":
-				# Vertical doors: add walls above and below
+				# Vertical doors: add walls above and below (smaller)
 				var wall_x := door_pos.x
 				solids.append({"name": "DoorWallTop_%s" % direction, "kind": "wall", "anchor": "center",
-					"position": [wall_x, door_pos.y - 80.0], "size": [16.0, 80.0]})
+					"position": [wall_x, door_pos.y - 40.0], "size": [16.0, 40.0]})
 				solids.append({"name": "DoorWallBot_%s" % direction, "kind": "wall", "anchor": "center",
-					"position": [wall_x, door_pos.y + 80.0], "size": [16.0, 80.0]})
+					"position": [wall_x, door_pos.y + 40.0], "size": [16.0, 40.0]})
 			"north", "south":
-				# Horizontal doors: add walls left and right
+				# Horizontal doors: add walls left and right (smaller)
 				var wall_y := door_pos.y
 				solids.append({"name": "DoorWallLeft_%s" % direction, "kind": "wall", "anchor": "center",
-					"position": [door_pos.x - 80.0, wall_y], "size": [80.0, 16.0]})
+					"position": [door_pos.x - 40.0, wall_y], "size": [40.0, 16.0]})
 				solids.append({"name": "DoorWallRight_%s" % direction, "kind": "wall", "anchor": "center",
-					"position": [door_pos.x + 80.0, wall_y], "size": [80.0, 16.0]})
+					"position": [door_pos.x + 40.0, wall_y], "size": [40.0, 16.0]})
 
 func _wall_segment(solids: Array, side: String, gap: Dictionary) -> void:
 	if side in ["east", "west"]:
