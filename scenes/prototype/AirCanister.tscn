@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/air_canister.gd" id="1_air_script"]
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0052.png" id="2_air_texture"]
+
+[sub_resource type="CircleShape2D" id="1_circle"]
+radius = 8.0
+
+[node name="AirCanister" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_air_script")
+monitorable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1_circle")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_air_texture")
+modulate = Color(0.0, 0.84, 1.0, 1.0)
+scale = Vector2(0.5, 0.5)

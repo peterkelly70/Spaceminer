@@ -39,7 +39,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if not event.is_pressed() or event.is_echo():
 		return
-	if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept"):
+	if event.is_action_pressed("interact"):
 		if _is_open():
 			_close()
 		else:
@@ -85,7 +85,7 @@ func _open() -> void:
 	margin.add_child(row)
 
 	var portrait := TextureRect.new()
-	portrait.texture = load("res://assets/images/willyinspace/dwarf1.png")
+	portrait.texture = load("res://assets/tiles/Transparent/tile_0096.png")
 	portrait.custom_minimum_size = Vector2(96, 96)
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -111,7 +111,7 @@ func _open() -> void:
 	col.add_child(text_lbl)
 
 	var hint := Label.new()
-	hint.text = "Press [S] to close"
+	hint.text = "Hold interact to close"
 	hint.add_theme_font_size_override("font_size", 16)
 	hint.add_theme_color_override("font_color", Color(0.6, 0.8, 1.0))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
