@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/controllers/rooms/GeneratedAsteroidRoomController.gd" id="1_controller"]
+[ext_resource type="Script" path="res://scripts/controllers/rooms/LevelBuilder.gd" id="2_level_builder"]
+[ext_resource type="PackedScene" path="res://scenes/prototype/Player.tscn" id="3_player_scene"]
+
+[node name="GeneratedAsteroidRoom" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_controller")
+
+[node name="RoomCamera" type="Camera2D" parent="."]
+zoom = Vector2(1.8, 1.8)
+current = true
+
+[node name="Level" type="Node2D" parent="."]
+script = ExtResource("2_level_builder")
+auto_build = false
+
+[node name="Collectibles" type="Node2D" parent="."]
+
+[node name="Hazards" type="Node2D" parent="."]
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="Doors" type="Node2D" parent="."]
+
+[node name="RespawnPoint" type="Marker2D" parent="."]
+position = Vector2(-280, 120)
+
+[node name="Player" parent="." instance=ExtResource("3_player_scene")]
+position = Vector2(-280, 120)
+
+[node name="Body" parent="Player"]
+scale = Vector2(2, 2)
