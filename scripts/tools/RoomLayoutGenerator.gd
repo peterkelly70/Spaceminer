@@ -1097,9 +1097,12 @@ func _place_mechanisms(rng: RandomNumberGenerator, platfs: Array, room_index: in
 
 	return mech
 
-# Place pairs of teleporters in rooms (room 3+, 1-2 pairs)
+# Place pairs of teleporters in rooms (room 3+, 40% chance per room)
 func _place_teleporters(rng: RandomNumberGenerator, platfs: Array, room_index: int) -> Array:
 	if room_index < 3 or platfs.size() < 2:
+		return []
+	# 40% chance to spawn teleporters in the room
+	if rng.randf() > 0.4:
 		return []
 	var tps: Array = []
 	var pair_count := rng.randi_range(1, 2) if room_index >= 4 else 1
