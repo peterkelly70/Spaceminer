@@ -65,16 +65,47 @@ func _pick_archetype(rng: RandomNumberGenerator, room_index: int) -> int:
 	]
 	return pool[rng.randi() % pool.size()]
 
+# Minimum vertical gap between horizontally-overlapping platforms. The player is
+# 32px tall; anything closer than this leaves no head-clearance and produces the
+# cramped "walk under a platform" look. 2 × LEVEL_STEP (96) gives comfortable room.
+const MIN_STACK_GAP := 80
+
 # Returns { "platfs": Array, "floor_gaps": Array[[x0,x1]] }
 func _build_archetype(arche: int, rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
+	var build: Dictionary
 	match arche:
-		RoomArchetype.SHAFT:     return {"platfs": _arch_shaft(rng)}
-		RoomArchetype.ISLANDS:   return {"platfs": _arch_islands(rng)}
-		RoomArchetype.TOWERS:    return {"platfs": _arch_towers(rng)}
-		RoomArchetype.VAULT:     return {"platfs": _arch_vault(rng)}
-		RoomArchetype.PIT:       return _arch_pit(rng)
-		RoomArchetype.CAVERN:    return {"platfs": _arch_cavern(rng, exits)}
-		_:                       return {"platfs": _arch_staircase(rng)}
+		RoomArchetype.SHAFT:     build = {"platfs": _arch_shaft(rng)}
+		RoomArchetype.ISLANDS:   build = {"platfs": _arch_islands(rng)}
+		RoomArchetype.TOWERS:    build = {"platfs": _arch_towers(rng)}
+		RoomArchetype.VAULT:     build = {"platfs": _arch_vault(rng)}
+		RoomArchetype.PIT:       build = _arch_pit(rng)
+		RoomArchetype.CAVERN:    build = {"platfs": _arch_cavern(rng, exits)}
+		_:                       build = {"platfs": _arch_staircase(rng)}
+	build["platfs"] = _declutter_platforms(build["platfs"])
+	return build
+
+# Drops platforms that sit too close above another overlapping platform, so the
+# player always has clear head-room and rooms don't look cramped.
+func _declutter_platforms(platfs: Array) -> Array:
+	var kept: Array = []
+	# Keep lower platforms first (larger top_y), discard the cramped one above.
+	var sorted := platfs.duplicate()
+	sorted.sort_custom(func(a, b): return float(a["top_y"]) > float(b["top_y"]))
+	for p in sorted:
+		var ok := true
+		for k in kept:
+			if _x_overlap(p, k) and absf(float(p["top_y"]) - float(k["top_y"])) < MIN_STACK_GAP:
+				ok = false
+				break
+		if ok:
+			kept.append(p)
+	return kept
+
+func _x_overlap(a: Dictionary, b: Dictionary) -> bool:
+	var ahw := float(a["width"]) * 0.5
+	var bhw := float(b["width"]) * 0.5
+	# +12 margin (~player half-width) so near-touching columns count as overlapping
+	return absf(float(a["cx"]) - float(b["cx"])) < ahw + bhw + 12.0
 
 # Helper: a platform dict with derived cy/level, snapped to the tile grid.
 func _mk_plat(name: String, cx: int, top_y: int, width: int) -> Dictionary:
@@ -132,9 +163,13 @@ func _arch_towers(rng: RandomNumberGenerator) -> Array:
 	var count := rng.randi_range(2, 3)
 	for t in range(count):
 		var tx := -240 + t * int(480.0 / float(maxi(count - 1, 1)))
-		var height := rng.randi_range(2, LEVEL_COUNT)
-		for k in range(height):
-			out.append(_mk_plat("Tower%d_%d" % [t, k], tx, _level_top_y(k), 64))
+		# Stack every 2nd level so there's clear head-room between rungs
+		var rungs := rng.randi_range(2, 3)
+		for r in range(rungs):
+			var k := r * 2
+			if k >= LEVEL_COUNT:
+				break
+			out.append(_mk_plat("Tower%d_%d" % [t, r], tx, _level_top_y(k), 64))
 	return out
 
 # A guarded reward: a climb leading to a high corner alcove (rich, deep loot).
