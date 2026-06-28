@@ -132,7 +132,7 @@ func _ensure_game_over_popup() -> void:
 	if _game_over_popup.has_signal("menu_requested") and not _game_over_popup.menu_requested.is_connected(_on_game_over_menu_requested):
 		_game_over_popup.menu_requested.connect(_on_game_over_menu_requested)
 
-func _load_room(room_id: String) -> void:
+func _load_room(room_id: String, entry_direction: String = "") -> void:
 	var room_path := ""
 	if RunManager and RunManager.has_method("get_room_path"):
 		room_path = RunManager.get_room_path(room_id)
@@ -141,14 +141,14 @@ func _load_room(room_id: String) -> void:
 	if room_path.is_empty():
 		push_error("No room JSON for id: %s" % room_id)
 		return
-	_load_generated_room(room_id, room_path)
+	_load_generated_room(room_id, room_path, entry_direction)
 
-func _load_generated_room(room_id: String, room_path: String) -> void:
+func _load_generated_room(room_id: String, room_path: String, entry_direction: String = "") -> void:
 	_clear_room()
 	current_room_id = room_id
 	room_instance = GENERATED_ROOM_SCENE.instantiate()
 	if room_instance.has_method("configure_room"):
-		room_instance.call("configure_room", room_path, room_id)
+		room_instance.call("configure_room", room_path, room_id, entry_direction)
 	elif room_instance.has_method("set"):
 		room_instance.set("room_json_path", room_path)
 		room_instance.set("current_room_id", room_id)
@@ -181,7 +181,7 @@ func _clear_room() -> void:
 		room_instance.queue_free()
 	room_instance = null
 
-func _on_room_change_requested(next_room_id: String) -> void:
+func _on_room_change_requested(next_room_id: String, entry_direction: String = "") -> void:
 	overlay_label.text = next_room_id
 	print("Room requested transition to: %s" % next_room_id)
 	if next_room_id == "campaign_complete":
@@ -191,7 +191,7 @@ func _on_room_change_requested(next_room_id: String) -> void:
 		return
 	if RunManager and RunManager.has_method("set_current_room"):
 		RunManager.set_current_room(next_room_id)
-	call_deferred("_load_room", next_room_id)
+	call_deferred("_load_room", next_room_id, entry_direction)
 
 func _on_room_status_changed(status: Dictionary) -> void:
 	if status.has("room_name"):
