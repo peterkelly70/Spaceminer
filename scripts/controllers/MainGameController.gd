@@ -46,12 +46,14 @@ const SUIT_UPGRADES := [
 @onready var battery_bar: ProgressBar = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Battery/ProgressBar
 @onready var security_cards_grid: GridContainer = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards
 @onready var upgrade_cards_grid: GridContainer = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards
-@onready var status_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox/StatusLabel01
+@onready var score_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox/ScoreValue
 
 var room_instance: Node2D = null
 var current_room_id: String = "room_000"
 var _game_over_popup: Control = null
 var _game_over_active: bool = false
+var _room_transition_locked: bool = false
+var _room_transition_request_id: int = 0
 
 func _ready() -> void:
 	print("MainGameController ready")
@@ -140,6 +142,7 @@ func _load_room(room_id: String, entry_direction: String = "") -> void:
 		room_path = ROOM_JSON.get(room_id, "")
 	if room_path.is_empty():
 		push_error("No room JSON for id: %s" % room_id)
+		_room_transition_locked = false
 		return
 	_load_generated_room(room_id, room_path, entry_direction)
 
@@ -163,6 +166,8 @@ func _load_generated_room(room_id: String, room_path: String, entry_direction: S
 		if room_instance.has_method("_emit_room_status"):
 			room_instance.call_deferred("_emit_room_status")
 	print("Generated gameplay room instanced: %s from %s" % [room_id, room_path])
+	if _room_transition_locked:
+		_unlock_room_transition_after_spawn()
 
 func on_enter_state(_state: int) -> void:
 	visible = true
@@ -182,16 +187,28 @@ func _clear_room() -> void:
 	room_instance = null
 
 func _on_room_change_requested(next_room_id: String, entry_direction: String = "") -> void:
+	if _room_transition_locked:
+		print("Ignoring room transition while locked: %s" % next_room_id)
+		return
+	_room_transition_locked = true
+	_room_transition_request_id += 1
 	overlay_label.text = next_room_id
 	print("Room requested transition to: %s" % next_room_id)
 	if next_room_id == "campaign_complete":
 		if RunManager and RunManager.has_method("set_current_room"):
 			RunManager.set_current_room(next_room_id)
 		_set_campaign_complete_state()
+		_room_transition_locked = false
 		return
 	if RunManager and RunManager.has_method("set_current_room"):
 		RunManager.set_current_room(next_room_id)
 	call_deferred("_load_room", next_room_id, entry_direction)
+
+func _unlock_room_transition_after_spawn() -> void:
+	var request_id := _room_transition_request_id
+	await get_tree().create_timer(0.45).timeout
+	if request_id == _room_transition_request_id:
+		_room_transition_locked = false
 
 func _on_room_status_changed(status: Dictionary) -> void:
 	if status.has("room_name"):
@@ -226,21 +243,16 @@ func _on_room_status_changed(status: Dictionary) -> void:
 			battery_root.visible = true
 		if battery_bar:
 			battery_bar.value = float(status["battery_pct"])
-	if status.has("is_resupply") and bool(status["is_resupply"]):
-		if status_label:
-			status_label.text = "Resupply Station"
 	if status.has("lives_remaining"):
 		var lives_remaining := int(status["lives_remaining"])
 		_update_life_icons(lives_remaining)
 		if lives_remaining <= 0 and not _game_over_active:
 			_open_game_over_popup(str(status.get("room_name", current_room_id)))
-	if status.has("status"):
-		status_label.text = str(status["status"])
+	if status.has("score") and score_label:
+		score_label.text = "%d" % int(status["score"])
 	_refresh_card_grids()
 
 func _set_campaign_complete_state() -> void:
-	if status_label:
-		status_label.text = "Exit reached"
 	room_model_tip("Exit reached. Returning to menu.")
 	call_deferred("_return_to_menu_after_exit")
 

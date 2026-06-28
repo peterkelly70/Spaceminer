@@ -164,6 +164,8 @@ func _on_ore_collected(amount: int) -> void:
 	var rm := _get_run_manager()
 	if rm and rm.has_method("add_ore"):
 		rm.add_ore(amount)
+	if rm and rm.has_method("add_score"):
+		rm.add_score(amount * 100)
 	room_model.set_tip("Nice haul!")
 	_play_collect_feedback()
 
@@ -399,6 +401,7 @@ func _emit_room_status() -> void:
 		"oxygen_percent":    int(round((room_model.current_oxygen / room_model.max_oxygen) * 100.0)),
 		"lives_remaining":   lives_remaining,
 		"lives_total":       max_lives,
+		"score":             int(rm.get_score()) if rm and rm.has_method("get_score") else 0,
 		"status":            current_status,
 		"tip":               current_tip,
 		"has_jetpack":       bool(rm and rm.has_method("has_equipment") and rm.has_equipment("jetpack")),

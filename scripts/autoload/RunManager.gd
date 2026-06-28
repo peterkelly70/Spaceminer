@@ -60,6 +60,7 @@ func start_new_run(seed_text: String = "", run_name: String = "") -> Dictionary:
 		"ore_count": 0,
 		"lives_remaining": STARTING_LIVES,
 		"max_lives": STARTING_LIVES,
+		"score": 0,
 	}
 
 	save_current_run(active_run["run_name"])
@@ -131,6 +132,8 @@ func load_run(save_path: String) -> Dictionary:
 		active_run["max_lives"] = STARTING_LIVES
 	if not active_run.has("lives_remaining"):
 		active_run["lives_remaining"] = int(active_run.get("max_lives", STARTING_LIVES))
+	if not active_run.has("score"):
+		active_run["score"] = 0
 	if not active_run.has("equipment") or not (active_run["equipment"] is Array):
 		active_run["equipment"] = []
 	if not active_run.has("security_cards") or not (active_run["security_cards"] is Array):
@@ -286,6 +289,14 @@ func has_security_card(card_id: String) -> bool:
 	return security_cards.has(card_id)
 
 # ── Lives (run-level, persist across rooms and saves) ─────────────────────────
+
+func get_score() -> int:
+	return int(active_run.get("score", 0))
+
+func add_score(amount: int) -> void:
+	if active_run.is_empty():
+		return
+	active_run["score"] = get_score() + amount
 
 func get_lives() -> int:
 	return int(active_run.get("lives_remaining", STARTING_LIVES))

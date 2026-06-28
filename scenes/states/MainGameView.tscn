@@ -1,73 +1,393 @@
-[gd_scene load_steps=5 format=3 uid="uid://8drsyuamf5dj"]
+[gd_scene format=3 uid="uid://8drsyuamf5dj"]
 
-[ext_resource type="Script" uid="uid://dixvoe07s2nu8" path="res://scripts/controllers/MainGameController.gd" id="1_3rvd4"]
-[ext_resource type="Texture2D" uid="uid://c7ewlyefpihge" path="res://assets/images/background.png" id="2_qvrd3"]
-[ext_resource type="Script" uid="uid://iopkpj7swdt3" path="res://scripts/views/sidebar.gd" id="3_xyxn7"]
-[ext_resource type="Theme" uid="uid://b8t7tkhvh8rgt" path="res://assets/themes/default_theme.tres" id="10_qxs5m"]
+[ext_resource type="Script" uid="uid://dixvoe07s2nu8" path="res://scripts/controllers/MainGameController.gd" id="1_controller"]
+[ext_resource type="Theme" uid="uid://bfmke1es4ewfx" path="res://assets/themes/retro_theme.tres" id="3_theme"]
+[ext_resource type="Script" path="res://scripts/ui/AnimatedLifeIcon.gd" id="4_life_icon"]
+[ext_resource type="Texture2D" uid="uid://cnte3noieli0j" path="res://assets/tiles/Transparent/tile_0400.png" id="6_ecmg4"]
+[ext_resource type="Texture2D" uid="uid://d36f0618q4mde" path="res://assets/tiles/Transparent/tile_0401.png" id="7_44nfw"]
 
-[node name="MainGameView" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ooov"]
+bg_color = Color(0.011764706, 0.9764706, 0.9843137, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l2vqa"]
+bg_color = Color(13.117, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fuel"]
+bg_color = Color(1, 0.55, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_battery"]
+bg_color = Color(0.67, 0.5, 1, 1)
+
+[node name="MainGameView" type="Control" unique_id=1710794659]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("1_3rvd4")
+script = ExtResource("1_controller")
 
-[node name="CutsceneLayer" type="CanvasLayer" parent="."]
-layer = 128
-
-[node name="CutsceneContainer" type="Control" parent="CutsceneLayer"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 13.0
-offset_top = 5.0
-offset_right = 2.0
-offset_bottom = 9.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1, 0.993577)
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="GameBackground" type="TextureRect" parent="."]
+[node name="GameBackground" type="ColorRect" parent="." unique_id=1730348157]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_qvrd3")
-expand_mode = 1
+color = Color(0, 0, 0, 1)
 
-[node name="Mainscreen" type="PanelContainer" parent="."]
-layout_mode = 2
+[node name="Layout" type="VBoxContainer" parent="." unique_id=848783024]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("10_qxs5m")
-script = ExtResource("3_xyxn7")
+theme = ExtResource("3_theme")
+theme_override_constants/separation = 0
 
-[node name="ContentArea" type="MarginContainer" parent="Mainscreen"]
-custom_minimum_size = Vector2(1560, 0)
+[node name="ContentArea" type="MarginContainer" parent="Layout" unique_id=1480487623]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.8
+size_flags_vertical = 3
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="Label" type="Label" parent="Mainscreen"]
+[node name="ViewportContainer" type="SubViewportContainer" parent="Layout/ContentArea" unique_id=1198616342]
 layout_mode = 2
-theme_override_font_sizes/font_size = 45
-text = "Instantiate your game play area in here
-"
-horizontal_alignment = 1
-vertical_alignment = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+stretch = true
+
+[node name="GameplayViewport" type="SubViewport" parent="Layout/ContentArea/ViewportContainer" unique_id=1425578468]
+handle_input_locally = false
+size = Vector2i(1957, 892)
+render_target_update_mode = 4
+
+[node name="StatusArea" type="MarginContainer" parent="Layout" unique_id=285530697]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 0
+
+[node name="StatusPanel" type="PanelContainer" parent="Layout/StatusArea" unique_id=1101373534]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+
+[node name="StatusMargin" type="MarginContainer" parent="Layout/StatusArea/StatusPanel" unique_id=45038985]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="StatusRow" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin" unique_id=1798666507]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="MissionLabel" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow" unique_id=760910700]
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 42
+text = "Landing Bay Alpha"
+uppercase = true
+
+[node name="Lives" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow" unique_id=977285189]
+layout_mode = 2
+
+[node name="life_01" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=73988662]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_02" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=569386415]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_03" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=1356462947]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_04" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=1608079467]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_05" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=285791501]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_06" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=1123673555]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_07" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=695720759]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_08" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=958931952]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_09" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=1172334211]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="life_10" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=1630262823]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("4_life_icon")
+
+[node name="Status" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow" unique_id=1469729299]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="Statusbox" type="VBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status" unique_id=556947142]
+layout_mode = 2
+
+[node name="ScoreHeader" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox" unique_id=192059238]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Score"
+uppercase = true
+
+[node name="ScoreValue" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox" unique_id=1202232539]
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 32
+text = "0"
+
+[node name="Ore" type="VBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status" unique_id=854574724]
+custom_minimum_size = Vector2(110, 140)
+layout_mode = 2
+
+[node name="OreLabel" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore" unique_id=999410782]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Ore"
+uppercase = true
+
+
+[node name="Consumables" type="VBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status" unique_id=1964397622]
+custom_minimum_size = Vector2(220, 140)
+layout_mode = 2
+
+[node name="Air" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables" unique_id=853812948]
+layout_mode = 2
+
+[node name="AirIcon" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Air" unique_id=2100000001]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+expand_mode = 1
+
+[node name="AirLabel" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Air" unique_id=1545291877]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 36
+text = "Air"
+uppercase = true
+
+[node name="ProgressBar" type="ProgressBar" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Air" unique_id=1614259381]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("3_theme")
+theme_override_colors/font_color = Color(13.1169815, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = SubResource("StyleBoxFlat_8ooov")
+value = 100.0
+
+[node name="Jetpack" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables" unique_id=1989491229]
+layout_mode = 2
+
+[node name="JetIcon" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Jetpack" unique_id=2100000004]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+expand_mode = 1
+
+[node name="JetLabel" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Jetpack" unique_id=807378032]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 36
+text = "Jet"
+uppercase = true
+
+[node name="ProgressBar" type="ProgressBar" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Jetpack" unique_id=1481004688]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("3_theme")
+theme_override_colors/font_color = Color(0.011764706, 0.9764706, 0.9843137, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = SubResource("StyleBoxFlat_l2vqa")
+value = 100.0
+
+[node name="Fuel" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables" unique_id=2001000001]
+layout_mode = 2
+
+[node name="FuelIcon" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Fuel" unique_id=2100000002]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+expand_mode = 1
+
+[node name="FuelLabel" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Fuel" unique_id=2001000002]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 36
+text = "Fuel"
+uppercase = true
+
+[node name="ProgressBar" type="ProgressBar" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Fuel" unique_id=2001000003]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("3_theme")
+theme_override_colors/font_color = Color(1, 0.55, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = SubResource("StyleBoxFlat_fuel")
+value = 100.0
+
+[node name="Battery" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables" unique_id=2001000004]
+layout_mode = 2
+
+[node name="BatteryIcon" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Battery" unique_id=2100000003]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+expand_mode = 1
+
+[node name="BatLabel" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Battery" unique_id=2001000005]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 36
+text = "Batt"
+uppercase = true
+
+[node name="ProgressBar" type="ProgressBar" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Battery" unique_id=2001000006]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("3_theme")
+theme_override_colors/font_color = Color(0.67, 0.5, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/background = SubResource("StyleBoxFlat_battery")
+value = 100.0
+
+[node name="MissionSpacer" type="Control" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow" unique_id=396602664]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EquipmentStrip" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow" unique_id=1019266232]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 25
+
+[node name="SecurityCards" type="GridContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip" unique_id=1019266233]
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 2
+
+[node name="Card01" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards" unique_id=48351718]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("6_ecmg4")
+expand_mode = 1
+
+[node name="Card02" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards" unique_id=1196025729]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("6_ecmg4")
+expand_mode = 1
+
+[node name="Card03" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards" unique_id=224201850]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("6_ecmg4")
+expand_mode = 1
+
+[node name="Card04" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards" unique_id=723097403]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("6_ecmg4")
+expand_mode = 1
+
+[node name="Card05" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards" unique_id=1301064223]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("6_ecmg4")
+expand_mode = 1
+
+[node name="Card06" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards" unique_id=1556057882]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("6_ecmg4")
+expand_mode = 1
+
+[node name="UpgradeCards" type="GridContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip" unique_id=1019266234]
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 3
+
+[node name="Equipment01" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards" unique_id=798551595]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("7_44nfw")
+expand_mode = 1
+
+[node name="Equipment02" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards" unique_id=1755771773]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("7_44nfw")
+expand_mode = 1
+
+[node name="Equipment03" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards" unique_id=1757826275]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("7_44nfw")
+expand_mode = 1
+
+[node name="Equipment04" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards" unique_id=1426225413]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("7_44nfw")
+expand_mode = 1
+
+[node name="Equipment05" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards" unique_id=148452337]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("7_44nfw")
+expand_mode = 1
+
+[node name="Equipment06" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards" unique_id=1917518660]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("7_44nfw")
+expand_mode = 1
