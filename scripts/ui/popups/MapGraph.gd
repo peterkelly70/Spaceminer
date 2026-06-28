@@ -149,6 +149,13 @@ func _draw_links(layout: Dictionary) -> void:
 
 func _draw_rooms(layout: Dictionary) -> void:
 	var placements: Dictionary = layout.get("points", {})
+	# Draw current room highlight box first (so it appears behind other rooms)
+	for room_id in _rooms.keys():
+		if room_id == _current_room_id:
+			var pos: Vector2 = _map_to_screen(placements.get(room_id, Vector2.ZERO), layout)
+			draw_rect(Rect2(pos - Vector2(18, 18), Vector2(36, 36)), ROOM_CURRENT, false, 2.5)
+			break
+
 	for room_id in _rooms.keys():
 		var room: Dictionary = _rooms[room_id]
 		var pos: Vector2 = _map_to_screen(placements.get(room_id, Vector2.ZERO), layout)
