@@ -4,15 +4,20 @@ class_name RoomLayoutGenerator
 # ── Room coordinate system (centre-origin, matching AsteroidCampaignGenerator) ──
 const ROOM_HALF_W  := 360
 const ROOM_HALF_H  := 200
-# Floor solid body.y = 160.  LevelBuilder shifts CollisionShape2D by (0,-8) so
-# shape centre = 152, shape top (walkable surface) = 144 = 9 × TILE_SZ.
-const FLOOR_Y_CTR  := 160   # floor StaticBody2D position.y
-const FLOOR_TOP_Y  := 152   # shape-centre reference (body.y - 8); used in _level_top_y
+# Floor solid: body.y = 152 (position 144 + anchor "top" half-height 8).
+# LevelBuilder puts CollisionShape2D at body centre, so walkable surface
+# (shape top) = 152 - 8 = 144 = 9 × TILE_SZ.  Tile row 9 draws at y=144.
+# FLOOR_TOP_Y MUST be a multiple of TILE_SZ so platform tiles align with their
+# collision surfaces (integer tile-row division).
+const FLOOR_Y_CTR  := 160   # floor StaticBody2D position reference
+const FLOOR_TOP_Y  := 144   # walkable floor surface = 9 × TILE_SZ
 const WALL_X       := 352
 const PLAT_THICK   := 16    # 1 tile
 const TILE_SZ      := 16    # tileset cell size in pixels
 
-# Jump physics  (must match LevelSolvabilityValidator)
+# Jump physics  (must match LevelSolvabilityValidator and player.gd JUMP_SPEED).
+# Player is 32 px tall; LEVEL_STEP gives vertical clearance to stand under and
+# jump up onto the next level.
 const MAX_JUMP_UP  := 64.0
 const MAX_JUMP_GAP := 96.0
 
@@ -23,17 +28,17 @@ const MAX_JUMP_GAP := 96.0
 #   Right edges: -240, -128, -16,  96, 208, 320
 #   Edge gap between adjacent columns: 112 - 80 = 32 px (2 tiles), always jumpable.
 #
-# Level heights (surface = FLOOR_TOP_Y - (n+1)×LEVEL_STEP):
-#   Level 0 → top 120, body centre 136
-#   Level 1 → top  88, body centre 104
-#   Level 2 → top  56, body centre  72
-#   Level 3 → top  24, body centre  40
-#   Level 4 → top  -8, body centre   8
+# Level heights (surface = FLOOR_TOP_Y - (n+1)×LEVEL_STEP), LEVEL_STEP=48:
+#   Level 0 → top  96
+#   Level 1 → top  48
+#   Level 2 → top   0
+#   Level 3 → top -48
+#   Level 4 → top -96
 const COL_COUNT    := 6
 const COL_X        := [-280, -168, -56, 56, 168, 280]
 const PLAT_W       := 80    # 5 tiles wide; with centres above, both edges on 16 px grid
 const LEVEL_COUNT  := 5     # levels 0..4
-const LEVEL_STEP   := 32    # 2 tiles per step
+const LEVEL_STEP   := 48    # 3 tiles per step — clearance for the 32px-tall player
 
 const ORE_SCENE      := "res://scenes/prototype/OreFragment.tscn"
 const AIR_SCENE      := "res://scenes/prototype/AirCanister.tscn"
@@ -57,7 +62,7 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 	_ensure_path(solids, rng)
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index)
 	return {
-		"spawn":        [-300, 130],
+		"spawn":        [-300, 128],
 		"solids":       solids,
 		"decor":        _build_decor(rng, room_index),
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1]),
@@ -95,7 +100,7 @@ func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array
 			},
 		})
 	return {
-		"spawn":        [-260, 130],
+		"spawn":        [-260, 128],
 		"solids":       solids,
 		"decor":        [],
 		"collectibles": pickups,
@@ -110,7 +115,7 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	_ensure_path(solids, rng)
 	var enemy_result := _place_enemies_tracked(rng, platfs, room_index)
 	return {
-		"spawn":        [0, 130],
+		"spawn":        [0, 128],
 		"solids":       solids,
 		"decor":        _build_decor(rng, room_index),
 		"collectibles": _place_ore(rng, platfs, room_index, enemy_result[1]),
@@ -437,6 +442,16 @@ func _bridge(surfs: Array, reached: Dictionary, unreach: Array, rng: RandomNumbe
 
 # ── Collectibles ───────────────────────────────────────────────────────────────
 
+# Half the on-screen height of each collectible sprite, so it rests ON a surface
+# (node origin is centred, so centre = surface - half-height).
+func _item_rest_offset(scene: String) -> float:
+	match scene:
+		ORE_SCENE:     return 12.0   # ruby 32px × 0.75 = 24 → half 12
+		BATTERY_SCENE: return 10.0   # yellowball 32px × 0.6 ≈ 19 → half ~10
+		FUEL_SCENE:    return 5.0    # fuelrods 16px × 0.6 ≈ 10 → half 5
+		AIR_SCENE:     return 4.0    # SpaceMiner 16px × 0.5 = 8 → half 4
+	return 8.0
+
 func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enemy_plat_names: Array = []) -> Array:
 	var items: Array = []
 	var idx := 0
@@ -447,7 +462,6 @@ func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enem
 		var count := 1 + (1 if p["level"] >= 2 else 0)
 		for j in range(count):
 			var ox := float(p["cx"]) + float(j) * 20.0 - 10.0
-			var oy := float(p["top_y"]) - 8.0
 			var roll := rng.randf()
 			var scene := ORE_SCENE
 			var name_prefix := "Ore"
@@ -460,13 +474,14 @@ func _place_ore(rng: RandomNumberGenerator, platfs: Array, room_index: int, enem
 			elif p["level"] >= 2 and roll < 0.08:
 				scene = BATTERY_SCENE
 				name_prefix = "Bat"
+			var oy := float(p["top_y"]) - _item_rest_offset(scene)
 			items.append({"name": "%s_%02d" % [name_prefix, idx],
 				"scene": scene, "position": [ox, oy]})
 			idx += 1
 	for i in range(rng.randi_range(1, 3)):
 		var scene := AIR_SCENE if rng.randf() < 0.3 else ORE_SCENE
 		items.append({"name": "Floor_%02d" % i, "scene": scene,
-			"position": [float(rng.randi_range(-280, 280)), float(FLOOR_TOP_Y) - 8.0]})
+			"position": [float(rng.randi_range(-280, 280)), float(FLOOR_TOP_Y) - _item_rest_offset(scene)]})
 	return items
 
 # ── Hazards ────────────────────────────────────────────────────────────────────
@@ -499,7 +514,7 @@ func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_inde
 			enm.append({
 				"name":  "Drone_%s" % p["name"],
 				"scene": DRONE_SCENE,
-				"position": [float(p["cx"]) - pw * 0.5, float(p["top_y"]) - 8.0],
+				"position": [float(p["cx"]) - pw * 0.5, float(p["top_y"]) - 11.0],
 				"scale":    [0.7, 0.7],
 				"props": {
 					"path_points": [[0, 0], [pw, 0]],

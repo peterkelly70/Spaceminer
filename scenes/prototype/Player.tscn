@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://scripts/prototype/player.gd" id="2_player_script"]
 
 [sub_resource type="RectangleShape2D" id="1_shape"]
-size = Vector2(14, 16)
+size = Vector2(20, 32)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 1
@@ -18,7 +18,7 @@ shape = SubResource("1_shape")
 sprite_frames = ExtResource("1_player_frames")
 animation = &"idle"
 autoplay = "idle"
-scale = Vector2(1, 1)
+scale = Vector2(2, 2)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -12)

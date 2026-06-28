@@ -31,6 +31,3 @@ position = Vector2(-280, 120)
 
 [node name="Player" parent="." instance=ExtResource("3_player_scene")]
 position = Vector2(-280, 120)
-
-[node name="Body" parent="Player"]
-scale = Vector2(2, 2)
