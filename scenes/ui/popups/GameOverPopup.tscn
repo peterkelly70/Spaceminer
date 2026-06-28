@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://c07774k08xeog"]
+
+[ext_resource type="PackedScene" uid="uid://c4vq8jfvxrpvw" path="res://scenes/ui/popups/BasePopup.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://cxmawc475k7sr" path="res://scripts/ui/popups/GameOverPopup.gd" id="2_script"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvh8rgt" path="res://assets/themes/default_theme.tres" id="3_theme"]
+[ext_resource type="Theme" uid="uid://bfmke1es4ewfx" path="res://assets/themes/retro_theme.tres" id="5_6hqf6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxEmpty_2wp50"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 0
+border_width_top = 0
+border_width_right = 0
+border_width_bottom = 0
+
+[node name="GameOverPopup" unique_id=737128841 instance=ExtResource("1_base")]
+theme = ExtResource("3_theme")
+script = ExtResource("2_script")
+
+[node name="CenterContainer" parent="." index="1"]
+offset_left = -21.0
+offset_top = 5.0
+offset_right = -21.0
+offset_bottom = 5.0
+theme = ExtResource("5_6hqf6")
+
+[node name="PanelContainer" parent="CenterContainer" index="0"]
+theme = ExtResource("5_6hqf6")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2wp50")
+
+[node name="TitleLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="0"]
+text = "Game Over"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 40
+
+[node name="ContentLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="0"]
+text = "The foot got you.
+Restart the same seed or return to the menu?"
+theme_override_font_sizes/font_size = 32
+
+[node name="CancelButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="0"]
+theme_override_font_sizes/font_size = 32
+text = "MAIN MENU"
+
+[node name="ConfirmButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="1"]
+theme_override_font_sizes/font_size = 32
+text = "RESTART SAME SEED"
