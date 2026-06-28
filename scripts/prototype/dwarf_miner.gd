@@ -8,9 +8,13 @@ const RETRO_THEME_PATH := "res://assets/themes/retro_theme.tres"
 
 @export_multiline var dialogue: String = "Arr! Another spaceman in me tunnels. Mind the spikes an' dig deep, lad!"
 @export var speaker_name: String = "DWARF MINER"
+@export var quest_item_tile: int = 96          # tile index for quest item sprite
+@export var quest_reward: int = 250            # ore given when quest item collected
+@export var quest_enabled: bool = true         # whether to spawn a quest item
 
 var _player_near := false
 var _dialog_layer: CanvasLayer = null
+var _quest_item_spawned := false
 
 @onready var prompt: Label = $Prompt if has_node("Prompt") else null
 
@@ -99,26 +103,27 @@ func _open() -> void:
 
 	var name_lbl := Label.new()
 	name_lbl.text = speaker_name
-	name_lbl.add_theme_font_size_override("font_size", 28)
+	name_lbl.add_theme_font_size_override("font_size", 40)
 	name_lbl.add_theme_color_override("font_color", Color(1, 0.85, 0.3))
 	col.add_child(name_lbl)
 
 	var text_lbl := Label.new()
 	text_lbl.text = dialogue
 	text_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	text_lbl.add_theme_font_size_override("font_size", 22)
+	text_lbl.add_theme_font_size_override("font_size", 32)
 	text_lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	col.add_child(text_lbl)
 
 	var hint := Label.new()
 	hint.text = "Hold interact to close"
-	hint.add_theme_font_size_override("font_size", 16)
+	hint.add_theme_font_size_override("font_size", 24)
 	hint.add_theme_color_override("font_color", Color(0.6, 0.8, 1.0))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	col.add_child(hint)
 
 	add_child(_dialog_layer)
 	_play_talk_sfx()
+	_spawn_quest_item()
 
 func _close() -> void:
 	if _is_open():
@@ -131,3 +136,37 @@ func _play_talk_sfx() -> void:
 	var am := get_node_or_null("/root/Audio_Manager")
 	if am and am.has_method("play_sfx"):
 		am.play_sfx("collect")
+
+func _spawn_quest_item() -> void:
+	if not quest_enabled or _quest_item_spawned:
+		return
+	_quest_item_spawned = true
+
+	var item := Area2D.new()
+	item.name = "QuestItem_%s" % speaker_name
+	item.position = global_position + Vector2(0, 40)
+	item.collision_layer = 0
+	item.collision_mask = 1
+	item.monitorable = true
+	add_sibling(item)
+
+	var shape := CollisionShape2D.new()
+	var circle := CircleShape2D.new()
+	circle.radius = 8.0
+	shape.shape = circle
+	item.add_child(shape)
+
+	var sprite := Sprite2D.new()
+	sprite.texture = load("res://assets/tiles/Transparent/tile_%04d.png" % quest_item_tile)
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.scale = Vector2(1.5, 1.5)
+	sprite.modulate = Color(1, 0.85, 0.3)
+	item.add_child(sprite)
+
+	# Quest item acts like a special collectible that gives ore
+	item.area_entered.connect(func(area: Area2D) -> void:
+		if area.is_in_group("prototype_player") or area.is_in_group("player"):
+			if RunManager.has_method("add_score"):
+				RunManager.add_score(quest_reward)
+			item.queue_free()
+	)
