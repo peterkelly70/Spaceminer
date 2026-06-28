@@ -378,11 +378,14 @@ func _exit_landings(exits: Array) -> Array:
 		var sz := _v2((e as Dictionary).get("size", [40, 72]))
 		match dir:
 			"east":
-				out.append(_mk_plat("EastLanding", ROOM_HALF_W - 40, _door_stand_y(pos, dir), 80))
+				# Platform extending 160px into the room from the wall, 160px wide total
+				out.append(_mk_plat("EastLanding", ROOM_HALF_W - 120, _door_stand_y(pos, dir), 160))
 			"west":
-				out.append(_mk_plat("WestLanding", -(ROOM_HALF_W - 40), _door_stand_y(pos, dir), 80))
+				# Mirror of east: extending 160px into the room from west wall
+				out.append(_mk_plat("WestLanding", -(ROOM_HALF_W - 120), _door_stand_y(pos, dir), 160))
 			"north":
-				out.append(_mk_plat("NorthLanding", int(pos.x), _door_stand_y(pos, dir), maxi(80, int(sz.x))))
+				# Horizontal platform below north door, wider to match door area
+				out.append(_mk_plat("NorthLanding", int(pos.x), _door_stand_y(pos, dir), maxi(120, int(sz.x) + 40)))
 			# south doors use a floor gap (see _merge_south_gaps), no ledge
 	return out
 
