@@ -46,6 +46,8 @@ const FUEL_SCENE     := "res://scenes/prototype/FuelCell.tscn"
 const BATTERY_SCENE  := "res://scenes/prototype/BatteryPack.tscn"
 const STATION_SCENE  := "res://scenes/prototype/ResupplyStation.tscn"
 const DRONE_SCENE    := "res://scenes/units/PatrolDrone.tscn"
+const DALEK_SCENE    := "res://scenes/units/Dalek.tscn"
+const UFO_SCENE      := "res://scenes/units/Ufo.tscn"
 const HAZARD_SCENE   := "res://scenes/prototype/HazardZone.tscn"
 
 enum LayoutTheme { ASCENT, DESCENT, VALLEY, PEAK, PLATEAU, ZIGZAG }
@@ -886,26 +888,44 @@ func _place_enemies_tracked(rng: RandomNumberGenerator, platfs: Array, room_inde
 	var enm: Array = []
 	var enemy_names: Array = []
 	var base_chance := clampf(0.15 + float(room_index) * 0.025, 0.15, 0.55)
+	var idx := 0
+	# Daleks patrol platforms (gateways get a higher chance)
 	for p in platfs:
-		# Gateways (platforms guarding the route to deeper loot) are prime enemy
-		# posts, so they get a much higher spawn chance.
 		var chance := base_chance
 		if _is_gateway(p, platfs, depths):
 			chance = minf(0.8, base_chance + 0.35)
 		if rng.randf() < chance:
-			var pw := float(p["width"])
+			var hunter := room_index >= 4 and rng.randf() < 0.4
 			enm.append({
-				"name":  "Drone_%s" % p["name"],
-				"scene": DRONE_SCENE,
-				"position": [float(p["cx"]) - pw * 0.5, float(p["top_y"]) - 11.0],
-				"scale":    [0.7, 0.7],
+				"name":  "Dalek_%d" % idx,
+				"scene": DALEK_SCENE,
+				"position": [float(p["cx"]), float(p["top_y"]) - 12.0],
+				"scale":    [1.0, 1.0],
 				"props": {
-					"path_points": [[0, 0], [pw, 0]],
-					"speed":       35.0 + float(room_index) * 1.5,
-					"pause_time":  0.4,
+					"span":    maxf(32.0, float(p["width"]) * 0.5),
+					"speed":   34.0 + float(room_index) * 1.5,
+					"variant": "hunter" if hunter else "patrol",
 				},
 			})
 			enemy_names.append(p["name"])
+			idx += 1
+	# UFOs fly in the open air above the floor
+	var ufo_count := clampi(int(float(room_index) * 0.12), 0, 3)
+	var variants := ["drifter", "diver", "speeder"]
+	for u in range(ufo_count):
+		var ux := float(rng.randi_range(-220, 220))
+		var uy := float(_level_top_y(rng.randi_range(2, LEVEL_COUNT - 1)) - 20)
+		enm.append({
+			"name":  "Ufo_%d" % u,
+			"scene": UFO_SCENE,
+			"position": [ux, uy],
+			"scale":    [1.0, 1.0],
+			"props": {
+				"span":    float(rng.randi_range(90, 200)),
+				"speed":   46.0 + float(room_index) * 1.5,
+				"variant": variants[rng.randi() % variants.size()],
+			},
+		})
 	return [enm, enemy_names]
 
 func _place_enemies(rng: RandomNumberGenerator, platfs: Array, room_index: int) -> Array:
