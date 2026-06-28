@@ -264,7 +264,6 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 		"enemies":      enemy_result[0],
 		"mechanisms":   mechanisms,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
-		"exits":        exits,
 	}
 
 func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array) -> Dictionary:
@@ -330,7 +329,6 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 		"enemies":      enemy_result[0],
 		"mechanisms":   mechanisms,
 		"tile_layers":  _build_tiles(platfs, room_index, floor_gaps),
-		"exits":        exits,
 	}
 
 # ── Ladders ──────────────────────────────────────────────────────────────────
@@ -1095,6 +1093,15 @@ func _build_tiles(platfs: Array, room_index: int, floor_gaps: Array = []) -> Arr
 			continue
 		fc.append({"x": tx, "y": floor_tile_y, "tile": [175, 176, 177, 178][i % 4]})
 	layers.append({"name": "FloorTiles", "modulate": floor_col, "z_index": 1, "cells": fc})
+
+	# Roof strip — mirrors the floor wall-to-wall so the room is enclosed on the
+	# top edge as well (matching the side walls and floor border).
+	var roof_tile_y := -(ROOM_HALF_H / TILE_SZ) - 1   # = -13, aligned with wall tops
+	var rc: Array = []
+	for i in range(wall_tx * 2):
+		var rtx := i - wall_tx
+		rc.append({"x": rtx, "y": roof_tile_y, "tile": [175, 176, 177, 178][i % 4]})
+	layers.append({"name": "RoofTiles", "modulate": floor_col, "z_index": 1, "cells": rc})
 
 	# Platform strips — tile row matches the collision surface precisely.
 	# body.y = top + 16; shape offset = -8; shape_top = body.y - 16 = top.
