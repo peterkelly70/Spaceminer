@@ -77,8 +77,14 @@ func _load_room_data() -> void:
 	room_model.room_name = str(_room_data.get("room_name", _room_data.get("name", current_room_id)))
 	var room_size := _as_vec2(_room_data.get("room_size", [720, 400]))
 	room_bounds = Rect2(Vector2(-room_size.x * 0.5, -room_size.y * 0.5), room_size)
-	max_lives = int(_room_data.get("lives", 10))
-	lives_remaining = max_lives
+	# Lives are a run-level resource — read the persisted value, don't reset per room
+	var rm_lives := _get_run_manager()
+	if rm_lives and rm_lives.has_method("get_lives"):
+		max_lives = int(rm_lives.get_max_lives())
+		lives_remaining = int(rm_lives.get_lives())
+	else:
+		max_lives = int(_room_data.get("lives", 10))
+		lives_remaining = max_lives
 	_is_resupply = bool(_room_data.get("is_resupply", false))
 	_apply_camera_limits(room_size)
 	var rm := _get_run_manager()
@@ -361,7 +367,12 @@ func _set_status(text: String) -> void:
 	_emit_room_status()
 
 func _mark_life_lost() -> void:
-	lives_remaining = maxi(lives_remaining - 1, 0)
+	# Decrement the persistent run-level life count (survives rooms and saves)
+	var rm := _get_run_manager()
+	if rm and rm.has_method("lose_life"):
+		lives_remaining = int(rm.lose_life())
+	else:
+		lives_remaining = maxi(lives_remaining - 1, 0)
 	_emit_room_status()
 
 func _check_out_of_bounds() -> void:

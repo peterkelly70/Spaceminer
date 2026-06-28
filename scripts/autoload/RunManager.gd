@@ -3,6 +3,7 @@ extends Node
 const ASTEROID_CAMPAIGN_GENERATOR_SCRIPT := preload("res://scripts/tools/AsteroidCampaignGenerator.gd")
 const BASE_FUEL_CAPACITY := 160.0
 const FUEL_CAPACITY_PER_JETPACK := 40.0
+const STARTING_LIVES := 10
 
 signal run_started(run_data: Dictionary)
 signal run_loaded(run_data: Dictionary)
@@ -57,6 +58,8 @@ func start_new_run(seed_text: String = "", run_name: String = "") -> Dictionary:
 		"jetpack_upgrades": 0,
 		"battery_pct": 100.0,
 		"ore_count": 0,
+		"lives_remaining": STARTING_LIVES,
+		"max_lives": STARTING_LIVES,
 	}
 
 	save_current_run(active_run["run_name"])
@@ -124,6 +127,10 @@ func load_run(save_path: String) -> Dictionary:
 	if not active_run.has("current_room_id") or str(active_run.get("current_room_id", "")).is_empty():
 		active_run["current_room_id"] = str(active_campaign_manifest.get("start_room_id", "room_000"))
 	active_run["room_count"] = int(active_campaign_manifest.get("room_count", int(active_run.get("room_count", 56))))
+	if not active_run.has("max_lives"):
+		active_run["max_lives"] = STARTING_LIVES
+	if not active_run.has("lives_remaining"):
+		active_run["lives_remaining"] = int(active_run.get("max_lives", STARTING_LIVES))
 	if not active_run.has("equipment") or not (active_run["equipment"] is Array):
 		active_run["equipment"] = []
 	if not active_run.has("security_cards") or not (active_run["security_cards"] is Array):
@@ -277,6 +284,29 @@ func has_security_card(card_id: String) -> bool:
 		return false
 	var security_cards: Array = active_run.get("security_cards", [])
 	return security_cards.has(card_id)
+
+# ── Lives (run-level, persist across rooms and saves) ─────────────────────────
+
+func get_lives() -> int:
+	return int(active_run.get("lives_remaining", STARTING_LIVES))
+
+func get_max_lives() -> int:
+	return int(active_run.get("max_lives", STARTING_LIVES))
+
+# Decrement one life on death; persists immediately. Returns lives left.
+func lose_life() -> int:
+	if active_run.is_empty():
+		return 0
+	var left := maxi(get_lives() - 1, 0)
+	active_run["lives_remaining"] = left
+	save_current_run(str(active_run.get("run_name", "Run")))
+	return left
+
+func add_life(amount: int = 1) -> void:
+	if active_run.is_empty():
+		return
+	active_run["lives_remaining"] = mini(get_lives() + amount, get_max_lives())
+	save_current_run(str(active_run.get("run_name", "Run")))
 
 # ── Resupply & resource tracking ──────────────────────────────────────────────
 
