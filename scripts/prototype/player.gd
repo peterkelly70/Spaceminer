@@ -227,11 +227,13 @@ func _physics_process(delta: float) -> void:
 		if _grapple_reeling:
 			_grapple_reel_timer = maxf(_grapple_reel_timer, 0.02)
 
-	if grounded:
-		_jetpack_active = false
-	elif jump_pressed and has_jetpack and not _climbing and not _grapple_aiming and not _grappling and not _grapple_reeling:
+	if jump_pressed and has_jetpack and not _climbing and not _grapple_aiming and not _grappling and not _grapple_reeling:
+		# Jetpack can be armed straight off the ground/a platform, not just
+		# mid-air — press the jump key to lift off directly.
 		_jetpack_active = true
 		jump_pressed = false
+	elif grounded:
+		_jetpack_active = false
 
 	# Ladder climbing — up/down move along a ladder; jetpack is disabled while climbing
 	var ladder := _current_ladder()
