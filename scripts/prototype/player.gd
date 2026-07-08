@@ -65,8 +65,10 @@ var _jump_lock_dir := 1.0
 # Ladder climbing
 const CLIMB_SPEED := 110.0
 const FEET_OFFSET := 16.0          # half of the 32px collision box
+const LADDER_JUMP_IGNORE_SECONDS := 0.3  # grace period after jumping off so we don't instantly re-grab it
 var _climbing := false
 var _climb_saved_mask := 0
+var _ladder_ignore_timer := 0.0
 
 # Drop-through: one-way platforms live on collision layer 2 (mask bit 2). Clearing
 # that bit briefly lets the player fall down through the platform they're stood on.
@@ -236,10 +238,12 @@ func _physics_process(delta: float) -> void:
 		_jetpack_active = false
 
 	# Ladder climbing — up/down move along a ladder; jetpack is disabled while climbing
+	if _ladder_ignore_timer > 0.0:
+		_ladder_ignore_timer = maxf(_ladder_ignore_timer - delta, 0.0)
 	var ladder := _current_ladder()
 	var climb_up := _up_held()
 	var climb_down := _down_held()
-	if ladder and not _climbing and (climb_up or climb_down):
+	if ladder and not _climbing and _ladder_ignore_timer <= 0.0 and (climb_up or climb_down):
 		_begin_climb()
 	if _climbing and ladder == null:
 		_end_climb()
@@ -495,9 +499,11 @@ func _end_climb() -> void:
 	collision_mask = _climb_saved_mask
 
 func _apply_ladder_climb(ladder: Node, h: float, jump_pressed: bool, up: bool, down: bool, delta: float) -> void:
-	# Jump off the ladder
+	# Jump off the ladder — h reflects whichever direction (if any) is held so
+	# the player can launch left or right, not just straight up.
 	if jump_pressed:
 		_end_climb()
+		_ladder_ignore_timer = LADDER_JUMP_IGNORE_SECONDS
 		_jump_active = true
 		_jump_lock_dir = h if h != 0.0 else facing_dir
 		velocity.y = -JUMP_SPEED
@@ -800,6 +806,16 @@ func _has_equipment(item: String) -> bool:
 	var rm := get_node_or_null("/root/RunManager")
 	return rm.has_equipment(item) if rm and rm.has_method("has_equipment") else false
 
+# Fixed slot → equipment type mapping (Insert, Home, PgUp, Del, End, PgDn),
+# matching the always-in-this-order equipment cards shown in the HUD. Unlike
+# a pickup-order hotbar, these keys always mean the same gear regardless of
+# the order it was collected in — slot 1 is always the jetpack, slot 2 the
+# laser, etc.
+const EQUIPMENT_SLOT_ORDER := [
+	"jetpack", "laser_pistol", "grappling_hook",
+	"magnetic_boots", "visibility_cloak", "shield",
+]
+
 # Tap a slot key (1-6) to activate that item; hold it to drop the item at the
 # player's feet as a pickup other rooms' logic can re-collect.
 func _update_equipment_hotkeys(delta: float) -> void:
@@ -824,13 +840,14 @@ func _update_equipment_hotkeys(delta: float) -> void:
 
 func _drop_equipment_slot(slot: int) -> void:
 	var rm := get_node_or_null("/root/RunManager")
-	if rm == null or not rm.has_method("get_equipment_list") or not rm.has_method("remove_equipment"):
+	if rm == null or not rm.has_method("remove_equipment"):
 		return
-	var equip_list: Array = rm.get_equipment_list()
 	var idx := slot - 1
-	if idx < 0 or idx >= equip_list.size():
+	if idx < 0 or idx >= EQUIPMENT_SLOT_ORDER.size():
 		return
-	var item_id: String = str(equip_list[idx])
+	var item_id: String = EQUIPMENT_SLOT_ORDER[idx]
+	if not _has_equipment(item_id):
+		return
 	rm.remove_equipment(item_id)
 	# Dropping active gear also shuts it off
 	match item_id:
@@ -860,16 +877,14 @@ func _drop_equipment_slot(slot: int) -> void:
 			if run_mgr and run_mgr.has_method("grant_equipment"):
 				run_mgr.grant_equipment(picked_id))
 
-# Activate equipment by slot number (1-based). Maps slot to named equipment actions.
+# Activate equipment by slot number (1-based). Maps slot to a fixed equipment type.
 func _activate_equipment_slot(slot: int) -> void:
-	var rm := get_node_or_null("/root/RunManager")
-	if rm == null or not rm.has_method("get_equipment_list"):
-		return
-	var equip_list: Array = rm.get_equipment_list()
 	var idx := slot - 1
-	if idx < 0 or idx >= equip_list.size():
+	if idx < 0 or idx >= EQUIPMENT_SLOT_ORDER.size():
 		return
-	var item_id: String = str(equip_list[idx])
+	var item_id: String = EQUIPMENT_SLOT_ORDER[idx]
+	if not _has_equipment(item_id):
+		return
 	match item_id:
 		"magnetic_boots":
 			_mag_active = not _mag_active

@@ -1,8 +1,9 @@
 extends Area2D
 class_name UfoEnemy
 
-# Flying enemy. Sweeps horizontally and bobs; the "diver" variant swoops toward
-# the player. Colour reflects the variant. Emits player_hit on contact.
+# Flying enemy. Sweeps horizontally and bobs in a fixed pattern regardless of
+# variant — none of them chase the player. Colour reflects the variant.
+# Emits player_hit on contact.
 
 signal player_hit
 
@@ -47,11 +48,9 @@ func _physics_process(delta: float) -> void:
 	elif pos.x < _origin.x - span:
 		pos.x = _origin.x - span
 		_dir = 1.0
+	# All variants stick to the predictable sweep-and-bob pattern — no variant
+	# chases the player's position, however close they get.
 	var target_y := _origin.y + sin(_t * 1.5) * 10.0
-	if variant == "diver":
-		var pl := _player()
-		if pl and absf(pl.global_position.x - pos.x) < 90.0:
-			target_y = pl.global_position.y - 18.0
 	pos.y = lerpf(pos.y, target_y, 0.08)
 	global_position = pos
 
@@ -62,9 +61,6 @@ func _animate(delta: float) -> void:
 	if _frame_t >= FRAME_TIME:
 		_frame_t = 0.0
 		body.frame = (body.frame + 1) % maxi(body.hframes, 1)
-
-func _player() -> Node2D:
-	return get_tree().get_first_node_in_group("player") as Node2D
 
 func _on_body_entered(b: Node) -> void:
 	if b.is_in_group("player") or b.is_in_group("prototype_player"):
