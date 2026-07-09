@@ -62,9 +62,10 @@ var _cloak_active := false
 var _jetpack_sfx_armed := false
 var _jetpack_hold_time := 0.0
 var _jetpack_active := false
-# Toggled by the jetpack's equipment hotkey (Insert): flight mode stays on
-# until toggled off again, and while on, up/down/left/right all burn fuel
-# to move around (not just steer while already airborne from a jump).
+# Toggled by the jetpack's equipment hotkey (equipment_1, key "1" by default):
+# flight mode stays on until toggled off again, and while on, up/down/left/
+# right all burn fuel to move around (not just steer while already airborne
+# from a jump).
 var _jetpack_mode := false
 var _jump_active := false
 var _jump_lock_dir := 1.0
@@ -263,8 +264,8 @@ func _physics_process(delta: float) -> void:
 		jump_pressed = false
 
 	# Jetpack: either armed briefly by a jump press while airborne, or held in
-	# flight mode via its equipment hotkey (Insert) — in flight mode, all four
-	# directions burn fuel to move around, not just steer while falling.
+	# flight mode via its equipment hotkey (equipment_1) — in flight mode, all
+	# four directions burn fuel to move around, not just steer while falling.
 	var jetpack_engaged := (_jetpack_active or _jetpack_mode) and not _climbing
 	var thrusting := _apply_jetpack_thrust(jetpack_engaged, has_jetpack, climb_up, climb_down, h, delta)
 	if not has_jetpack or _get_fuel() <= 0.0:
@@ -846,11 +847,11 @@ func _has_equipment(item: String) -> bool:
 	var rm := get_node_or_null("/root/RunManager")
 	return rm.has_equipment(item) if rm and rm.has_method("has_equipment") else false
 
-# Fixed slot → equipment type mapping (Insert, Home, PgUp, Del, End, PgDn),
-# matching the always-in-this-order equipment cards shown in the HUD. Unlike
-# a pickup-order hotbar, these keys always mean the same gear regardless of
-# the order it was collected in — slot 1 is always the jetpack, slot 2 the
-# laser, etc.
+# Fixed slot → equipment type mapping for equipment_1..6 (keys "1".."6" by
+# default — see ControlsManager presets), matching the always-in-this-order
+# equipment cards shown in the HUD. Unlike a pickup-order hotbar, these keys
+# always mean the same gear regardless of the order it was collected in —
+# slot 1 is always the jetpack, slot 2 the laser, etc.
 const EQUIPMENT_SLOT_ORDER := [
 	"jetpack", "laser_pistol", "grappling_hook",
 	"magnetic_boots", "visibility_cloak", "shield",
