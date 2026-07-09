@@ -1,0 +1,357 @@
+2006-01-27 John Elliott
+
+	* Ran jswed through valgrind and fixed various warnings (more
+	 still to do).
+	* Added code to patch the JSW64 engine up to HL12, adding 'trap'
+	 blocks. Added support for trap blocks to the room editor.
+	* Added dynamic patching to allow Maria and the Toilet to be
+	 positioned in the same room.
+	* Bugfix: Ensure the currently selected option is visible in the
+	 JSW64 "portals" page. 
+
+2006-01-14 John Elliott
+
+	* Fixed a nasty memory corruption bug that shows up when the start 
+	 room is 64 or more.
+
+2005-11-27 John Elliott
+
+	* jswed-2.2.8 release.
+
+	* Bugfix: Items in JSW64 games were not being drawn (introduced by
+	 the multiple items support, and present also in 2.3.0).
+	* Bugfix: Guardians based on local sprites weren't being updated
+	 as the user moved from room to room.
+	* Added support for colour-keyed transparency in bitmaps (using the
+	 new ZX_TRANS colour). This then allows guardians to be drawn with
+	 transparent backgrounds, so they don't get a black block following
+	 them around.
+
+2005-11-25 John Elliott
+
+	* jswed-2.2.7 release.
+
+	* Added a simple tune import/export page.
+	* Backported the extra room navigation keys (CTRL+P, CTRL+J) from
+	 the 2.3.0 tree.
+	* Added CTRL+L to refresh the current room.
+	* Backported support for multiple items in a cell from 2.3.0.
+	* Added an autosave function.
+	* Bug fix: If the graphic for a portal is changed, refresh the 
+	 portal to show it.
+
+2005-11-19 John Elliott
+
+	* jswed-2.2.6 release.
+
+	* The Manic Miner and JSW64 cell graphic editors now preview in
+	 colour.
+	* Bugfix: Preview bitmaps no longer have their last row endlessly 
+	 repeated.
+	* Bugfix: Drawing in the font editor did not immediately update the
+	 list view.
+	* Bugfix: The sprite chooser for guardians now displays all 8 
+	 frames of the sprites.
+	* Bugfix: A race condition in the guardian editor could cause a
+	 crash.
+	* Bugfix: Various values for multicolour vertical guardians could
+	 not be edited.
+	* Bugfix: When switching between two views of the same room, 
+	 out-of-date data (eg. guardian paths) were being cached.
+
+2005-11-16 John Elliott
+
+	* jswed-2.2.5 release.
+
+	* Fixed a bug involving static ropes in JSW64.
+
+	* Backported the hex editor and its support code from my moribund
+	 JSWED 2.3.0 tree. 
+	* Also backported the code that remembers what directory the file 
+	 selector was in.
+
+2005-08-21 John Elliott
+
+	* jswed-2.2.4 release.
+
+	* Simplistic screenshot utility added.
+
+2005-01-07 John Elliott
+
+	* jswed-2.2.3 release.
+
+	* Bug fix: Positioning ropes in JSW64 games didn't do anything.
+
+2004-10-24 John Elliott
+	
+	* jswed-2.2.2 release.
+
+	* Bug fixes in the JSW128-to-JSW64 conversion. 
+
+	* Sprites can be imported and exported.
+
+2004-10-24 John Elliott
+	
+	* jswed-2.2.1 release.
+
+	* JSW128 games can now be converted to JSW64.
+
+	* Title screens can be imported and exported.
+
+	* Patch the JSW64 engine so WRITETYPER works.
+
+2004-09-18 John Elliott
+	
+	* Tidying up for jswed-2.2.0 release.
+
+2004-09-06 John Elliott
+	
+	* jswed-2.1.8 release.
+
+	* +3DOS load/save support was broken for 128k games. Fixed.
+
+	* Vertical arrow positions could not be set. Fixed.
+
+2004-08-22 John Elliott
+	
+	* jswed-2.1.7 release.
+
+	* Bugfixes in the JSW64 engine.
+
+2004-08-17 John Elliott
+	
+	* jswed-2.1.6 release.
+
+	* JSW64 engine upgraded to HL11, which adds extra guardian types -
+	Triggers, Eugenes, Skylabs, Opening Walls, Switches and Stoppers.
+
+	* Support added within the game engine for Final Barrier-style 
+	 graphics.
+
+	* JSWED updated to supprot these features.
+
+2004-07-28 John Elliott
+	
+	* jswed-2.1.5 release.
+
+	* Editing support added for bonus rooms, escalators (aka conveyor 
+	 ramps), and setting the 'fall any height' option by room.
+
+2004-07-24 John Elliott
+	
+	* JSW64 engine upgraded to HL10. Rooms can be marked as "bonus" 
+	 rooms in which collecting an item gives you an extra life.
+
+2004-07-24 John Elliott
+	
+	* jswed-2.1.4 release.
+
+	* Bugfix for adding/deleting items in JSW64 games.
+
+	* Stop the 4th vertical guardian in a Manic Miner game crashing the 
+	game engine.
+
+	* Add copy / paste for JSW64 guardians.
+
+	* Portal special effect can be set by room.
+
+2004-07-22 John Elliott
+	
+	* jswed-2.1.3 release.
+
+	* Brown-paper-bag bugfix for adding guardians
+
+	* Robustness improved in the upgrade tool.
+
+2004-07-22 John Elliott
+	
+	* jswed-2.1.2 release.
+
+	* Supports JSW64 games (five variants).
+
+	* JSW48 games can be upgraded to JSW64.
+
+	* Internal structures amended; there is now a proper "Room" class.
+	 This takes JSWED closer to a Model/View/Controller pattern; the
+	 abstract Room also means the editing pages don't need to know about
+	 the six variants of JSW64.
+
+	* JSW64 engine at Hacklevel 9 (for parity with JSW128).
+
+2004-06-05 John Elliott
+	
+	* jswed-2.1.1 release.
+
+	* Bug fix upgrading 48k games to the JSW128 engine; the guardian 
+	 code was not being properly upgraded. This caused the HL8->HL9 
+	 upgrade to fail.
+
+	* When adding a guardian in a Manic Miner room, and there is a choice
+	 of horizontal or vertical guardians, the choice actually works.
+
+	* Saving JSW128 games in TAP or +3DOS format ought to work now.
+
+2004-05-29 John Elliott
+
+	* jswed-2.1.0 release.
+
+2004-05-22 John Elliott
+
+	* Support for Manic Miner games completed.
+
+	* Support for Ian Collier's "avoid infinite death" patch.
+
+	* Bug fix: Repositioning the toilet ought to work now.
+	
+	* Upgrades JSW128 games to Hacklevel 9 (changes tune in cheat mode);
+	 title screen tune stored in bank 7; uses JSW64 tape loader.)
+
+2004-05-22 John Elliott
+
+	* jswed-2.0.4 release.
+
+	* Now compiles under gcc-3.x.
+
+2003-03-23 John Elliott
+
+	* Replaced custom build system with GNU Autotools.
+
+2002-01-22 John Elliott
+
+	* Made a start on Manic Miner support (not in 2.0.3 release).
+
+	* jswed-2.0.3 release.
+
+	* The "Press ENTER to start" message can now be changed.
+
+2001-02-03 John Elliott
+
+	* jswed-2.0.2 released.
+
+	* The Windows version no longer leaks temporary files when playtesting.
+
+2001-01-28 John Elliott
+
+	* jswed-2.0.1 released.
+
+	* The UNIX version compiles unaltered on BeOS.
+
+	* Henry's Hoard (1985 version) can now be made completable.
+
+2001-01-14 John Elliott
+
+	* jswed-2.0.0 released (Windows and Linux versions, under GPL).
+
+2001-01-14 John Elliott
+
+	* jswed-1.9.4 released (Windows binary only).
+
+	* Support added for 'Geoff-Mode' games.
+	* Bug fixes setting screen attributes.
+	* Files can be saved in +3DOS format, so they can be imported by
+	 the original JSWED.
+
+2001-01-09 John Elliott
+
+	* jswed-1.9.3 released (Windows binary only).
+
+	* Support added for games modified by the Softricks editor.
+	* Softricks patches can be turned on and off from the patches page.
+
+2001-01-06 John Elliott
+
+	* jswed-1.9.2 released (Windows binary only).
+
+	* Can now edit the title screen.
+	* Can save the game by pressing F2.
+	* Can playtest by pressing F5.
+	* Other bug fixes.
+
+2000-12-12 John Elliott
+
+	* jswed-1.9.1 released (Windows binary only).
+
+	* Font editor added for JSW128 games.
+	* Support added for Henry's Hoard engine.
+	* 128k games saved by jswed do not crash.
+	* Guardian editor has a different sprite chooser.
+
+2000-12-12 John Elliott
+
+	* jswed-1.9.0 released (Windows binary only).
+
+	* Rewritten completely from scratch in C++ as an SDL-based, 
+	 event-driven, Jet Set Willy editor. The UI is object-oriented, 
+	 but the game itself is just a single object (an instance of
+	 JswGame).
+	* Supports editing 128k and 48k JSW games.
+
+2000-07-21 John Elliott
+
+	* jswed-1.08b2 released (DOS binary only).
+
+	* Upgrades JSW128 games to Hacklevel 8 (possible fix for superjump 
+	 bug).
+
+2000-06-25 John Elliott
+
+	* jswed-1.07 released (DOS binary only).
+
+	* Upgrades JSW128 games to Hacklevel 7 (diagonal guardians bugfix).
+
+	* Rooms can be cleared to air, earth, water or fire.
+	* PageUp/PageDown can be used when choosing rooms from a list.
+	* Can move between rooms using their exits, rather than always 
+	 choosing them from a list.
+
+2000-05-28 John Elliott
+	
+	* jswed-1.05 released (DOS binary only).
+
+	* Doesn't allow the user to edit guardian 127, which is an end marker
+	 rather than a real guardian.
+
+1998-08-13 John Elliott
+	
+	* jswed-1.03 released (DOS binary only).
+
+	* Upgrades JSW128 games to Hacklevel 6 (diagonal guardians).
+	* Can therefore edit diagonal guardians.
+
+1997-09-17 John Elliott
+
+	* jswed-1.02 released (DOS binary only).
+
+	* Upgrades JSW128 games to Hacklevel 5 (Superjump poke can be 
+	 turned on and off by top bit of room byte 0xDE).
+
+1997-08-13 John Elliott
+
+	* jswed-1.01 released (DOS binary only).
+
+	* Upgrades JSW128 games to Hacklevel 4 (byte 0EDh of room definition
+	 gives Willy's sprite page).
+
+1997-05-18 John Elliott
+
+	* jswed-1.00 released (DOS binary only).
+
+	* User-friendly is not the description that springs to mind here. 
+	 Supports just about any PC video card, including MDA. 
+	* Text-mode menuing system.
+	* Implementation language: C.
+
+	* JSW128 at Hacklevel 3.
+
+1996-02-29 John Elliott
+
+	* JSW128 at Hacklevel 2 (128k music, cheat mode, animated title screen).
+
+1996-01-27 John Elliott
+
+	* First release of JSW128, at Hacklevel 1 (256 rooms).
+
+1996-01-15 John Elliott
+
+	* I get the idea for JSW128 - see USENET message
+	 <4ddulm$qgp@news.ox.ac.uk>

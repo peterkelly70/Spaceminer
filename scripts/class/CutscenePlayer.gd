@@ -46,18 +46,18 @@ var clear_story_on_frame: bool = false
 var audio_manager = null
 
 func _ready():
-	Logger.info(self, "_ready called")
+	print("_ready called")
 	
 	# Get audio manager if available
 	audio_manager = get_node_or_null("/root/AudioManager")
 	if not audio_manager:
-		Logger.warn(self, "AudioManager not found at /root/AudioManager")
+		push_warning("AudioManager not found at /root/AudioManager")
 		# Try alternative paths
 		audio_manager = get_node_or_null("/root/Audio_Manager")
 		if not audio_manager:
-			Logger.warn(self, "AudioManager not found at /root/Audio_Manager either")
+			push_warning("AudioManager not found at /root/Audio_Manager either")
 	
-	Logger.debug(self, "AudioManager reference: %s" % audio_manager)
+	print("AudioManager reference: %s" % audio_manager)
 	
 	# Get UI references
 	background = $Background
@@ -65,11 +65,11 @@ func _ready():
 	title_label = $TitleLabel if has_node("TitleLabel") else null
 	story_text_label = $MainContainer/HBoxContainer/FrameText/MarginContainer/StoryTextLabel
 	
-	Logger.debug(self, "UI references:")
-	Logger.debug(self, "  - background: %s" % background)
-	Logger.debug(self, "  - frame_image: %s" % frame_image)
-	Logger.debug(self, "  - title_label: %s" % title_label)
-	Logger.debug(self, "  - story_text_label: %s" % story_text_label)
+	print("UI references:")
+	print("  - background: %s" % background)
+	print("  - frame_image: %s" % frame_image)
+	print("  - title_label: %s" % title_label)
+	print("  - story_text_label: %s" % story_text_label)
 	
 	var scene_control = $MainContainer/HBoxContainer/RightSideContainer/SceneControlContainer/SceneControl
 	
@@ -98,10 +98,10 @@ func _ready():
 			continue_button.pressed.connect(Callable(self, "_on_continue_pressed"))
 			scene_control.add_child(continue_button)
 	
-	Logger.debug(self, "Button references:")
-	Logger.debug(self, "  - next_button: %s" % next_button)
-	Logger.debug(self, "  - skip_button: %s" % skip_button)
-	Logger.debug(self, "  - continue_button: %s" % continue_button)
+	print("Button references:")
+	print("  - next_button: %s" % next_button)
+	print("  - skip_button: %s" % skip_button)
+	print("  - continue_button: %s" % continue_button)
 	
 	# Hide until a cutscene is loaded
 	visible = false
@@ -165,19 +165,19 @@ func _finish_typing():
 func load_cutscene(resource_path: String) -> bool:
 	# Check if cutscenes are disabled in settings
 	if SettingsManager.get_setting("gameplay", "hide_cutscenes", false):
-		Logger.info(self, "Cutscenes are disabled in settings, skipping")
+		print("Cutscenes are disabled in settings, skipping")
 		# Emit the completed signal immediately
 		emit_signal("cutscene_completed")
 		return false
 	
-	Logger.info(self, "Loading cutscene from: %s" % resource_path)
+	print("Loading cutscene from: %s" % resource_path)
 	cutscene_path = resource_path
 	cutscene_resource = load(resource_path)
 	if not cutscene_resource:
-		Logger.error(self, "Failed to load cutscene: %s" % resource_path)
+		push_error("Failed to load cutscene: %s" % resource_path)
 		return false
 	
-	Logger.info(self, "Loaded cutscene: %s" % cutscene_resource.name)
+	print("Loaded cutscene: %s" % cutscene_resource.name)
 	
 	# Reset player state
 	is_playing = true
@@ -205,15 +205,15 @@ func load_cutscene(resource_path: String) -> bool:
 
 func _start_cutscene():
 	if not cutscene_resource:
-		Logger.error(self, "No cutscene resource set")
+		push_error("No cutscene resource set")
 		return
 		
-	Logger.info(self, "Starting cutscene: %s" % cutscene_resource.name)
+	print("Starting cutscene: %s" % cutscene_resource.name)
 	
 	# Set up the cutscene
 	total_frames = cutscene_resource.frames.size()
 	if total_frames == 0:
-		Logger.error(self, "Cutscene has no frames")
+		push_error("Cutscene has no frames")
 		return
 	
 	# Apply theme if specified
@@ -232,7 +232,7 @@ func _start_cutscene():
 	
 	# Play music if specified
 	if audio_manager and cutscene_resource.music_path and not cutscene_resource.music_path.is_empty():
-		Logger.info(self, "Playing music: %s" % cutscene_resource.music_path)
+		print("Playing music: %s" % cutscene_resource.music_path)
 		
 		# Check if persistent music is playing and stop it
 		if audio_manager.has_method("is_persistent_music_playing"):
@@ -247,7 +247,7 @@ func _start_cutscene():
 		
 		# Play the music
 		if audio_manager.has_method("play_music_file"):
-			audio_manager.play_music_file(cutscene_resource.music_path, music_volume)
+				audio_manager.play_music_file(cutscene_resource.music_path, music_volume, false)
 	
 	# Show the first frame
 	current_frame = -1
@@ -255,14 +255,14 @@ func _start_cutscene():
 
 func show_frame(frame_index: int):
 	if not cutscene_resource or frame_index < 0 or frame_index >= cutscene_resource.frames.size():
-		Logger.error(self, "Invalid frame index: %s" % frame_index)
+		push_error("Invalid frame index: %s" % frame_index)
 		return
 	
-	Logger.info(self, "Showing frame %s" % frame_index)
+	print("Showing frame %s" % frame_index)
 	
 	var frame = cutscene_resource.frames[frame_index]
 	if not frame:
-		Logger.error(self, "Frame is null")
+		push_error("Frame is null")
 		return
 	
 	# Optionally clear the story text
@@ -282,25 +282,25 @@ func show_frame(frame_index: int):
 		if "title" in frame and frame.title and not frame.title.is_empty():
 			title_label.text = frame.title
 			title_label.visible = true
-			Logger.debug(self, "Showing title: %s" % frame.title)
+			print("Showing title: %s" % frame.title)
 		else:
 			title_label.text = ""
 			title_label.visible = false
-			Logger.debug(self, "No title to show")
+			print("No title to show")
 	
 	# Show the frame image if specified
 	if "frame_image" in frame and frame.frame_image and not frame.frame_image.is_empty():
-		Logger.debug(self, "Loading frame image: %s" % frame.frame_image)
+		print("Loading frame image: %s" % frame.frame_image)
 		_load_image(frame.frame_image)
 	else:
 		# Hide the image if no image is specified
 		if frame_image:
 			frame_image.visible = false
-			Logger.debug(self, "No frame image to show")
+			print("No frame image to show")
 	
 	# Stop any playing voiceovers
 	if audio_manager:
-		Logger.debug(self, "Stopping any playing voiceovers")
+		print("Stopping any playing voiceovers")
 		if audio_manager.has_method("voiceover_queue_clear"):
 			audio_manager.voiceover_queue_clear()
 		elif audio_manager.has_method("stop_voiceover"):
@@ -314,7 +314,7 @@ func show_frame(frame_index: int):
 		# Check if voiceover_path exists and is not empty
 		if "voiceover_path" in frame and frame.voiceover_path and not frame.voiceover_path.is_empty():
 			var vo_path = frame.voiceover_path
-			Logger.info(self, "Playing voiceover: %s" % vo_path)
+			print("Playing voiceover: %s" % vo_path)
 			
 			# Set voiceover volume if specified
 			var voiceover_volume = 1.0
@@ -335,7 +335,7 @@ func show_frame(frame_index: int):
 				# Default duration if we can't determine it
 				audio_duration = 3.0
 			
-			Logger.debug(self, "Voiceover duration: %s" % audio_duration)
+			print("Voiceover duration: %s" % audio_duration)
 	
 	# Calculate frame duration based on duration_mode
 	var frame_duration = 0.0
@@ -343,7 +343,7 @@ func show_frame(frame_index: int):
 	if "duration_mode" in frame and frame.duration_mode != null:
 		duration_mode = frame.duration_mode
 	
-	Logger.debug(self, "Duration mode: %s" % duration_mode)
+	print("Duration mode: %s" % duration_mode)
 	
 	if duration_mode == "manual":
 		frame_duration = 3.0
@@ -363,28 +363,28 @@ func show_frame(frame_index: int):
 	
 	# Clamp to minimum 0.5s for safety
 	frame_duration = max(0.5, frame_duration)
-	Logger.debug(self, "Frame duration: %s" % frame_duration)
+	print("Frame duration: %s" % frame_duration)
 	
 	# Show text with typing effect if needed
 	if "text" in frame and frame.text != null and not frame.text.is_empty():
 		full_text = frame.text
-		Logger.debug(self, "Frame text: %s" % full_text)
+		print("Frame text: %s" % full_text)
 		
 		if _is_playing_audio and audio_duration > 0 and duration_mode == "auto_voiceover":
 			# Sync typing speed to voiceover
 			typing_speed = audio_duration / float(full_text.length()) if full_text.length() > 0 else 0.03
-			Logger.debug(self, "Typing speed (synced to audio): %s" % typing_speed)
+			print("Typing speed (synced to audio): %s" % typing_speed)
 		else:
 			# Use default typing speed
 			typing_speed = cutscene_resource.typing_speed
-			Logger.debug(self, "Typing speed (default): %s" % typing_speed)
+			print("Typing speed (default): %s" % typing_speed)
 		
 		_start_typing_effect()
 	else:
 		# No text to display
 		full_text = ""
 		is_typing = false
-		Logger.debug(self, "No text to display")
+		print("No text to display")
 		
 		# Enable the next button
 		if next_button:
@@ -405,43 +405,43 @@ func show_frame(frame_index: int):
 
 func _load_image(image_path: String):
 	if not frame_image:
-		Logger.error(self, "Frame image node is null")
+		push_error("Frame image node is null")
 		return
 		
 	if image_path.is_empty():
 		frame_image.visible = false
 		return
 		
-	Logger.debug(self, "Loading image: %s" % image_path)
+	print("Loading image: %s" % image_path)
 	
 	var texture = _load_texture_from_path(image_path)
 	if texture:
 		frame_image.texture = texture
 		frame_image.visible = true
-		Logger.debug(self, "Successfully loaded image")
+		print("Successfully loaded image")
 	else:
 		frame_image.visible = false
-		Logger.warn(self, "Failed to load image")
+		push_warning("Failed to load image")
 
 func _load_background_image(image_path: String):
 	if not background:
-		Logger.error(self, "Background node is null")
+		push_error("Background node is null")
 		return
 		
 	if image_path.is_empty():
 		background.visible = false
 		return
 		
-	Logger.debug(self, "Loading background image: %s" % image_path)
+	print("Loading background image: %s" % image_path)
 	
 	var texture = _load_texture_from_path(image_path)
 	if texture:
 		background.texture = texture
 		background.visible = true
-		Logger.debug(self, "Successfully loaded background")
+		print("Successfully loaded background")
 	else:
 		background.visible = false
-		Logger.warn(self, "Failed to load background")
+		push_warning("Failed to load background")
 
 func _load_texture_from_path(image_path: String) -> Texture2D:
 	if image_path.is_empty():
@@ -451,17 +451,17 @@ func _load_texture_from_path(image_path: String) -> Texture2D:
 	
 	# Handle different path formats
 	if image_path.begins_with("uid://"):
-		Logger.debug(self, "Loading texture from UID: %s" % image_path)
+		print("Loading texture from UID: %s" % image_path)
 		texture = load(image_path)
 	elif image_path.begins_with("res://"):
-		Logger.debug(self, "Loading texture from res path: %s" % image_path)
+		print("Loading texture from res path: %s" % image_path)
 		texture = load(image_path)
 	else:
-		Logger.debug(self, "Loading texture from relative path: %s" % image_path)
+		print("Loading texture from relative path: %s" % image_path)
 		texture = load("res://" + image_path)
 		
 	if not texture:
-		Logger.warn(self, "Failed to load texture from path: %s" % image_path)
+		push_warning("Failed to load texture from path: %s" % image_path)
 		
 	return texture
 
@@ -480,7 +480,7 @@ func _advance_frame():
 		
 		# Debug auto_next state
 	if cutscene_resource:
-		Logger.debug(self, "auto_next is %s" % cutscene_resource.auto_next)
+		print("auto_next is %s" % cutscene_resource.auto_next)
 
 func _setup_auto_advance(frame_index: int, delay: float):
 	# Cancel any existing auto-advance timer
@@ -488,7 +488,7 @@ func _setup_auto_advance(frame_index: int, delay: float):
 	
 	# Create a new timer for auto-advancing
 	if is_playing and delay > 0 and cutscene_resource and cutscene_resource.auto_next:
-		Logger.debug(self, "Auto-advancing after %s seconds" % delay)
+		print("Auto-advancing after %s seconds" % delay)
 		auto_advance_timer_active = true
 		await get_tree().create_timer(delay).timeout
 		# Only call if still active (not canceled)
@@ -512,7 +512,7 @@ func _on_skip_pressed():
 		elif audio_manager.has_method("stop_music"):
 			# If we don't have a specific method, we'll have to restore it later
 			if was_persistent_music_playing:
-				Logger.info(self, "Will restore persistent music after skip")
+				print("Will restore persistent music after skip")
 			audio_manager.stop_music()
 		
 		# Stop other audio
@@ -525,7 +525,7 @@ func _on_skip_pressed():
 	_complete_cutscene()
 
 func _complete_cutscene():
-	Logger.info(self, "Completing cutscene")
+	print("Completing cutscene")
 	
 	# Mark as not playing to prevent further frame advances
 	is_playing = false
@@ -538,7 +538,7 @@ func _complete_cutscene():
 	
 	# Restore persistent music if it was playing before the cutscene
 	if audio_manager and was_persistent_music_playing:
-		Logger.info(self, "Restoring persistent music")
+		print("Restoring persistent music")
 		if audio_manager.has_method("restore_persistent_music"):
 			audio_manager.restore_persistent_music()
 	

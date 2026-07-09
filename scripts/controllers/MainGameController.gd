@@ -25,13 +25,15 @@ const SUIT_UPGRADES := [
 	{"item_id": "visibility_cloak", "icon_path": "res://assets/tiles/Transparent/tile_0407.png", "accent_color": Color("#FF00C8")},
 	{"item_id": "shield", "icon_path": "res://assets/tiles/Transparent/tile_0408.png", "accent_color": Color("#1D4FFF")},
 ]
+const QUEST_SLOT_COUNT := 4
 
 @onready var viewport: SubViewport = $Layout/ContentArea/ViewportContainer/GameplayViewport
 @onready var viewport_container: SubViewportContainer = $Layout/ContentArea/ViewportContainer
 @onready var overlay_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/MissionLabel
 @onready var lives_root: HBoxContainer = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives
-@onready var ore_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore/OreLabel
-@onready var ore_icons_root: GridContainer = get_node_or_null("Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore/HBoxContainer") as GridContainer
+@onready var ore_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore/OreValue
+@onready var ore_icons_root: GridContainer = null
+@onready var quest_slots_grid: GridContainer = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox/Quest
 @onready var air_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Air/AirLabel
 @onready var air_icon: TextureRect = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Air/AirIcon
 @onready var air_bar: ProgressBar = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Air/ProgressBar
@@ -46,7 +48,7 @@ const SUIT_UPGRADES := [
 @onready var battery_bar: ProgressBar = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Consumables/Battery/ProgressBar
 @onready var security_cards_grid: GridContainer = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/SecurityCards
 @onready var upgrade_cards_grid: GridContainer = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/EquipmentStrip/UpgradeCards
-@onready var score_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox/ScoreValue
+@onready var score_label: Label = $Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore/ScoreValue
 
 var room_instance: Node2D = null
 var current_room_id: String = "room_000"
@@ -62,8 +64,7 @@ func _ready() -> void:
 	_configure_viewport()
 	_setup_consumable_icons()
 	_setup_card_grids()
-	if ore_icons_root:
-		ore_icons_root.visible = false
+	_setup_quest_slots()
 	if jetpack_root:
 		jetpack_root.visible = false
 	if fuel_root:
@@ -215,33 +216,35 @@ func _on_room_status_changed(status: Dictionary) -> void:
 		overlay_label.text = str(status["room_name"])
 	if status.has("ore_collected") and status.has("ore_total"):
 		var ore_count := int(status.get("ore_count", status["ore_collected"]))
-		ore_label.text = "Ore %d" % ore_count
+		ore_label.text = "%d" % ore_count
 	if status.has("oxygen_percent"):
 		var oxygen_percent := int(status["oxygen_percent"])
 		air_label.text = "Air"
 		air_bar.value = oxygen_percent
-	if status.has("jetpack_percent") or status.has("jetpack_unlocked") or status.has("has_jetpack"):
-		if jetpack_root:
-			jetpack_root.visible = true
-		if status.has("jetpack_percent") and jetpack_bar:
-			jetpack_bar.value = int(status["jetpack_percent"])
-		elif status.has("has_jetpack") and jetpack_bar:
-			jetpack_bar.value = 100 if bool(status["has_jetpack"]) else 0
-		elif status.has("jetpack_unlocked") and jetpack_bar:
-			jetpack_bar.value = 100 if bool(status["jetpack_unlocked"]) else 0
-	elif jetpack_root:
-		jetpack_root.visible = false
-	if status.has("fuel_pct"):
-		if fuel_root:
-			fuel_root.visible = true
-		if fuel_bar:
+	var has_jetpack := bool(status.get("has_jetpack", false) or status.get("jetpack_unlocked", false))
+	var uses_battery := bool(
+		status.get("has_magnetic_boots", false)
+		or status.get("has_grappling_hook", false)
+		or status.get("has_visibility_cloak", false)
+		or status.get("has_laser_pistol", false)
+		or status.get("has_shield", false)
+	)
+	if jetpack_root:
+		jetpack_root.visible = has_jetpack
+		if has_jetpack:
+			if status.has("jetpack_percent") and jetpack_bar:
+				jetpack_bar.value = int(status["jetpack_percent"])
+			elif jetpack_bar:
+				jetpack_bar.value = 100
+	if fuel_root:
+		fuel_root.visible = has_jetpack and status.has("fuel_pct")
+		if fuel_root.visible and fuel_bar:
 			if status.has("fuel_max_pct"):
 				fuel_bar.max_value = float(status["fuel_max_pct"])
 			fuel_bar.value = float(status["fuel_pct"])
-	if status.has("battery_pct"):
-		if battery_root:
-			battery_root.visible = true
-		if battery_bar:
+	if battery_root:
+		battery_root.visible = uses_battery and status.has("battery_pct")
+		if battery_root.visible and battery_bar:
 			battery_bar.value = float(status["battery_pct"])
 	if status.has("lives_remaining"):
 		var lives_remaining := int(status["lives_remaining"])
@@ -332,6 +335,54 @@ func _setup_card_grid(grid: GridContainer, entries: Array, is_security: bool) ->
 func _refresh_card_grids() -> void:
 	_refresh_card_grid(security_cards_grid, SECURITY_CARDS, true)
 	_refresh_card_grid(upgrade_cards_grid, SUIT_UPGRADES, false)
+	_refresh_quest_slots()
+
+# Quick-slot hotbar mirroring equipment_1..4 — slot N shows whatever equipment
+# is in RunManager.get_equipment_list()[N-1] (pickup order), same list the
+# player's number-key hotkeys index into. Empty slots show the hotkey number;
+# it disappears once an item lands in that slot.
+func _setup_quest_slots() -> void:
+	if not quest_slots_grid:
+		return
+	for child in quest_slots_grid.get_children():
+		child.free()
+	for i in range(QUEST_SLOT_COUNT):
+		var card := EQUIPMENT_CARD_SCENE.instantiate()
+		quest_slots_grid.add_child(card)
+		if card.has_method("configure"):
+			card.call("configure", "", "", Color("#00D7FF"), false, i + 1)
+
+func _refresh_quest_slots() -> void:
+	if not quest_slots_grid:
+		return
+	var equipped: Array = []
+	if RunManager and RunManager.has_method("get_equipment_list"):
+		equipped = RunManager.get_equipment_list()
+	var index := 0
+	for child in quest_slots_grid.get_children():
+		if index >= QUEST_SLOT_COUNT:
+			break
+		if index < equipped.size():
+			var item_id := str(equipped[index])
+			var info := _find_upgrade_info(item_id)
+			if child.has_method("configure"):
+				child.call(
+					"configure",
+					item_id,
+					str(info.get("icon_path", "")),
+					info.get("accent_color", Color("#00D7FF")),
+					true,
+					index + 1
+				)
+		elif child.has_method("configure"):
+			child.call("configure", "", "", Color("#00D7FF"), false, index + 1)
+		index += 1
+
+func _find_upgrade_info(item_id: String) -> Dictionary:
+	for entry in SUIT_UPGRADES:
+		if str(entry.get("item_id", "")) == item_id:
+			return entry
+	return {}
 
 func _refresh_card_grid(grid: GridContainer, entries: Array, is_security: bool) -> void:
 	if not grid:
@@ -343,8 +394,11 @@ func _refresh_card_grid(grid: GridContainer, entries: Array, is_security: bool) 
 			index += 1
 			continue
 		var card_info: Dictionary = entries[index]
+		var owned := _is_card_owned(str(card_info.get("item_id", "")), is_security)
 		if child.has_method("set_owned"):
-			child.call("set_owned", _is_card_owned(str(card_info.get("item_id", "")), is_security))
+			child.call("set_owned", owned)
+		else:
+			child.visible = owned
 		index += 1
 
 func _is_card_owned(item_id: String, is_security: bool) -> bool:

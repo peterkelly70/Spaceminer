@@ -6,6 +6,7 @@ class_name PausePopup
 @onready var _music_slider: HSlider = %MusicSlider
 @onready var _track_select: OptionButton = %TrackSelect
 @onready var _sfx_slider: HSlider = %SfxSlider
+@onready var _run_info_label: Label = %RunInfoLabel
 @onready var _resume_button: Button = %ResumeButton
 @onready var _exit_button: Button = %ExitButton
 @onready var _mute_check: CheckButton = %MuteButton
@@ -24,6 +25,11 @@ func _ready() -> void:
 	_music_slider.value = am.music_volume * 100.0
 	_sfx_slider.value = am.sfx_volume * 100.0
 	_mute_check.button_pressed = am.is_muted()
+	if _run_info_label:
+		if RunManager and RunManager.has_method("get_active_run_summary"):
+			_run_info_label.text = RunManager.get_active_run_summary()
+		else:
+			_run_info_label.text = "Seed: Random"
 
 	# Populate tracks from MusicManager
 	var mm = get_tree().get_first_node_in_group("music_manager")
@@ -60,6 +66,13 @@ func _ready() -> void:
 	_exit_button.disabled = false
 	focus_default()
 
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+	if event.is_action_pressed("ui_cancel"):
+		_on_resume()
+		get_viewport().set_input_as_handled()
+
 func _on_music_changed(v: float) -> void:
 	var am = get_node("/root/Audio_Manager")
 	am.set_music_volume(v / 100.0)
@@ -76,13 +89,16 @@ func _on_resume() -> void:
 	if Engine.is_editor_hint() == false:
 		print("[PausePopup] Resume pressed")
 	get_tree().paused = false
+	State_Manager.change_state(AppState.State.PLAYING)
 	hide()
 
 func _on_exit() -> void:
 	if Engine.is_editor_hint() == false:
 		print("[PausePopup] Exit pressed")
+	get_tree().paused = false
 	# Exit to main menu action
-	State_Manager.change_state(GameState.GameState.MAIN_MENU)
+	State_Manager.change_state(AppState.State.MAIN_MENU)
+	hide()
 
 func focus_default() -> void:
 	if is_instance_valid(_resume_button):

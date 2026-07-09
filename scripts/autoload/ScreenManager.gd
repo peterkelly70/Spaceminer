@@ -8,7 +8,7 @@ const DEFAULT_WIDTH: int = 1920
 const DEFAULT_HEIGHT: int = 1080
 
 func _ready():
-	Logger.info(self, "Initializing...")
+	print("Initializing...")
 	
 	# Set the window to fullscreen on startup
 	if OS.has_feature("standalone"):  # Only force fullscreen in standalone builds
@@ -25,17 +25,17 @@ func _ready():
 	var centered_pos = (screen_size - window_size) / 2
 	DisplayServer.window_set_position(centered_pos)
 	
-	Logger.info(self, "Window set to: %s" % DisplayServer.window_get_size())
-	Logger.info(self, "Window mode: %s" % DisplayServer.window_get_mode())
+	print("Window set to: %s" % DisplayServer.window_get_size())
+	print("Window mode: %s" % DisplayServer.window_get_mode())
 	
 	# Connect to window resize signals
 	get_window().size_changed.connect(_on_window_size_changed)
 	
-	Logger.info(self, "Initialized")
+	print("Initialized")
 
 func _on_window_size_changed():
 	var new_size = DisplayServer.window_get_size()
-	Logger.info(self, "Window resized to: %s" % new_size)
+	print("Window resized to: %s" % new_size)
 	
 	# You could implement additional logic here for handling different resolutions
 
@@ -44,17 +44,17 @@ func toggle_fullscreen():
 	
 	if current_mode == DisplayServer.WINDOW_MODE_FULLSCREEN:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		Logger.info(self, "Switched to windowed mode")
+		print("Switched to windowed mode")
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-		Logger.info(self, "Switched to fullscreen mode")
+		print("Switched to fullscreen mode")
 	
 	return DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 
 func set_fullscreen(enable: bool):
 	if enable:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-		Logger.info(self, "Enabled fullscreen mode")
+		print("Enabled fullscreen mode")
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		Logger.info(self, "Disabled fullscreen mode")
+		print("Disabled fullscreen mode")

@@ -1,9 +1,9 @@
-# RetroSpeech — SAM-Inspired Runtime Speech Synthesiser
+# RetroSpeech — SAM Runtime Speech Bridge
 
-Runtime 1980s-style speech synthesis for Godot 4.6. No external programs, no
-pre-recorded audio. Pure GDScript phoneme synthesis targeting the crunchy,
-robotic character of old C64/Spectrum software like SAM (Software Automatic
-Mouth) by Don't Ask Software.
+Runtime 1980s-style speech synthesis for Godot 4.6. `RetroSpeech` is a thin
+compatibility layer over the upstream SAM source code bundled in
+`tools/sam/`, so the project follows the real table-driven SAM implementation
+path instead of a clean-room approximation.
 
 ---
 
@@ -56,6 +56,10 @@ v.crunch_bits = 4  # 4-bit quantisation
 
 ## SamVoice Parameters
 
+The bridge maps `pitch`, `speed`, `mouth`, and `throat` directly into the SAM
+binary call path. The remaining fields stay on the voice resource for
+compatibility with the existing UI and preset code.
+
 | Parameter     | Range       | Effect                                          |
 |---------------|-------------|-------------------------------------------------|
 | `sample_rate` | Hz          | Output rate. 8000 = crunchiest, 22050 = cleanest|
@@ -91,24 +95,25 @@ Supported phonemes:
 ## Architecture
 
 ```
-Text → SamReciter → phoneme string
-                         ↓
-               SamParser → allophone frames
-                                ↓
-                    SamRenderer → PCM buffer
-                                      ↓
-                          RetroAudioUtil → AudioStreamWAV
+Text / phonemes → RetroSpeech
+                      ↓
+                SamBridge (resolves voices, builds CLI args)
+                      ↓
+        tools/sam/sam (upstream SAM binary, built locally)
+                      ↓
+              WAV output → RetroAudioUtil → AudioStreamWAV
 ```
 
-### What is SAM-inspired vs original
+### What is SAM vs project glue
 
-- **SAM-inspired:** The overall pipeline (text → reciter → phonemes → frames →
-  PCM), the phoneme names, the use of F1/F2 formant shaping, the 256-entry
-  sine/rect lookup tables, the mouth/throat parameter names.
-- **Original (clean-room):** All actual code, the resonator implementation
-  (one-pole IIR rather than SAM's table-driven approach), the reciter rules
-  (written from English linguistics knowledge), the GDScript class structure.
-  This is **not** a port of the SAM source code.
+- **SAM:** `tools/sam/src/*` is the upstream C implementation and the `sam`
+  binary built from it.
+- **Project glue:** `RetroSpeech`, `SamBridge`, and `RetroAudioUtil` adapt
+  that binary for Godot, preserve the existing `RetroSpeech` API, and turn the
+  resulting WAV into an `AudioStreamWAV`.
+- **Compatibility fields:** The `SamVoice` resource still carries the project
+  voice knobs used by the UI. The bridge maps the core SAM parameters
+  (`pitch`, `speed`, `mouth`, `throat`) directly into the binary call path.
 
 ### AudioStreamWAV Notes
 
@@ -140,18 +145,6 @@ press **Speak**. The generated phoneme string is shown below the controls.
 ## Licensing
 
 The original SAM software is a commercial product by Don't Ask Software (now
-Nicola Cimmino / Eric Giguere). **This implementation does not use any SAM
-source code.** It is an independent clean-room recreation inspired by the
-published description of the algorithm and the publicly documented phoneme
-tables.
-
-The lookup tables (SINUS_TABLE, RECT_TABLE) are derived from widely
-reproduced documentation of the SAM algorithm that has circulated in the
-retrocomputing community since the 1980s. They are believed to be in the
-public domain but **use at your own risk in commercial projects**. If in
-doubt, replace the waveform tables with your own sine computation:
-
-```gdscript
-for i in range(256):
-    SINUS_TABLE[i] = int((sin(float(i) / 256.0 * TAU) * 0.5 + 0.5) * 255)
-```
+Nicola Cimmino / Eric Giguere). This project vendors the upstream SAM source
+under `tools/sam/src/` and builds it locally. If you reuse the bundle outside
+this repo, review the upstream license and source provenance before shipping.

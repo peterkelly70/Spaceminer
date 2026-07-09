@@ -1,0 +1,16 @@
+{
+  "workers": {
+    "miner": {"display_name": "Miner", "tier": 1, "description": "Digs ore."},
+    "farmer": {"display_name": "Farmer", "tier": 1, "description": "Grows food."},
+    "lumberjack": {"display_name": "Lumberjack", "tier": 1, "description": "Cuts wood."},
+    "quarryworker": {"display_name": "Quarry Worker", "tier": 1, "description": "Breaks stone."},
+    "smith": {"display_name": "Smith", "tier": 1, "description": "Works metal."},
+    "carpenter": {"display_name": "Carpenter", "tier": 1, "description": "Shapes timber."},
+    "stonemason": {"display_name": "Stonemason", "tier": 1, "description": "Builds with stone."},
+    "brewmaster": {"display_name": "Brewmaster", "tier": 1, "description": "Makes morale drink."},
+    "alchemist": {"display_name": "Alchemist", "tier": 1, "description": "Fiddles with mana."},
+    "runesmith": {"display_name": "Runesmith", "tier": 1, "description": "Etches runes."},
+    "scholar": {"display_name": "Scholar", "tier": 1, "description": "Studies lore."},
+    "warrior": {"display_name": "Warrior", "tier": 1, "description": "Fights for the hold."}
+  }
+}

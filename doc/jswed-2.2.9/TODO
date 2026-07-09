@@ -1,0 +1,178 @@
+For 2.2.9 release:
+
+1. Bug: Protect pages 9E00 and 9F00 in JSW64 games.
+2. Upgrade JSW64 games to HL12
+3. Memory corruption bug. Fortuately Jet Set Danny has managed to isolate a 
+  test case, which is more than I have.
+	** RTIME.JS2: 0866 D0 -> 80 	;Willy Y
+		      086B 19 -> 41	;<<!!! Start room
+                      0870 BD -> 0F	;Willy X
+
+  ** Buffer overflow in m_roomCache??? **
+
+
+For 2.1.0 release:
+
+1. Get some more Manic Miner functionality in there. 
+	>> Room viewer
+		+ Air remaining?
+	>> Room editor
+		+ Clipboard etc: 
+			* Horizontal mirror doesn't reflect portal.
+			* Horizontal mirror moves Willy one cell too far right
+			* Horizontal mirror moves portal one cell too far right
+			* Vertical mirror untested, but probably scrambles
+			 all sorts of things.
+
+[DONE] Get JSW128 using the JSW64 "universal" loader.
+
+[DONE] Get JSWED to read "universal" format tap files.
+
+[DONE] Get a memory map into JSW128 (and JSW64) for these memory pages:
+	ED EE EF F0 F1 F2 F3 F4 F5 F6 F7
+[DONE] 2. Get some JSW64 functionality into JSW128, and add editors for it.
+
+3. Allow JSWED to create and edit JSW64 games - at least try supporting 
+  variant W.
+	[DONE] >> Loader doesn't load all files from jsw64w.tap
+	[DONE?] >> As part of this, move everything over to the 'Room' object 
+	  model. Still need to cover altering room properties.
+	[DONE] >> Also as part of this, MM doesn't handle '?' cells properly 
+	  yet.
+	[DONE] >> Create a JSW64 room drawer.
+	[DONE] >> Create a JSW64 room editor.	
+		[DONE] + Place '?' cells (Z variant)
+		[DONE] + Air supply
+		[DONE] + Item bitmap
+		or in bytes:
+
+		00-40: Guardians	[DONE]
+		       Cell behaviour	[DONE]
+		41-B5: Cells		[DONE]
+		B6-D5: Room name	[DONE]
+		D6-D9: Conveyor anim	[DONE]
+		DA-DB: Guardian table   [DONE]
+		DC-DD: Solar beam	[DONE]
+		DE:    Flags		[DONE]
+		DF-E0: Air		[DONE]
+		E1-E8: Item bitmap	[DONE]
+		E9-EC: Exits		[DONE]
+		ED:    Willy's sprite	[DONE]
+		EE-EF: Portal bitmap	[DONE]
+		F0-F3: Portal position  [DONE]
+		F4:    Portal attribute [DONE]
+		F5-F8: Portal destination [DONE]
+		F9-FE: Patch vectors
+		FF:    Flags2		[DONE]
+
+		[DONE] * Add editor for sprites at 8200 and 8300 (depending 
+		 on the variant).
+
+	[DONE?] >> Create a JSW64 'room memory' editor.
+		[DONE] Allows guardian table to be moved around.
+		[DONE] >> Stop sprites being put on top of guardian tables.
+	[DONE] >> Create a JSW64 portal/teleport editor.
+	>> Create a JSW64 guardian editor.
+		-- Screen exists, but only goes up to 32 guardians.
+		-- Guardian table editor needs a legend.
+	[DONE] >> Create a JSW64 messages-page editor.
+	[DONE] >> The code to get the variant doesn't work on snapshots, because
+	  the variant ID is stored in a byte that is overwritten. Either use
+	  a different byte or write a different test.
+	[DONE?] >> Write a JSW48 -> JSW64 upgrade.
+
+	[DONE] >> Air bar attribute editor
+
+	[DONE] >> Documentation: Superjump and trampolines do *not* mix!
+
+[DONE] 4. Check compilation under Mandrake 9.2.
+
+[DONE] 5. Add support for safe start position (IMCJSW).
+
+[DONE] Bug: Upgrade to JSW64 can crash, particularly with Softricks games (try
+ with JSEMILY).
+
+-- 2.1.5 release --
+
+[DONE] 6. JSW64 upgrade: Triggers. These are guardian entries that change the 
+  subsequent guardian entry when a flag byte goes to 0. A Eugenic is a 
+  one-shot change.
+  First byte is 88h. Others somehow have to decompress over existing 
+  guardian. 
+	(The JSW64 engines now support these. JSWED can upgrade the engine,
+	and can edit a trigger (sort-of) but can't add a new one).
+
+	Trigger format:
+		DB	88	-- Type
+		DW	flag	-- Address of the flag byte, which must go 
+				  to zero to trigger the change.
+		DB	newtyp	-- New byte 0 of target guardian.
+		DS	4	-- New bytes 4-7 of target guardian.
+
+[DONE] 6a. Add editors for skylabs, Eugenes, switches, vanishing walls.
+	* We have:
+		Skylabs: OK
+		Eugenes: OK
+		Switches: OK
+		Triggers: OK 
+		Vanishers: OK
+
+[DONE] 6b. Write optional extra guardian modules that can be hooked in at will, for:
+   * Kong (maybe Kong should be left as a patch vector)
+   * Lifts. The lift check is done while drawing:
+	> Draw lift. If it collides with something:
+		>> If Willy's Y is >= (lift Y - 15), set it to 
+		   (lift Y - 16). If this is <0, go up.
+
+[DONE] 6c. Write yet another room options form, to say where the room gets its
+   graphics from.
+
+6d. Backport the JSW64 "funky guardians" code to JSW128. Enable editing of
+   all new types, noting that there's no rigor support in JSW128, so no 
+   "items taken" trigger.
+	[Not really feasible, because of the different internal organization
+	of JSW128 as opposed to JSW64. Also guardians are global, not reset
+	when you enter a room]
+
+[DONE] 6e. Add a "blocker" type. All guardians after the blocker don't appear; 
+  but a trigger can be used to unblock it...
+
+6f. Add a true "patch vector" type guardian type.
+	0x8F [move vector] [draw vector] xx yy zz
+	[No space left in JSW64 engine].
+
+6g. Do a "JSW64 for machine code programmers" section.
+
+-- Ideas for 2.3.x: --
+
+7. Music editors: JSW48, JSW128, etc.
+
+8. Import and export.
+
+9. Some sort of plugin support.
+
+10. Attributes of Maria, Toilet etc.
+
+11. Patch vector editor?
+
+12. Support Manic Miner 128.
+
+13. Support JSW2 and JSW2 128.
+
+14. Support JSW: Excession (aka "How big can we make a room definition?")
+   Excessionary ideas:
+	* Save as SLT file.
+	* 16k per room, consisting of:
+
+		0xD300:     Sprites
+		0xE300:     Guardians
+		0xE400:     Tune
+		0xE500-end: Screen
+
+15: Here's an idea. Killed Until Dead: JSW
+	* Make the rooms look like JSW rooms, and rename them:
+		- Hall    -> Hall
+		- Foyer   -> Attic
+		- Library -> Landing
+		- Patio   -> Yacht
+	* The view from your window should be the Megatree

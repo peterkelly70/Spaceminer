@@ -67,7 +67,7 @@ const PHONEME_TABLE: Array = [
 	{ "name": "HH",  "voiced": false, "vowel": false, "f1":   0, "f2":    0, "len": 4  }, # 39
 	{ "name": "NGK", "voiced": false, "vowel": false, "f1":   0, "f2":    0, "len": 6  }, # 40
 	{ "name": "KS",  "voiced": false, "vowel": false, "f1":   0, "f2": 2000, "len": 6  }, # 41
-	{ "name": "/",   "voiced": false, "vowel": false, "f1":   0, "f2":    0, "len": 14 }, # 42  pause
+	{ "name": "/",   "voiced": false, "vowel": false, "f1":   0, "f2":    0, "len": 18 }, # 42  pause
 ]
 
 # Build name → index map at class load time

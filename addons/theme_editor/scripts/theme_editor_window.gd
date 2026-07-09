@@ -350,8 +350,7 @@ func _create_preview_controls() -> void:
 	_preview_controls["separator"] = separator
 	
 	# Add buttons section
-	var buttons_section = _create_section("Buttons")
-	preview_vbox.add_child(buttons_section)
+	var buttons_section = _create_section(preview_vbox, "Buttons")
 	
 	# Normal button
 	var button = Button.new()
@@ -367,8 +366,7 @@ func _create_preview_controls() -> void:
 	_preview_controls["disabled_button"] = disabled_button
 	
 	# Add input section
-	var input_section = _create_section("Input Controls")
-	preview_vbox.add_child(input_section)
+	var input_section = _create_section(preview_vbox, "Input Controls")
 	
 	# LineEdit
 	var line_edit = LineEdit.new()
@@ -384,8 +382,7 @@ func _create_preview_controls() -> void:
 	_preview_controls["text_edit"] = text_edit
 	
 	# Add option controls section
-	var option_section = _create_section("Option Controls")
-	preview_vbox.add_child(option_section)
+	var option_section = _create_section(preview_vbox, "Option Controls")
 	
 	# CheckBox
 	var check_box = CheckBox.new()
@@ -402,8 +399,7 @@ func _create_preview_controls() -> void:
 	_preview_controls["option_button"] = option_button
 	
 	# Add container section
-	var container_section = _create_section("Containers")
-	preview_vbox.add_child(container_section)
+	var container_section = _create_section(preview_vbox, "Containers")
 	
 	# Panel
 	var panel = Panel.new()
@@ -431,8 +427,7 @@ func _create_preview_controls() -> void:
 	_preview_controls["tab_container"] = tab_container
 	
 	# Add progress section
-	var progress_section = _create_section("Progress Controls")
-	preview_vbox.add_child(progress_section)
+	var progress_section = _create_section(preview_vbox, "Progress Controls")
 	
 	# ProgressBar
 	var progress_bar = ProgressBar.new()
@@ -441,8 +436,7 @@ func _create_preview_controls() -> void:
 	_preview_controls["progress_bar"] = progress_bar
 	
 	# Add tree section
-	var tree_section = _create_section("Tree View")
-	preview_vbox.add_child(tree_section)
+	var tree_section = _create_section(preview_vbox, "Tree View")
 	
 	# Tree
 	var tree = Tree.new()
@@ -463,10 +457,10 @@ func _create_preview_controls() -> void:
 	tree_section.add_child(tree)
 	_preview_controls["tree"] = tree
 
-func _create_section(title: String) -> VBoxContainer:
+func _create_section(parent: VBoxContainer, title: String) -> VBoxContainer:
 	var section = VBoxContainer.new()
 	section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	
+
 	# Create a header with collapse button
 	var header = HBoxContainer.new()
 	header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -496,7 +490,10 @@ func _create_section(title: String) -> VBoxContainer:
 	# Add separator
 	var section_separator = HSeparator.new()
 	section.add_child(section_separator)
-	
+
+	# Add the composed section to the provided parent container
+	parent.add_child(section)
+
 	# Store references to make sure they get proper theme updates
 	_preview_controls["section_" + title + "_header"] = header
 	_preview_controls["section_" + title + "_button"] = collapse_button

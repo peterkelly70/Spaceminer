@@ -15,7 +15,7 @@ var _original_color: Color
 var _highlight_color: Color = Color(1, 0.5, 0, 0.3)
 
 var _type: String
-var _name: String
+var _name: StringName
 var _stylebox: StyleBox
 var _file_dialog: FileDialog
 var _property_editors: Dictionary = {}
@@ -40,9 +40,9 @@ func _ready() -> void:
 
 func setup(type: String, name: String, stylebox: StyleBox) -> void:
 	_type = type
-	_name = name
+	_name = StringName(name)
 	_stylebox = stylebox
-	
+
 	# Update UI
 	type_label.text = type
 	name_label.text = name
@@ -562,7 +562,7 @@ func get_type() -> String:
 	return _type
 
 # Get the name of this editor item
-func get_name() -> String:
+func get_name() -> StringName:
 	return _name
 
 # Highlight this item when selected from preview

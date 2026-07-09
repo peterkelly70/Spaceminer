@@ -92,9 +92,9 @@ const RECT_TABLE: PackedByteArray = [
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 ]
 
-# How many PCM samples to generate per SAM "frame" at 22 050 Hz.
-# At 8 000 Hz we scale this down proportionally in render().
-const SAMPLES_PER_FRAME_22K: int = 50
+# How many PCM samples to generate per SAM frame at 22 050 Hz.
+# Reference SAM implementations use 10 ms frames, so 22 050 Hz ≈ 220 samples/frame.
+const SAMPLES_PER_FRAME_22K: int = 220
 
 # Noise source LFSRseed (16-bit Galois LFSR for pseudo-random noise).
 var _noise_state: int = 0xACE1
@@ -149,7 +149,7 @@ func render(frames: Array, voice: SamVoice) -> PackedByteArray:
 
 		# Pitch: number of samples per glottal pulse.
 		# Higher voice.pitch value → longer period → lower pitch.
-		var pitch_period := max(4, voice.pitch)
+		var pitch_period: int = maxi(4, voice.pitch)
 
 		for _f in range(frame_count):
 			var block := _render_frame(
@@ -188,15 +188,16 @@ func _render_frame(
 		var raw: float = 0.0
 
 		if is_voiced:
-			# Sawtooth glottal buzz: ramp from +1 to -1 over one pitch period.
+			# Smooth glottal source: a sine carrier is easier to understand than
+			# a hard sawtooth in this simplified renderer.
 			var t := float(phase) / float(pitch_period)
-			raw = 1.0 - 2.0 * t   # sawtooth
+			raw = sin(TAU * t)
 			phase += 1
 			if phase >= pitch_period:
 				phase = 0
 		else:
 			# Unvoiced: shaped noise (LFSR pseudo-random).
-			raw = _next_noise() * 0.7
+			raw = _next_noise() * 0.45
 
 		# F1 resonator (one-pole low-pass-ish)
 		var r1 := raw + coeff_f1 * _r1_prev
@@ -207,7 +208,7 @@ func _render_frame(
 		_r2_prev = r2
 
 		# Mix the two formants
-		var mixed := r1 * 0.6 + r2 * 0.4
+		var mixed := r1 * 0.72 + r2 * 0.28
 
 		# Scale and clamp
 		var scaled := mixed * volume
@@ -253,9 +254,9 @@ func _apply_crunch(pcm: PackedByteArray, intensity: float, bits: int) -> PackedB
 
 	for i in range(pcm.size()):
 		var original := float(pcm[i])
-		var quantised := floor(original / step) * step + step * 0.5
+		var quantised: float = floor(original / step) * step + step * 0.5
 		# Blend between original and quantised based on intensity
-		var blended := original + (quantised - original) * intensity
+		var blended: float = original + (quantised - original) * intensity
 		out[i] = clampi(int(blended), 0, 255)
 
 	return out

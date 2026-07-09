@@ -1,0 +1,15 @@
+Void Black: #000000
+Deep Space Blue: #07111F
+Panel Charcoal: #1B1B24
+Metal Grey: #8C8C8C
+Bright White: #F4F4F4
+CPC Cyan: #00D7FF
+Deep Blue: #1D4FFF
+Miner Yellow: #FFD21A
+Hazard Orange: #FF8A00
+Alarm Red: #FF1E2D
+Alien Green: #00D66B
+Toxic Lime: #8CFF00
+Power Purple: #5A2DFF
+Pickup Magenta: #FF00C8
+Chroma Magenta: #FF00FF

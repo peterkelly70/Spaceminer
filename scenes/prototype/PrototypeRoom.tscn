@@ -1,0 +1,149 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" uid="uid://prototype_room_script" path="res://scripts/prototype/prototype_room.gd" id="1_room_script"]
+[ext_resource type="PackedScene" uid="uid://prototype_player_scene" path="res://scenes/prototype/Player.tscn" id="2_player_scene"]
+[ext_resource type="PackedScene" uid="uid://prototype_ore_scene" path="res://scenes/prototype/OreFragment.tscn" id="3_ore_scene"]
+[ext_resource type="PackedScene" uid="uid://prototype_hazard_scene" path="res://scenes/prototype/HazardZone.tscn" id="4_hazard_scene"]
+
+[sub_resource type="RectangleShape2D" id="1_floor_shape"]
+size = Vector2(900, 40)
+
+[sub_resource type="RectangleShape2D" id="2_mid_shape"]
+size = Vector2(240, 24)
+
+[sub_resource type="RectangleShape2D" id="3_high_shape"]
+size = Vector2(200, 20)
+
+[sub_resource type="RectangleShape2D" id="4_bridge_shape"]
+size = Vector2(280, 18)
+
+[node name="PrototypeRoom" type="Node2D"]
+script = ExtResource("1_room_script")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.054902, 0.058824, 0.101961, 1)
+
+[node name="Level" type="Node2D" parent="."]
+
+[node name="Floor" type="StaticBody2D" parent="Level"]
+position = Vector2(0, 220)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Floor"]
+position = Vector2(0, -20)
+shape = SubResource("1_floor_shape")
+
+[node name="Visual" type="Polygon2D" parent="Level/Floor"]
+position = Vector2(0, -20)
+color = Color(0.2, 0.32, 0.34, 1)
+polygon = PackedVector2Array(-450, 0, 450, 0, 450, -40, -450, -40)
+
+[node name="MidPlatform" type="StaticBody2D" parent="Level"]
+position = Vector2(-180, 90)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/MidPlatform"]
+position = Vector2(0, -12)
+shape = SubResource("2_mid_shape")
+
+[node name="Visual" type="Polygon2D" parent="Level/MidPlatform"]
+position = Vector2(0, -12)
+color = Color(0.341176, 0.439216, 0.501961, 1)
+polygon = PackedVector2Array(-120, 0, 120, 0, 120, -24, -120, -24)
+
+[node name="HighPlatform" type="StaticBody2D" parent="Level"]
+position = Vector2(260, -10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/HighPlatform"]
+position = Vector2(0, -10)
+shape = SubResource("3_high_shape")
+
+[node name="Visual" type="Polygon2D" parent="Level/HighPlatform"]
+position = Vector2(0, -10)
+color = Color(0.32549, 0.486275, 0.32549, 1)
+polygon = PackedVector2Array(-100, 0, 100, 0, 100, -20, -100, -20)
+
+[node name="Bridge" type="StaticBody2D" parent="Level"]
+position = Vector2(80, 150)
+rotation = -0.1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Bridge"]
+position = Vector2(0, -9)
+shape = SubResource("4_bridge_shape")
+
+[node name="Visual" type="Polygon2D" parent="Level/Bridge"]
+position = Vector2(0, -9)
+color = Color(0.231373, 0.25098, 0.392157, 1)
+polygon = PackedVector2Array(-140, 0, 140, 0, 140, -18, -140, -18)
+
+[node name="Collectibles" type="Node2D" parent="."]
+
+[node name="OreA" parent="Collectibles" instance=ExtResource("3_ore_scene")]
+position = Vector2(-260, 70)
+
+[node name="OreB" parent="Collectibles" instance=ExtResource("3_ore_scene")]
+position = Vector2(40, 130)
+
+[node name="OreC" parent="Collectibles" instance=ExtResource("3_ore_scene")]
+position = Vector2(260, -70)
+
+[node name="OreD" parent="Collectibles" instance=ExtResource("3_ore_scene")]
+position = Vector2(340, -40)
+
+[node name="Hazards" type="Node2D" parent="."]
+
+[node name="Spikes" parent="Hazards" instance=ExtResource("4_hazard_scene")]
+position = Vector2(40, 214)
+scale = Vector2(1, 1.2)
+
+[node name="RespawnPoint" type="Marker2D" parent="."]
+position = Vector2(-360, 140)
+
+[node name="Player" parent="." instance=ExtResource("2_player_scene")]
+position = Vector2(-360, 140)
+
+[node name="HUDLayer" type="CanvasLayer" parent="."]
+layer = 50
+
+[node name="HUD" type="MarginContainer" parent="HUDLayer"]
+anchors_preset = 1
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 24.0
+offset_top = 24.0
+
+[node name="Panel" type="PanelContainer" parent="HUDLayer/HUD"]
+custom_minimum_size = Vector2(260, 120)
+
+[node name="MarginContainer" type="MarginContainer" parent="HUDLayer/HUD/Panel"]
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUDLayer/HUD/Panel/MarginContainer"]
+theme_override_constants/separation = 6
+
+[node name="RoomLabel" type="Label" parent="HUDLayer/HUD/Panel/MarginContainer/VBoxContainer"]
+text = "Landing Bay Alpha"
+theme_override_font_sizes/font_size = 20
+uppercase = true
+
+[node name="OreLabel" type="Label" parent="HUDLayer/HUD/Panel/MarginContainer/VBoxContainer"]
+text = "Ore Collected: 0 / 0"
+theme_override_font_sizes/font_size = 16
+
+[node name="StaminaPanel" type="VBoxContainer" parent="HUDLayer/HUD/Panel/MarginContainer/VBoxContainer"]
+
+[node name="StaminaLabel" type="Label" parent="HUDLayer/HUD/Panel/MarginContainer/VBoxContainer/StaminaPanel"]
+text = "Stamina"
+
+[node name="StaminaBar" type="ProgressBar" parent="HUDLayer/HUD/Panel/MarginContainer/VBoxContainer/StaminaPanel"]
+custom_minimum_size = Vector2(220, 24)
+step = 0.01
+value = 100.0
+
+[node name="TipLabel" type="Label" parent="HUDLayer/HUD/Panel/MarginContainer/VBoxContainer"]
+theme_override_font_sizes/font_size = 14
+text = "Arrows to move, Space to jump, W/Up to thrust, F to grapple"

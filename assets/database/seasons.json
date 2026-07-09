@@ -1,0 +1,39 @@
+{
+  "spring": {
+    "bbcode_description": "[color=lime]Spring[/color]: thaw, growth, and soft ground.",
+    "dwarf_months": ["Thawfrost", "Seedsow", "Sproutgrow"],
+    "months": ["Thawfrost", "Seedsow", "Sproutgrow"],
+    "effects": [
+      {"type": "resource_modifier", "resource": "food", "multiplier": 1.2},
+      {"type": "resource_modifier", "resource": "wood", "multiplier": 1.1}
+    ]
+  },
+  "summer": {
+    "bbcode_description": "[color=yellow]Summer[/color]: heat, light, and deep work.",
+    "dwarf_months": ["Fireforge", "Stonedry", "Goldgrain"],
+    "months": ["Fireforge", "Stonedry", "Goldgrain"],
+    "effects": [
+      {"type": "resource_modifier", "resource": "food", "multiplier": 1.5},
+      {"type": "resource_modifier", "resource": "ore", "multiplier": 1.2}
+    ]
+  },
+  "fall": {
+    "bbcode_description": "[color=orange]Fall[/color]: harvest, dust, and colder halls.",
+    "dwarf_months": ["Amberhew", "Mistfall", "Stormshroud"],
+    "months": ["Amberhew", "Mistfall", "Stormshroud"],
+    "effects": [
+      {"type": "resource_modifier", "resource": "food", "multiplier": 0.8},
+      {"type": "resource_modifier", "resource": "gold", "multiplier": 1.3}
+    ]
+  },
+  "winter": {
+    "bbcode_description": "[color=aqua]Winter[/color]: deep dark, pressure, and survival.",
+    "dwarf_months": ["Icevault", "Deepdark", "Frosthold"],
+    "months": ["Icevault", "Deepdark", "Frosthold"],
+    "effects": [
+      {"type": "resource_modifier", "resource": "food", "multiplier": 0.5},
+      {"type": "resource_modifier", "resource": "wood", "multiplier": 0.7},
+      {"type": "resource_modifier", "resource": "ore", "multiplier": 0.8}
+    ]
+  }
+}

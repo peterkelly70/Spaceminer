@@ -1,8 +1,5 @@
 extends Node2D
 
-const Logger = preload("res://scripts/class/Logger.gd")
-const GameState = preload("res://scripts/autoload/GameState.gd")
-
 @export var player_scene: PackedScene = preload("res://scenes/units/Player.tscn")
 @export var enemy_scene: PackedScene = preload("res://scenes/units/Enemy.tscn")
 @export var enemy_spawn_interval: float = 1.2
@@ -17,7 +14,7 @@ var score: int = 0
 var _elapsed: float = 0.0
 
 func _ready() -> void:
-	Logger.info(self, "GameWorldController ready")
+	print("GameWorldController ready")
 	add_to_group("gameworld")
 	State_Manager.register_state_aware_view(self)
 	State_Manager.register_state_emitter(self)
@@ -25,7 +22,7 @@ func _ready() -> void:
 	receive_state_ping(State_Manager.get_current_state())
 
 func receive_state_ping(state: int) -> void:
-	var is_playing := state == GameState.GameState.PLAYING
+	var is_playing := state == AppState.State.PLAYING
 	visible = is_playing
 	if is_playing:
 		_on_enter_playing()

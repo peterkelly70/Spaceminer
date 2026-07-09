@@ -584,6 +584,7 @@ func _add_link(rooms: Dictionary, from_room_id: String, to_room_id: String, dire
 
 func _make_door(from_room_id: String, target_room_id: String, direction: String, requirement: String, is_forward: bool) -> Dictionary:
 	var position := _door_position(direction, is_forward)
+	var size := _door_size(direction)
 	var requires: Array[String] = []
 	if not requirement.is_empty():
 		requires.append(requirement)
@@ -603,7 +604,7 @@ func _make_door(from_room_id: String, target_room_id: String, direction: String,
 		"anchor": "center",
 		"direction": direction,
 		"position": position,
-		"size": [40, 72],
+		"size": [size.x, size.y],
 		"target_room_id": target_room_id,
 		"requires": requires,
 		"forward": is_forward,
@@ -633,7 +634,7 @@ func _build_room_data(room_info: Dictionary, graph: Dictionary, rng: RandomNumbe
 			"label": "EXIT",
 			"direction": exit_dir,
 			"position": _door_position(exit_dir, true),
-			"size": [40, 72],
+			"size": [_door_size(exit_dir).x, _door_size(exit_dir).y],
 			"target_room_id": "campaign_complete",
 			"requires": [],
 			"scene": "res://scenes/prototype/DoorZone.tscn",
@@ -697,32 +698,33 @@ func _make_exit_supports(exits: Array) -> Array:
 	for exit_variant in exits:
 		var exit_data: Dictionary = exit_variant
 		var pos := _as_vec2(exit_data.get("position", [0, 0]))
-		var sz  := _as_vec2(exit_data.get("size", [40, 72]))
 		var dir := str(exit_data.get("direction", "east"))
+		var sz  := _as_vec2(exit_data.get("size", _door_size(dir)))
+		var landing_top_y := _door_landing_top_y(pos, sz, dir)
 		var plat: Dictionary
 		match dir:
 			"east":
 				# Ledge just inside the east wall; player drops onto it from above
 				plat = {"name": "%s_landing" % str(exit_data.get("name", "Exit")),
-					"position": [ROOM_HALF.x - 40.0, pos.y + sz.y * 0.5 + 8.0],
+					"position": [_door_landing_x("east"), landing_top_y],
 					"size": [64.0, 16.0], "one_way": true, "type": "platform"}
 			"west":
 				plat = {"name": "%s_landing" % str(exit_data.get("name", "Exit")),
-					"position": [-ROOM_HALF.x + 40.0, pos.y + sz.y * 0.5 + 8.0],
+					"position": [_door_landing_x("west"), landing_top_y],
 					"size": [64.0, 16.0], "one_way": true, "type": "platform"}
 			"north":
 				# Ledge just below the north opening
 				plat = {"name": "%s_landing" % str(exit_data.get("name", "Exit")),
-					"position": [pos.x, -ROOM_HALF.y + 40.0],
+					"position": [pos.x, landing_top_y],
 					"size": [maxf(64.0, sz.x), 16.0], "one_way": true, "type": "platform"}
 			"south":
 				# Ledge just above the south opening
 				plat = {"name": "%s_landing" % str(exit_data.get("name", "Exit")),
-					"position": [pos.x, ROOM_HALF.y - 40.0],
+					"position": [pos.x, landing_top_y],
 					"size": [maxf(64.0, sz.x), 16.0], "one_way": true, "type": "platform"}
 			_:
 				plat = {"name": "%s_landing" % str(exit_data.get("name", "Exit")),
-					"position": [pos.x, pos.y + sz.y * 0.5 + 8.0],
+					"position": [pos.x, landing_top_y],
 					"size": [64.0, 16.0], "one_way": true, "type": "platform"}
 		supports.append(plat)
 	return supports
@@ -734,26 +736,55 @@ func _build_spawns(exits: Array) -> Dictionary:
 	for exit_variant in exits:
 		var exit_data: Dictionary = exit_variant
 		var pos := _as_vec2(exit_data.get("position", [0, 0]))
-		var sz  := _as_vec2(exit_data.get("size", [40, 72]))
 		var dir := str(exit_data.get("direction", ""))
+		var sz  := _as_vec2(exit_data.get("size", _door_size(dir)))
 		if dir.is_empty():
 			continue
-		# Landing ledge top (matches RoomLayoutGenerator._door_stand_y); player
+		# Landing ledge top (matches RoomLayoutGenerator._door_landing_top_y); player
 		# centre sits 16px above it so the feet rest on the ledge.
-		var stand_y := float((int(pos.y) / 16) * 16)
+		var stand_y := _door_landing_top_y(pos, sz, dir)
 		match dir:
 			"east":
-				spawns["east"] = [ROOM_HALF.x - 40.0, stand_y - 16.0]
+				spawns["east"] = [_door_landing_x("east"), stand_y - 16.0]
 			"west":
-				spawns["west"] = [-ROOM_HALF.x + 40.0, stand_y - 16.0]
+				spawns["west"] = [_door_landing_x("west"), stand_y - 16.0]
 			"north":
-				spawns["north"] = [pos.x, -ROOM_HALF.y + 24.0]
+				spawns["north"] = [pos.x, stand_y - 16.0]
 			"south":
 				# The south doorway is a hole in the floor; arrive on solid floor
 				# beside it (player centre y=128 → feet on the 144 floor surface).
 				var off := -56.0 if pos.x > 0.0 else 56.0
 				spawns["south"] = [pos.x + off, 128.0]
 	return spawns
+
+func _door_landing_x(direction: String) -> float:
+	match direction:
+		"east":
+			# Match RoomLayoutGenerator: ledge centre at WALL_X - 40.
+			return ROOM_HALF.x - 48.0
+		"west":
+			return -ROOM_HALF.x + 48.0
+		_:
+			return 0.0
+
+func _door_size(direction: String) -> Vector2:
+	match direction:
+		"north", "south":
+			return Vector2(48.0, 16.0)
+		_:
+			return Vector2(16.0, 48.0)
+
+func _door_landing_top_y(pos: Vector2, sz: Vector2, dir: String) -> float:
+	match dir:
+		"east", "west":
+			# Landing top flush with the door zone's bottom edge — matches
+			# RoomLayoutGenerator._door_landing_top_y and door_zone.gd art pinning.
+			return float(int(floorf((pos.y + sz.y * 0.5) / 16.0)) * 16)
+		"north":
+			# 48px ceiling clearance: 32px player plus one tile of walking margin.
+			return -ROOM_HALF.y + sz.y * 0.5 + 48.0
+		_:
+			return float(int(floorf((pos.y + sz.y * 0.5) / 16.0)) * 16)
 
 func _build_main_layout(solids: Array, decor: Array, collectibles: Array, hazards: Array, enemies: Array, tile_layers: Array, room_info: Dictionary, exits: Array, rng: RandomNumberGenerator) -> void:
 	var floor_y := 148
@@ -877,7 +908,7 @@ func _add_wall_segments(solids: Array, side: String, gap_exit: Variant, _floor_y
 	if side == "east" or side == "west":
 		if gap_exit is Dictionary and not gap_exit.is_empty():
 			var gap_pos := _as_vec2(gap_exit.get("position", [0, 0]))
-			var gap_size := _as_vec2(gap_exit.get("size", [40, 72]))
+			var gap_size := _as_vec2(gap_exit.get("size", _door_size(side)))
 			var top_height := maxf(0.0, (ROOM_HALF.y - gap_pos.y) - (gap_size.y * 0.5))
 			var bottom_height := maxf(0.0, (ROOM_HALF.y + gap_pos.y) - (gap_size.y * 0.5))
 			if top_height > 0.0:
@@ -891,7 +922,7 @@ func _add_wall_segments(solids: Array, side: String, gap_exit: Variant, _floor_y
 	if side == "north" or side == "south":
 		if gap_exit is Dictionary and not gap_exit.is_empty():
 			var gap_pos := _as_vec2(gap_exit.get("position", [0, 0]))
-			var gap_size := _as_vec2(gap_exit.get("size", [40, 72]))
+			var gap_size := _as_vec2(gap_exit.get("size", _door_size(side)))
 			var left_width := maxf(0.0, (ROOM_HALF.x + gap_pos.x) - (gap_size.x * 0.5))
 			var right_width := maxf(0.0, (ROOM_HALF.x - gap_pos.x) - (gap_size.x * 0.5))
 			var wall_y_pos := -ROOM_HALF.y if side == "north" else ROOM_HALF.y
@@ -912,15 +943,20 @@ func _find_exit(exits: Array, direction: String) -> Dictionary:
 func _door_position(direction: String, is_forward: bool) -> Array:
 	match direction:
 		"east":
-			return [320, 24]
+			return [352, 24]
 		"west":
-			return [-320, 24]
+			return [-352, 24]
 		"north":
-			return [-40 if is_forward else 40, -164]
+			return [-40 if is_forward else 40, -200]
 		"south":
-			return [40 if is_forward else -40, 164]
+			# South doors sit flush in the floor tile band (surface at
+			# FLOOR_SURFACE_Y, PLAT_THICK=16 tall), not at the room's outer
+			# boundary (ROOM_HALF.y) — the floor is a raised platform well
+			# above that edge, so using ROOM_HALF.y stranded the door icon
+			# in the open void beneath the floor sprites.
+			return [40 if is_forward else -40, FLOOR_SURFACE_Y + 8]
 		_:
-			return [320, 24]
+			return [352, 24]
 
 func _opposite_direction(direction: String) -> String:
 	match direction:

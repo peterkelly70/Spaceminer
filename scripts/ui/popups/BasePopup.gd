@@ -37,7 +37,7 @@ func _apply_theme() -> void:
 	# Load the default theme
 	var default_theme = load(DEFAULT_THEME_PATH)
 	if not default_theme:
-		Logger.error(self, "Failed to load default theme from: %s" % [DEFAULT_THEME_PATH])
+		push_error("Failed to load default theme from: %s" % [DEFAULT_THEME_PATH])
 		return
 	
 	# Apply the theme to this popup
@@ -69,8 +69,7 @@ func _apply_theme() -> void:
 	
 	# Set content font
 	if content_label:
-		# Load SourceSansPro font for paragraph text
-		var paragraph_font = load("res://assets/fonts/SourceSansPro-Regular.ttf")
+		var paragraph_font = load("res://assets/fonts/Oswald/Oswald-VariableFont_wght.ttf")
 		if paragraph_font:
 			content_label.add_theme_font_override("font", paragraph_font)
 		else:

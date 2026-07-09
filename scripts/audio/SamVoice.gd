@@ -10,7 +10,7 @@ extends Resource
 
 ## Output sample rate in Hz. Lower values = crunchier, more retro.
 ## Typical: 8000, 11025, 22050.
-@export var sample_rate: int = 8000
+@export var sample_rate: int = 22050
 
 ## Base pitch period in samples at the chosen sample_rate.
 ## Higher number = lower pitch. Range roughly 20–120.
@@ -29,13 +29,13 @@ extends Resource
 
 ## Crunch factor (0.0–1.0). Adds hard clipping / bit-depth reduction artefacts.
 ## 0.0 = clean, 1.0 = heavily quantised.
-@export var crunch: float = 0.5
+@export var crunch: float = 0.10
 
 ## Bit depth for quantisation during crunch. 4 = very 8-bit, 8 = standard.
-@export var crunch_bits: int = 6
+@export var crunch_bits: int = 7
 
 ## Volume scale applied to final output (0.0–1.0).
-@export var volume: float = 0.85
+@export var volume: float = 1.0
 
 # ---------------------------------------------------------------------------
 # Constructor helpers

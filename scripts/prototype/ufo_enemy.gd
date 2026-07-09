@@ -7,7 +7,7 @@ class_name UfoEnemy
 signal player_hit
 
 @export var span: float = 160.0          # horizontal sweep distance from origin
-@export var speed: float = 60.0
+@export var speed: float = 36.0
 @export var variant: String = "drifter"  # drifter | diver | speeder
 
 const FRAME_TIME := 0.15
@@ -29,7 +29,7 @@ func _ready() -> void:
 func _apply_variant() -> void:
 	match variant:
 		"speeder":
-			speed *= 1.7
+			speed *= 1.15
 			if body: body.modulate = Color("#FFE600")
 		"diver":
 			if body: body.modulate = Color("#FF3B3B")
@@ -47,7 +47,7 @@ func _physics_process(delta: float) -> void:
 	elif pos.x < _origin.x - span:
 		pos.x = _origin.x - span
 		_dir = 1.0
-	var target_y := _origin.y + sin(_t * 2.2) * 12.0
+	var target_y := _origin.y + sin(_t * 1.5) * 10.0
 	if variant == "diver":
 		var pl := _player()
 		if pl and absf(pl.global_position.x - pos.x) < 90.0:

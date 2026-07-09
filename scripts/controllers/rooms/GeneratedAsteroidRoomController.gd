@@ -31,6 +31,8 @@ var _fuel_pct: float = 100.0
 var _battery_pct: float = 100.0
 var _is_resupply: bool = false
 var _entry_direction: String = ""
+var _initialized_room_json_path: String = ""
+var _room_initialized: bool = false
 
 func _ready() -> void:
 	room_model.ore_changed.connect(_on_ore_changed)
@@ -39,6 +41,27 @@ func _ready() -> void:
 	room_model.oxygen_depleted.connect(_on_oxygen_depleted)
 	player.player_defeated.connect(_on_player_defeated)
 
+	_try_initialize_room()
+
+func _process(delta: float) -> void:
+	room_model.drain_oxygen(delta)
+	_sync_oxygen_to_run_manager()
+	_check_out_of_bounds()
+
+func configure_room(json_path: String, room_id: String, entry_direction: String = "") -> void:
+	room_json_path = json_path
+	current_room_id = room_id
+	_entry_direction = entry_direction
+	if is_inside_tree():
+		_try_initialize_room()
+
+func _try_initialize_room() -> void:
+	if room_json_path.is_empty():
+		return
+	if not is_inside_tree():
+		return
+	if _room_initialized and _initialized_room_json_path == room_json_path:
+		return
 	_load_room_data()
 	_build_room()
 	_register_collectibles()
@@ -51,16 +74,8 @@ func _ready() -> void:
 	room_model.set_tip("Move: WASD/Arrows  Jump: Space  Thrust: W/Up  Grapple: F  Map: M  Pause: P")
 	_set_status("Door sealed")
 	_emit_room_status()
-
-func _process(delta: float) -> void:
-	room_model.drain_oxygen(delta)
-	_sync_oxygen_to_run_manager()
-	_check_out_of_bounds()
-
-func configure_room(json_path: String, room_id: String, entry_direction: String = "") -> void:
-	room_json_path = json_path
-	current_room_id = room_id
-	_entry_direction = entry_direction
+	_initialized_room_json_path = room_json_path
+	_room_initialized = true
 
 func _load_room_data() -> void:
 	if room_json_path.is_empty():
@@ -123,8 +138,16 @@ func _register_collectibles() -> void:
 		if child_script:
 			script_path = str(child_script.resource_path)
 		if script_path.ends_with("ore_fragment.gd"):
+			# Ore stays collected across revisits and death resets (JSW-style):
+			# skip fragments this run has already picked up in this room.
+			var ore_key := _ore_key_for(child)
+			var rm_ore := _get_run_manager()
+			if rm_ore and rm_ore.has_method("get_collected_ore") \
+					and ore_key in rm_ore.get_collected_ore(current_room_id):
+				child.queue_free()
+				continue
 			room_model.register_ore(child.amount)
-			child.collected.connect(_on_ore_collected)
+			child.collected.connect(_on_ore_collected.bind(ore_key))
 		elif script_path.ends_with("resupply_station.gd"):
 			child.activated.connect(_on_resupply_activated)
 		elif script_path.ends_with("air_canister.gd"):
@@ -159,13 +182,20 @@ func _register_doors() -> void:
 		if child.has_signal("door_blocked"):
 			child.door_blocked.connect(_on_door_blocked)
 
-func _on_ore_collected(amount: int) -> void:
+# Stable per-fragment identity within a room: generated layouts are
+# deterministic, so the spawn position uniquely identifies a fragment.
+func _ore_key_for(node: Node2D) -> String:
+	return "%d_%d" % [int(round(node.position.x)), int(round(node.position.y))]
+
+func _on_ore_collected(amount: int, ore_key: String = "") -> void:
 	room_model.collect_ore(amount)
 	var rm := _get_run_manager()
 	if rm and rm.has_method("add_ore"):
 		rm.add_ore(amount)
 	if rm and rm.has_method("add_score"):
 		rm.add_score(amount * 100)
+	if rm and not ore_key.is_empty() and rm.has_method("mark_ore_collected"):
+		rm.mark_ore_collected(current_room_id, ore_key)
 	room_model.set_tip("Nice haul!")
 	_play_collect_feedback()
 
@@ -248,8 +278,8 @@ func _on_pickup_collected(item_id: String) -> void:
 	_emit_room_status()
 
 func _on_hazard_triggered() -> void:
-	_play_damage_feedback()
-	player.handle_hazard_hit()
+	if player.handle_hazard_hit():
+		_play_damage_feedback()
 
 func _on_door_selected(next_room_id: String) -> void:
 	if next_room_id.is_empty():

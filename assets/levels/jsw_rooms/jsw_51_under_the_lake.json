@@ -1,0 +1,247 @@
+{
+	"name": "Under The Lake",
+	"room_name": "Under The Lake",
+	"jsw_room_num": 51,
+	"spawn": [
+		-300,
+		140
+	],
+	"exit": {
+		"position": [
+			300,
+			-120
+		],
+		"size": [
+			40,
+			72
+		],
+		"sprite_frames": "res://assets/sprite/space_miner_teleporter_frames.tres",
+		"animation": "cycle",
+		"scale": [
+			2.0,
+			2.0
+		]
+	},
+	"room_size": [
+		640,
+		320
+	],
+	"tile_layers": [
+		{
+			"name": "PlatformTiles",
+			"modulate": "#8cff00",
+			"z_index": 1,
+			"cells": [
+				{
+					"x": -8,
+					"y": -6,
+					"tile": 178
+				},
+				{
+					"x": -7,
+					"y": -6,
+					"tile": 179
+				},
+				{
+					"x": -6,
+					"y": -6,
+					"tile": 175
+				},
+				{
+					"x": -5,
+					"y": -5,
+					"tile": 176
+				},
+				{
+					"x": -4,
+					"y": -5,
+					"tile": 177
+				},
+				{
+					"x": -3,
+					"y": -5,
+					"tile": 178
+				},
+				{
+					"x": -9,
+					"y": -4,
+					"tile": 177
+				},
+				{
+					"x": -4,
+					"y": -3,
+					"tile": 177
+				},
+				{
+					"x": -3,
+					"y": -3,
+					"tile": 178
+				},
+				{
+					"x": -10,
+					"y": -2,
+					"tile": 176
+				},
+				{
+					"x": -4,
+					"y": -1,
+					"tile": 177
+				},
+				{
+					"x": -3,
+					"y": -1,
+					"tile": 178
+				},
+				{
+					"x": 3,
+					"y": -1,
+					"tile": 179
+				},
+				{
+					"x": 4,
+					"y": -1,
+					"tile": 175
+				},
+				{
+					"x": -11,
+					"y": 0,
+					"tile": 175
+				},
+				{
+					"x": 9,
+					"y": 0,
+					"tile": 175
+				},
+				{
+					"x": 10,
+					"y": 0,
+					"tile": 176
+				},
+				{
+					"x": -4,
+					"y": 1,
+					"tile": 177
+				},
+				{
+					"x": -3,
+					"y": 1,
+					"tile": 178
+				},
+				{
+					"x": 14,
+					"y": 2,
+					"tile": 175
+				},
+				{
+					"x": 15,
+					"y": 2,
+					"tile": 176
+				},
+				{
+					"x": -4,
+					"y": 3,
+					"tile": 177
+				},
+				{
+					"x": -3,
+					"y": 3,
+					"tile": 178
+				},
+				{
+					"x": -10,
+					"y": 4,
+					"tile": 176
+				},
+				{
+					"x": -9,
+					"y": 4,
+					"tile": 177
+				},
+				{
+					"x": -16,
+					"y": 5,
+					"tile": 175
+				},
+				{
+					"x": -15,
+					"y": 5,
+					"tile": 176
+				},
+				{
+					"x": 1,
+					"y": 5,
+					"tile": 177
+				}
+			]
+		}
+	],
+	"solids": [
+		{
+			"name": "Floor",
+			"position": [
+				0,
+				160
+			],
+			"size": [
+				660,
+				16
+			]
+		},
+		{
+			"name": "WallLeft",
+			"position": [
+				-328,
+				0
+			],
+			"size": [
+				16,
+				320
+			]
+		},
+		{
+			"name": "WallRight",
+			"position": [
+				328,
+				0
+			],
+			"size": [
+				16,
+				320
+			]
+		},
+		{
+			"name": "Ceiling",
+			"position": [
+				0,
+				-168
+			],
+			"size": [
+				660,
+				16
+			]
+		}
+	],
+	"collectibles": [],
+	"hazards": [
+		{
+			"name": "Hazard_0_15",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-310,
+				150
+			]
+		},
+		{
+			"name": "Hazard_1_15",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-290,
+				150
+			]
+		}
+	],
+	"enemies": [],
+	"doors": [],
+	"is_resupply": false,
+	"is_junction": false
+}

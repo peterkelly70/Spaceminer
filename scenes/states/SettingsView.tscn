@@ -354,6 +354,45 @@ theme = ExtResource("4_kf5ho")
 theme_override_font_sizes/font_size = 32
 alignment = 1
 
+[node name="SpeechTestContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=1532610970]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SpeechTitle" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer" unique_id=1009064753]
+layout_mode = 2
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
+text = "Speech Synth Test"
+vertical_alignment = 1
+
+[node name="SpeechRow" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer" unique_id=961744539]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpeechInput" type="LineEdit" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer/SpeechRow" unique_id=1549506227]
+custom_minimum_size = Vector2(360, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Type a phrase to speak"
+
+[node name="SpeechSpeakButton" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer/SpeechRow" unique_id=884815167]
+custom_minimum_size = Vector2(180, 48)
+layout_mode = 2
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
+text = "Speak"
+
+[node name="SpeechOutput" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer" unique_id=1978626411]
+layout_mode = 2
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 24
+text = "Dirty SAM-style speech test ready."
+autowrap_mode = 3
+
+[node name="SpeechPlayer" type="AudioStreamPlayer" parent="." unique_id=1188820332]
+
 [node name="Gameplay" type="ScrollContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer" unique_id=471589657]
 visible = false
 layout_mode = 2

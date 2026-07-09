@@ -1,7 +1,6 @@
-[gd_resource type="Theme" load_steps=29 format=3 uid="uid://b53kq7tblu52o"]
+[gd_resource type="Theme" format=3 uid="uid://b53kq7tblu52o"]
 
-[ext_resource type="FontFile" uid="uid://cmfhn5hlm6x0d" path="res://assets/fonts/Khazad_Dum_Regular.ttf" id="1_font"]
-[ext_resource type="FontFile" uid="uid://ba1j1sexah80o" path="res://assets/fonts/Anglorunic-q44q.ttf" id="3_al0vl"]
+[ext_resource type="FontFile" uid="uid://dfsq7qtdt18hn" path="res://assets/fonts/Oswald/Oswald-VariableFont_wght.ttf" id="3_al0vl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_disabled"]
 bg_color = Color(0.0862745, 0.105882, 0.129412, 1)
@@ -348,7 +347,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [resource]
-default_font = ExtResource("1_font")
+default_font = ExtResource("3_al0vl")
 default_font_size = 18
 Button/colors/font_color = Color(0.866667, 0.698039, 0.133333, 1)
 Button/colors/font_disabled_color = Color(0.4, 0.321569, 0.0627451, 0.5)

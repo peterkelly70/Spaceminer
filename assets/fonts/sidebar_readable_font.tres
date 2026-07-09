@@ -1,8 +1,0 @@
-[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://cjxs8q8yj7kgp"]
-
-[ext_resource type="FontFile" uid="uid://b7qjnufh0ynq0" path="res://assets/fonts/SourceSansPro-Regular.ttf" id="1_source_font"]
-
-[resource]
-base_font = ExtResource("1_source_font")
-spacing_top = 2
-spacing_bottom = 2

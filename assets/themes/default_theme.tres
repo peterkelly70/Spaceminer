@@ -1,7 +1,6 @@
-[gd_resource type="Theme" load_steps=11 format=3 uid="uid://b8t7tkhvh8rgt"]
+[gd_resource type="Theme" format=3 uid="uid://b8t7tkhvh8rgt"]
 
-[ext_resource type="FontFile" uid="uid://dfsq7qtdt18hn" path="res://assets/fonts/Oswald/Oswald-VariableFont_wght.ttf" id="1_oswald"]
-[ext_resource type="FontFile" uid="uid://bx7vq10frcpu3" path="res://assets/fonts/SourceSansPro-Regular.ttf" id="2_source"]
+[ext_resource type="FontFile" uid="uid://dfsq7qtdt18hn" path="res://assets/fonts/Oswald/Oswald-VariableFont_wght.ttf" id="2_source"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
 content_margin_left = 8.0
@@ -111,12 +110,12 @@ shadow_offset = Vector2(2, 2)
 
 [resource]
 default_font = ExtResource("2_source")
-default_font_size = 16
+default_font_size = 32
 Button/colors/font_color = Color(0.878431, 0.823529, 0.6, 1)
 Button/colors/font_focus_color = Color(0.94902, 0.894118, 0.654902, 1)
 Button/colors/font_hover_color = Color(0.94902, 0.894118, 0.654902, 1)
 Button/colors/font_pressed_color = Color(0.878431, 0.823529, 0.6, 1)
-Button/fonts/font = ExtResource("1_oswald")
+Button/fonts/font = ExtResource("2_source")
 Button/styles/hover = SubResource("StyleBoxFlat_button_hover")
 Button/styles/normal = SubResource("StyleBoxFlat_button_normal")
 Button/styles/pressed = SubResource("StyleBoxFlat_button_pressed")
@@ -128,15 +127,15 @@ CheckBox/styles/pressed = SubResource("StyleBoxEmpty_cb")
 HeaderLarge/base_type = &"Label"
 HeaderLarge/colors/font_color = Color(0.878431, 0.823529, 0.6, 1)
 HeaderLarge/font_sizes/font_size = 24
-HeaderLarge/fonts/font = ExtResource("1_oswald")
+HeaderLarge/fonts/font = ExtResource("2_source")
 HeaderMedium/base_type = &"Label"
 HeaderMedium/colors/font_color = Color(0.878431, 0.823529, 0.6, 1)
 HeaderMedium/font_sizes/font_size = 20
-HeaderMedium/fonts/font = ExtResource("1_oswald")
+HeaderMedium/fonts/font = ExtResource("2_source")
 HeaderSmall/base_type = &"Label"
 HeaderSmall/colors/font_color = Color(0.878431, 0.823529, 0.6, 1)
 HeaderSmall/font_sizes/font_size = 18
-HeaderSmall/fonts/font = ExtResource("1_oswald")
+HeaderSmall/fonts/font = ExtResource("2_source")
 Label/colors/font_color = Color(0.878431, 0.823529, 0.6, 1)
 Label/fonts/font = ExtResource("2_source")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
@@ -151,4 +150,4 @@ notification_text/fonts/normal_font = ExtResource("2_source")
 notification_title/base_type = &"Label"
 notification_title/colors/font_color = Color(0.94902, 0.894118, 0.654902, 1)
 notification_title/font_sizes/font_size = 18
-notification_title/fonts/font = ExtResource("1_oswald")
+notification_title/fonts/font = ExtResource("2_source")

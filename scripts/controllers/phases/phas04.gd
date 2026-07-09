@@ -6,4 +6,4 @@ func _ready():
 	printPhase04()
 	
 func printPhase04():
-	Logger.info(self, "printPhase04() called!")
+	print("printPhase04() called!")

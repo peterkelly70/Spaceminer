@@ -1,6 +1,5 @@
 extends Node
 
-const Logger = preload("res://scripts/class/Logger.gd")
 var log_level: int = 1
 
 # Game state management singleton
@@ -8,15 +7,15 @@ var log_level: int = 1
 @export var version = "0.0.2"
 
 # Current game state
-var _current_state: GameState.GameState = GameState.GameState.MAIN_MENU
-var _previous_state: GameState.GameState = GameState.GameState.MAIN_MENU
+var _current_state: AppState.State = AppState.State.MAIN_MENU
+var _previous_state: AppState.State = AppState.State.MAIN_MENU
 
 # State aware views and controllers
 var _state_aware_views = []
 var _state_emitters = []
 
 func _ready() -> void:
-	Logger.info(self, "Initialized")
+	print("Initialized")
 	
 	# Set process input to handle global key events
 	set_process_input(true)
@@ -25,25 +24,25 @@ func _ready() -> void:
 func register_state_aware_view(view) -> void:
 	if view not in _state_aware_views:
 		_state_aware_views.append(view)
-		Logger.info(self, "Registered view: %s" % view.name)
+		print("Registered view: %s" % view.name)
 
 # Register a component that can emit state change requests
 func register_state_emitter(emitter) -> void:
 	if emitter not in _state_emitters:
 		_state_emitters.append(emitter)
 		emitter.connect("request_state_change", Callable(self, "_on_state_change_requested"))
-		Logger.info(self, "Registered emitter: %s" % emitter.name)
+		print("Registered emitter: %s" % emitter.name)
 
 # get Version info
 func get_version() -> String:	
 	return version
 
 # Get the current game state
-func get_current_state() -> GameState.GameState:
+func get_current_state() -> AppState.State:
 	return _current_state
 
 # Get the previous game state
-func get_previous_state() -> GameState.GameState:
+func get_previous_state() -> AppState.State:
 	return _previous_state
 
 # Return to the previous game state
@@ -51,7 +50,7 @@ func return_to_previous_state() -> void:
 	change_state(_previous_state)
 
 # Change the game state
-func change_state(new_state: GameState.GameState) -> void:
+func change_state(new_state: AppState.State) -> void:
 	var old_state = _current_state
 	
 	# Check if state is changing or staying the same
@@ -64,9 +63,9 @@ func change_state(new_state: GameState.GameState) -> void:
 	
 	# Log state change or refresh
 	if is_same_state:
-		Logger.info(self, "State refreshed: %s (triggering view updates)" % GameState.GameState.keys()[new_state])
+		print("State refreshed: %s (triggering view updates)" % AppState.State.keys()[new_state])
 	else:
-		Logger.info(self, "State changed: %s -> %s" % [GameState.GameState.keys()[old_state], GameState.GameState.keys()[new_state]])
+		print("State changed: %s -> %s" % [AppState.State.keys()[old_state], AppState.State.keys()[new_state]])
 	
 	# Notify all registered views and controllers
 	# Always notify, even for same state, to allow phase updates
@@ -75,5 +74,5 @@ func change_state(new_state: GameState.GameState) -> void:
 			view.receive_state_ping(new_state)
 
 # Handle state change requests from emitters
-func _on_state_change_requested(new_state: GameState.GameState) -> void:
+func _on_state_change_requested(new_state: AppState.State) -> void:
 	change_state(new_state)

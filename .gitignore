@@ -11,3 +11,6 @@ tools/genpzl/NN.env/
 *.exe
 *.pck
 
+
+# Claude Code session/worktree data — never part of project history
+.claude/

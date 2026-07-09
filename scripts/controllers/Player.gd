@@ -1,7 +1,5 @@
 extends CharacterBody2D
 
-const Logger = preload("res://scripts/class/Logger.gd")
-
 @export var max_speed: float = 420.0
 @export var arrival_radius: float = 160.0
 @export var accel_lerp: float = 6.0
@@ -39,7 +37,7 @@ signal player_killed
 @onready var _sprite: Sprite2D = %Sprite
 
 func _ready() -> void:
-	Logger.info(self, "Player ready")
+	print("Player ready")
 	add_to_group("player")
 	shield = shield_max
 

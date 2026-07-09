@@ -53,10 +53,11 @@ func configure(data: Dictionary) -> void:
 	for value in requirement_values:
 		requires.append(str(value))
 	var size := _normalize_size(_as_vec2(data.get("size", _default_size_for_direction())))
+	var interaction_size := _interaction_size_for_direction(size)
 	_art_offset = _art_offset_for_direction(size)
 	if collision_shape and collision_shape.shape is RectangleShape2D:
-		(collision_shape.shape as RectangleShape2D).size = size
-		collision_shape.position = _art_offset
+		(collision_shape.shape as RectangleShape2D).size = interaction_size
+		collision_shape.position = _art_offset + _zone_offset_for_direction(size, interaction_size)
 	if body_visual:
 		body_visual.position = _art_offset
 		body_visual.scale = Vector2.ONE
@@ -114,7 +115,7 @@ func _refresh_visual() -> void:
 			text += " (NEEDS %s)" % str(requires[0]).replace("_", " ").to_upper()
 		title_label.text = text.strip_edges()
 		title_label.modulate = EXIT_COLOR if target_room_id == "campaign_complete" else (LOCKED_COLOR if not requires.is_empty() else Color.WHITE)
-		title_label.visible = true
+		title_label.visible = false
 
 	if body_visual:
 		body_visual.position = _art_offset
@@ -126,7 +127,6 @@ func _refresh_visual() -> void:
 			# Subtle tint: darken the requirement color and blend with white
 			var req_color := _requirement_color()
 			color = Color.WHITE.lerp(req_color, 0.25)  # 25% tint towards requirement color
-		body_visual.color = color
 		body_visual.self_modulate = color
 	if panel_left:
 		panel_left.position = _art_offset + Vector2(-10.0 if _player_near and requires.is_empty() else 0.0, 0.0)
@@ -227,19 +227,39 @@ func _normalize_size(size: Vector2) -> Vector2:
 	var expected := _default_size_for_direction()
 	return Vector2(minf(size.x, expected.x), minf(size.y, expected.y))
 
-func _art_offset_for_direction(size: Vector2) -> Vector2:
-	# Anchor each door to its wall edge so the art sits in the wall opening
-	# instead of poking into the floor / ceiling band.
+func _interaction_size_for_direction(size: Vector2) -> Vector2:
+	var out := size
 	match _door_direction:
 		"east", "west":
-			# Rise up out of the landing ledge the door stands on.
-			return Vector2(0.0, -size.y * 0.5)
+			# Give the player a tile of forgiveness on either side of the door.
+			out.x = maxf(out.x, size.x + 32.0)
+		"north", "south", "up", "down":
+			# Reach 48px into the room so a player standing on the landing ledge
+			# (48px below a ceiling door / above a floor door) overlaps the zone.
+			out.y = maxf(out.y, size.y + 48.0)
+	return out
+
+# Ceiling/floor door zones grow toward the room interior only: keep the
+# wall-side edge where the door sits and push the extra reach inward.
+func _zone_offset_for_direction(size: Vector2, interaction_size: Vector2) -> Vector2:
+	var reach := (interaction_size.y - size.y) * 0.5
+	match _door_direction:
 		"north", "up":
-			# Hug the ceiling.
-			return Vector2(0.0, -size.y * 0.5)
+			return Vector2(0.0, reach)
 		"south", "down":
-			# Drop below the floor band so it doesn't overlap the floor border.
-			return Vector2(0.0, size.y * 0.5)
+			return Vector2(0.0, -reach)
+		_:
+			return Vector2.ZERO
+
+func _art_offset_for_direction(size: Vector2) -> Vector2:
+	# Pin the visible tile to the BOTTOM edge of the wall-door zone so the door
+	# art sits directly on its landing platform (whose top is flush with the
+	# zone bottom — see RoomLayoutGenerator._door_landing_top_y).
+	match _door_direction:
+		"east", "west":
+			return Vector2(0.0, size.y * 0.5 - 8.0)
+		"north", "south", "up", "down":
+			return Vector2(-size.x * 0.5 + 8.0, 0.0)
 		_:
 			return Vector2.ZERO
 

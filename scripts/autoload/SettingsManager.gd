@@ -51,10 +51,10 @@ signal music_track_requested(track_name)
 @onready var audio_manager = get_node("/root/Audio_Manager") if has_node("/root/Audio_Manager") else null
 
 func _ready():
-	Logger.info(self, "Initializing...")
+	print("Initializing...")
 	load_settings()
 	apply_settings()
-	Logger.info(self, "Settings loaded and applied")
+	print("Settings loaded and applied")
 
 # Load settings from file
 func load_settings() -> void:
@@ -62,7 +62,7 @@ func load_settings() -> void:
 	var err = config.load(CONFIG_FILE_PATH)
 	
 	if err == OK:
-		Logger.info(self, "Settings file found, loading values")
+		print("Settings file found, loading values")
 		
 		# Load video settings
 		if config.has_section("video"):
@@ -75,7 +75,9 @@ func load_settings() -> void:
 		
 		# Load audio settings
 		if config.has_section("audio"):
-			if config.has_section_key("audio", "music_enabled"):
+			var has_music_enabled := config.has_section_key("audio", "music_enabled")
+			var has_music_muted := config.has_section_key("audio", "music_muted")
+			if has_music_enabled:
 				settings.audio.music_enabled = config.get_value("audio", "music_enabled")
 			if config.has_section_key("audio", "music_volume"):
 				settings.audio.music_volume = config.get_value("audio", "music_volume")
@@ -83,12 +85,16 @@ func load_settings() -> void:
 				settings.audio.sfx_enabled = config.get_value("audio", "sfx_enabled")
 			if config.has_section_key("audio", "sfx_volume"):
 				settings.audio.sfx_volume = config.get_value("audio", "sfx_volume")
-			if config.has_section_key("audio", "music_muted"):
+			if has_music_muted:
 				settings.audio.music_muted = config.get_value("audio", "music_muted")
 			if config.has_section_key("audio", "music_folder"):
 				settings.audio.music_folder = config.get_value("audio", "music_folder")
 			if config.has_section_key("audio", "music_track"):
 				settings.audio.music_track = config.get_value("audio", "music_track")
+			if has_music_enabled:
+				settings.audio.music_muted = not settings.audio.music_enabled
+			elif has_music_muted:
+				settings.audio.music_enabled = not settings.audio.music_muted
 		
 		# Load gameplay settings
 		if config.has_section("gameplay"):
@@ -111,7 +117,7 @@ func load_settings() -> void:
 			if config.has_section_key("gameplay", "notification_duration"):
 				settings.gameplay.notification_duration = config.get_value("gameplay", "notification_duration")
 	else:
-		Logger.warn(self, "No settings file found, using defaults")
+		push_warning("No settings file found, using defaults")
 		save_settings()
 
 # Save settings to file
@@ -145,9 +151,9 @@ func save_settings() -> void:
 	
 	var err = config.save(CONFIG_FILE_PATH)
 	if err == OK:
-		Logger.info(self, "Settings saved successfully")
+		print("Settings saved successfully")
 	else:
-		Logger.error(self, "Failed to save settings: %s" % err)
+		push_error("Failed to save settings: %s" % err)
 
 # Get setting value
 func get_setting(section: String, key: String, default = null):
@@ -171,6 +177,12 @@ func set_setting(section: String, key: String, value) -> void:
 	
 	# Update setting
 	settings[section][key] = value
+	if section == "audio":
+		match key:
+			"music_enabled":
+				settings.audio.music_muted = not bool(value)
+			"music_muted":
+				settings.audio.music_enabled = not bool(value)
 	
 	# Save immediately
 	save_settings()
@@ -192,7 +204,7 @@ func set_setting(section: String, key: String, value) -> void:
 
 # Apply all settings at once
 func apply_settings() -> void:
-	Logger.info(self, "Applying all settings...")
+	print("Applying all settings...")
 	_apply_video_settings()
 	_apply_audio_settings()
 	_apply_gameplay_settings()
@@ -200,19 +212,19 @@ func apply_settings() -> void:
 
 # Apply video settings
 func _apply_video_settings() -> void:
-	Logger.info(self, "Applying video settings")
+	print("Applying video settings")
 	
 	# Set fullscreen
 	if settings.video.fullscreen:
 		var current_mode = DisplayServer.window_get_mode()
 		if current_mode != DisplayServer.WINDOW_MODE_FULLSCREEN:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-			Logger.info(self, "Set window mode to fullscreen")
+			print("Set window mode to fullscreen")
 	else:
 		var current_mode = DisplayServer.window_get_mode()
 		if current_mode != DisplayServer.WINDOW_MODE_WINDOWED:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			Logger.info(self, "Set window mode to windowed")
+			print("Set window mode to windowed")
 	
 	# Set vsync
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if settings.video.vsync else DisplayServer.VSYNC_DISABLED)
@@ -222,7 +234,7 @@ func _apply_video_settings() -> void:
 		var current_size = DisplayServer.window_get_size()
 		if current_size != settings.video.resolution:
 			DisplayServer.window_set_size(settings.video.resolution)
-			Logger.info(self, "Set window size to: %s" % settings.video.resolution)
+			print("Set window size to: %s" % settings.video.resolution)
 	
 	# Center the window if in windowed mode
 	if not settings.video.fullscreen:
@@ -230,11 +242,11 @@ func _apply_video_settings() -> void:
 		var window_size = DisplayServer.window_get_size()
 		var centered_pos = (screen_size - window_size) / 2
 		DisplayServer.window_set_position(centered_pos)
-		Logger.info(self, "Centered window on screen")
+		print("Centered window on screen")
 
 # Apply audio settings
 func _apply_audio_settings() -> void:
-	Logger.info(self, "Applying audio settings")
+	print("Applying audio settings")
 	
 	# Emit signals for any UI that needs to update
 	if settings.has("audio"):
@@ -244,24 +256,26 @@ func _apply_audio_settings() -> void:
 	
 	# First try using the AudioManager
 	if audio_manager:
-		# Set music state based on music_muted setting
-		var is_muted = is_music_muted()
+		# Keep the enabled and muted flags in sync, then apply the active state.
+		var is_muted = not is_music_enabled()
+		settings.audio.music_muted = is_muted
+		settings.audio.music_enabled = not is_muted
 		audio_manager.set_mute(is_muted)
-		Logger.info(self, "Applied mute setting to AudioManager: %s" % is_muted)
+		print("Applied mute setting to AudioManager: %s" % is_muted)
 		
 		# Set volume levels
 		audio_manager.set_music_volume(settings.audio.music_volume)
 		audio_manager.set_sfx_volume(settings.audio.sfx_volume)
 		
-		Logger.info(self, "Applied settings to AudioManager")
+		print("Applied settings to AudioManager")
 	else:
 		# Fallback to direct AudioServer manipulation
-		Logger.warn(self, "AudioManager not found, using fallback")
+		push_warning("AudioManager not found, using fallback")
 		var music_bus_idx = AudioServer.get_bus_index("Music")
 		var sfx_bus_idx = AudioServer.get_bus_index("SFX")
 		
 		if music_bus_idx >= 0:
-			AudioServer.set_bus_mute(music_bus_idx, settings.audio.music_muted)
+			AudioServer.set_bus_mute(music_bus_idx, is_music_muted())
 			AudioServer.set_bus_volume_db(music_bus_idx, linear_to_db(settings.audio.music_volume))
 		
 		if sfx_bus_idx >= 0:
@@ -269,7 +283,7 @@ func _apply_audio_settings() -> void:
 
 # Apply gameplay settings
 func _apply_gameplay_settings()->void:
-	Logger.info(self, "Applying gameplay settings")
+	print("Applying gameplay settings")
 	
 	# Emit signals for any UI that needs to update
 	if settings.has("gameplay"):
@@ -296,8 +310,11 @@ func _apply_gameplay_settings()->void:
 func is_timer_visible() -> bool:
 	return get_setting("gameplay", "show_timer", true)
 
+func is_music_enabled() -> bool:
+	return get_setting("audio", "music_enabled", true)
+
 func is_music_muted() -> bool:
-	return get_setting("audio", "music_muted", true)
+	return get_setting("audio", "music_muted", false)
 
 func is_show_completed() -> bool:
 	return get_setting("gameplay", "show_completed", true)
@@ -315,6 +332,11 @@ func toggle_music_muted() -> bool:
 	set_music_muted(!current)
 	return !current
 
+func toggle_music_enabled() -> bool:
+	var current = is_music_enabled()
+	set_music_enabled(!current)
+	return !current
+
 func toggle_timer_visible() -> bool:
 	var current = is_timer_visible()
 	set_timer_visible(!current)
@@ -326,6 +348,10 @@ func set_timer_visible(visible:bool):
 
 func set_music_muted(muted:bool):
 	set_setting("audio","music_muted",muted)
+	# Signal is already emitted in _apply_audio_settings, so we don't need to emit it here
+
+func set_music_enabled(enabled: bool) -> void:
+	set_setting("audio", "music_enabled", enabled)
 	# Signal is already emitted in _apply_audio_settings, so we don't need to emit it here
 
 func is_clue_highlight_visible() -> bool:
@@ -391,7 +417,7 @@ func set_fullscreen(enable: bool) -> void:
 	# Apply immediately
 	if enable:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-		Logger.info(self, "Enabled fullscreen mode")
+		print("Enabled fullscreen mode")
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 		
@@ -401,7 +427,7 @@ func set_fullscreen(enable: bool) -> void:
 		var window_size = DisplayServer.window_get_size()
 		var centered_pos = (screen_size - window_size) / 2
 		DisplayServer.window_set_position(centered_pos)
-		Logger.info(self, "Disabled fullscreen mode")
+		print("Disabled fullscreen mode")
 
 # Set resolution
 func set_resolution(width: int, height: int) -> void:
@@ -419,5 +445,5 @@ func set_resolution(width: int, height: int) -> void:
 
 # For debugging
 func print_settings() -> void:
-	Logger.debug(self, "Current settings:")
-	Logger.debug(self, JSON.stringify(settings, "  "))
+	print("Current settings:")
+	print(JSON.stringify(settings, "  "))

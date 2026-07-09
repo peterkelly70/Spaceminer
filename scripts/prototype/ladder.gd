@@ -32,7 +32,7 @@ func center_x() -> float:
 
 # True when a point (the player origin) is within the ladder's climb column.
 func contains_point(p: Vector2) -> bool:
-	if absf(p.x - global_position.x) > width * 0.5 + 8.0:
+	if absf(p.x - global_position.x) > width * 0.5 + 16.0:
 		return false
 	return p.y >= top_y() - 24.0 and p.y <= bottom_y() + 8.0
 

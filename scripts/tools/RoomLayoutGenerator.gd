@@ -246,8 +246,8 @@ func generate_main(rng: RandomNumberGenerator, room_index: int, exits: Array) ->
 	var build := _build_archetype(_pick_archetype(rng, room_index), rng, room_index, exits)
 	var platfs: Array = build["platfs"]
 	var floor_gaps: Array = _merge_south_gaps(build.get("floor_gaps", []), exits)
-	platfs.append_array(_exit_landings(exits))
 	platfs = _ensure_spawn_clearance(platfs)
+	platfs.append_array(_exit_landings(exits))
 	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
@@ -313,8 +313,8 @@ func generate_branch(rng: RandomNumberGenerator, room_index: int, exits: Array) 
 	var build := _build_archetype(arche, rng, room_index, exits)
 	var platfs: Array = build["platfs"]
 	var floor_gaps: Array = _merge_south_gaps(build.get("floor_gaps", []), exits)
-	platfs.append_array(_exit_landings(exits))
 	platfs = _ensure_spawn_clearance(platfs)
+	platfs.append_array(_exit_landings(exits))
 	var solids := _build_solids(platfs, exits, floor_gaps)
 	_ensure_path(solids, rng)
 	var depths := _platform_depths(platfs)
@@ -378,25 +378,31 @@ func _exit_landings(exits: Array) -> Array:
 		var sz := _v2((e as Dictionary).get("size", [40, 72]))
 		match dir:
 			"east":
-				# Platform extending 160px into the room from the wall, 160px wide total
-				out.append(_mk_plat("EastLanding", ROOM_HALF_W - 120, _door_stand_y(pos, dir), 160))
+				# Grid-aligned 80px ledge tucked under the wall (spans x 272..352) so
+				# its tiles butt against the wall column with no seam.
+				out.append(_mk_plat("EastLanding", WALL_X - 40, _door_landing_top_y(pos, sz, dir), 80))
 			"west":
-				# Mirror of east: extending 160px into the room from west wall
-				out.append(_mk_plat("WestLanding", -(ROOM_HALF_W - 120), _door_stand_y(pos, dir), 160))
+				# Mirror: spans x -352..-272
+				out.append(_mk_plat("WestLanding", -(WALL_X - 40), _door_landing_top_y(pos, sz, dir), 80))
 			"north":
-				# Horizontal platform below north door, wider to match door area
-				out.append(_mk_plat("NorthLanding", int(pos.x), _door_stand_y(pos, dir), maxi(120, int(sz.x) + 40)))
-			# south doors use a floor gap (see _merge_south_gaps), no ledge
+				# Platform 1 tile below the ceiling door, at least 3 tiles wide
+				out.append(_mk_plat("NorthLanding", int(pos.x), _door_landing_top_y(pos, sz, dir), maxi(48, int(sz.x) + 32)))
+			# south doors sit flush in the floor — no gap, no landing ledge needed
 	return out
 
-# Top-y of the ledge a door is entered onto — at the door's centre height so the
-# validator counts the door as grounded, snapped to the tile grid.
-func _door_stand_y(pos: Vector2, dir: String) -> int:
+# Top-y of the landing ledge a door is entered onto.
+func _door_landing_top_y(pos: Vector2, sz: Vector2, dir: String) -> int:
 	match dir:
+		"east", "west":
+			# Landing top flush with the door zone's bottom edge — the door art is
+			# pinned to that edge (see door_zone.gd), so the tile sits ON the ledge.
+			return int(floorf((pos.y + sz.y * 0.5) / float(TILE_SZ))) * TILE_SZ
 		"north":
-			return -ROOM_HALF_H + 40
+			# 48px between ledge and ceiling inner edge: the 32px player plus one
+			# tile of margin, so walking the ledge never scrapes the ceiling.
+			return (-ROOM_HALF_H + int(sz.y * 0.5) + (TILE_SZ * 3))
 		_:
-			return (int(pos.y) / TILE_SZ) * TILE_SZ
+			return int(floorf((pos.y + sz.y * 0.5) / float(TILE_SZ))) * TILE_SZ
 
 func _exit_ladders(exits: Array) -> Array:
 	var out: Array = []
@@ -408,11 +414,11 @@ func _exit_ladders(exits: Array) -> Array:
 		var lx := 0
 		match dir:
 			"east":
-				top = _door_stand_y(pos, dir); lx = ROOM_HALF_W - 40
+				top = _door_landing_top_y(pos, sz, dir); lx = WALL_X - 40
 			"west":
-				top = _door_stand_y(pos, dir); lx = -(ROOM_HALF_W - 40)
+				top = _door_landing_top_y(pos, sz, dir); lx = -(WALL_X - 40)
 			"north":
-				top = _door_stand_y(pos, dir); lx = int(pos.x)
+				top = _door_landing_top_y(pos, sz, dir); lx = int(pos.x)
 			_:
 				continue
 		if FLOOR_TOP_Y - top > int(float(LEVEL_STEP) * 1.2):
@@ -424,14 +430,9 @@ func _exit_ladders(exits: Array) -> Array:
 			})
 	return out
 
-func _merge_south_gaps(gaps: Array, exits: Array) -> Array:
-	var out: Array = gaps.duplicate()
-	for e in exits:
-		if str((e as Dictionary).get("direction", "")) == "south":
-			var pos := _v2((e as Dictionary).get("position", [0, 0]))
-			var sz := _v2((e as Dictionary).get("size", [40, 72]))
-			out.append([pos.x - sz.x * 0.5 - 10.0, pos.x + sz.x * 0.5 + 10.0])
-	return out
+func _merge_south_gaps(gaps: Array, _exits: Array) -> Array:
+	# South doors sit flush in the floor — no gap carved, floor stays solid
+	return gaps.duplicate()
 
 # ── Platform reachability depth (difficulty) ───────────────────────────────────
 # Hop-distance of each platform from the floor, using the same jump reach the
@@ -682,8 +683,10 @@ func _in_gaps(x: float, gaps: Array) -> bool:
 	return false
 
 func _add_walls(solids: Array, exits: Array) -> void:
-	for side in ["east", "west", "north", "south"]:
+	for side in ["east", "west", "north"]:
 		_wall_segment(solids, side, _find_exit(exits, side))
+	# South door sits flush in the floor — south wall stays solid, no gap
+	_wall_segment(solids, "south", {})
 
 # Add protective walls around door positions so player can't walk off edges
 func _add_door_walls(solids: Array, exits: Array) -> void:
@@ -699,13 +702,15 @@ func _add_door_walls(solids: Array, exits: Array) -> void:
 					"position": [wall_x, door_pos.y - 40.0], "size": [16.0, 40.0]})
 				solids.append({"name": "DoorWallBot_%s" % direction, "kind": "wall", "anchor": "center",
 					"position": [wall_x, door_pos.y + 40.0], "size": [16.0, 40.0]})
-			"north", "south":
+			"north":
 				# Horizontal doors: add walls left and right (smaller)
 				var wall_y := door_pos.y
 				solids.append({"name": "DoorWallLeft_%s" % direction, "kind": "wall", "anchor": "center",
 					"position": [door_pos.x - 40.0, wall_y], "size": [40.0, 16.0]})
 				solids.append({"name": "DoorWallRight_%s" % direction, "kind": "wall", "anchor": "center",
 					"position": [door_pos.x + 40.0, wall_y], "size": [40.0, 16.0]})
+			"south":
+				pass  # south door is flush in the floor, no extra wall stubs needed
 
 func _wall_segment(solids: Array, side: String, gap: Dictionary) -> void:
 	if side in ["east", "west"]:
@@ -1235,8 +1240,7 @@ func _exit_target_level(exits: Array, direction: String) -> int:
 		return 3
 	var pos := _v2(ex.get("position", [0, 0]))
 	var sz  := _v2(ex.get("size", [40, 72]))
-	# Support top = exit_pos.y + exit_h/2 + 8 - plat_h/2
-	var sup_top := pos.y + sz.y * 0.5 + 8.0 - float(PLAT_THICK) * 0.5
+	var sup_top := float(_door_landing_top_y(pos, sz, direction))
 	# Find nearest level
 	var best_lv  := 0
 	var best_err := INF

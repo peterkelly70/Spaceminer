@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://cnte3noieli0j" path="res://assets/tiles/Transparent/tile_0400.png" id="6_ecmg4"]
 [ext_resource type="Texture2D" uid="uid://d36f0618q4mde" path="res://assets/tiles/Transparent/tile_0401.png" id="7_44nfw"]
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_l2vqa"]
+color = Color(0.011764706, 0.9764706, 0.9843137, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ooov"]
 bg_color = Color(0.011764706, 0.9764706, 0.9843137, 1)
 
@@ -65,7 +68,7 @@ stretch = true
 
 [node name="GameplayViewport" type="SubViewport" parent="Layout/ContentArea/ViewportContainer" unique_id=1425578468]
 handle_input_locally = false
-size = Vector2i(1957, 892)
+size = Vector2i(1931, 890)
 render_target_update_mode = 4
 
 [node name="StatusArea" type="MarginContainer" parent="Layout" unique_id=285530697]
@@ -99,6 +102,7 @@ text = "Landing Bay Alpha"
 uppercase = true
 
 [node name="Lives" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow" unique_id=977285189]
+custom_minimum_size = Vector2(320, 160)
 layout_mode = 2
 
 [node name="life_01" type="TextureRect" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Lives" unique_id=73988662]
@@ -163,33 +167,54 @@ script = ExtResource("4_life_icon")
 
 [node name="Status" type="HBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow" unique_id=1469729299]
 layout_mode = 2
-theme_override_constants/separation = 50
+theme_override_constants/separation = 35
 
 [node name="Statusbox" type="VBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status" unique_id=556947142]
 layout_mode = 2
 
-[node name="ScoreHeader" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox" unique_id=192059238]
+[node name="Quest" type="GridContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox" unique_id=1480689279]
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "Score"
-uppercase = true
-
-[node name="ScoreValue" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Statusbox" unique_id=1202232539]
-layout_mode = 2
-theme = ExtResource("3_theme")
-theme_override_font_sizes/font_size = 32
-text = "0"
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 2
 
 [node name="Ore" type="VBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status" unique_id=854574724]
 custom_minimum_size = Vector2(110, 140)
 layout_mode = 2
 
-[node name="OreLabel" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore" unique_id=999410782]
+[node name="OreHeader" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore" unique_id=999410782]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Ore"
+horizontal_alignment = 1
 uppercase = true
 
+[node name="OreValue" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore" unique_id=1306702201]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "00000"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="VSeparator" type="HSeparator" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore" unique_id=1544579515]
+custom_minimum_size = Vector2(100, 10)
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_styles/separator = SubResource("StyleBoxLine_l2vqa")
+
+[node name="ScoreHeader" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore" unique_id=192059238]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Score"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="ScoreValue" type="Label" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status/Ore" unique_id=1202232539]
+layout_mode = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 32
+text = "000000000"
+horizontal_alignment = 1
 
 [node name="Consumables" type="VBoxContainer" parent="Layout/StatusArea/StatusPanel/StatusMargin/StatusRow/Status" unique_id=1964397622]
 custom_minimum_size = Vector2(220, 140)

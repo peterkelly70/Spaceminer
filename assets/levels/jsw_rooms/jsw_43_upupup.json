@@ -1,0 +1,503 @@
+{
+	"name": "Up,Up,Up...",
+	"room_name": "Up,Up,Up...",
+	"jsw_room_num": 43,
+	"spawn": [
+		-300,
+		140
+	],
+	"exit": {
+		"position": [
+			300,
+			-120
+		],
+		"size": [
+			40,
+			72
+		],
+		"sprite_frames": "res://assets/sprite/space_miner_teleporter_frames.tres",
+		"animation": "cycle",
+		"scale": [
+			2.0,
+			2.0
+		]
+	},
+	"room_size": [
+		640,
+		320
+	],
+	"tile_layers": [
+		{
+			"name": "PlatformTiles",
+			"modulate": "#8cff00",
+			"z_index": 1,
+			"cells": [
+				{
+					"x": 8,
+					"y": -8,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": -7,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": -6,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": -5,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": -4,
+					"tile": 179
+				},
+				{
+					"x": -8,
+					"y": -3,
+					"tile": 178
+				},
+				{
+					"x": 0,
+					"y": -3,
+					"tile": 176
+				},
+				{
+					"x": 8,
+					"y": -3,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": -2,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": -1,
+					"tile": 179
+				},
+				{
+					"x": -8,
+					"y": 0,
+					"tile": 178
+				},
+				{
+					"x": 0,
+					"y": 0,
+					"tile": 176
+				},
+				{
+					"x": 8,
+					"y": 0,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": 1,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": 2,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": 3,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": 4,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": 5,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": 6,
+					"tile": 179
+				},
+				{
+					"x": 8,
+					"y": 7,
+					"tile": 179
+				}
+			]
+		}
+	],
+	"solids": [
+		{
+			"name": "Floor",
+			"position": [
+				0,
+				160
+			],
+			"size": [
+				660,
+				16
+			]
+		},
+		{
+			"name": "WallLeft",
+			"position": [
+				-328,
+				0
+			],
+			"size": [
+				16,
+				320
+			]
+		},
+		{
+			"name": "WallRight",
+			"position": [
+				328,
+				0
+			],
+			"size": [
+				16,
+				320
+			]
+		},
+		{
+			"name": "Ceiling",
+			"position": [
+				0,
+				-168
+			],
+			"size": [
+				660,
+				16
+			]
+		}
+	],
+	"collectibles": [],
+	"hazards": [
+		{
+			"name": "Hazard_1_1",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-290,
+				-130
+			]
+		},
+		{
+			"name": "Hazard_26_1",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				210,
+				-130
+			]
+		},
+		{
+			"name": "Hazard_9_2",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-130,
+				-110
+			]
+		},
+		{
+			"name": "Hazard_17_2",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				30,
+				-110
+			]
+		},
+		{
+			"name": "Hazard_30_3",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				290,
+				-90
+			]
+		},
+		{
+			"name": "Hazard_0_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-310,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_1_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-290,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_2_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-270,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_9_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-130,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_10_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-110,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_17_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				30,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_18_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				50,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_19_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				70,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_27_7",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				230,
+				-10
+			]
+		},
+		{
+			"name": "Hazard_30_7",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				290,
+				-10
+			]
+		},
+		{
+			"name": "Hazard_0_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-310,
+				10
+			]
+		},
+		{
+			"name": "Hazard_1_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-290,
+				10
+			]
+		},
+		{
+			"name": "Hazard_2_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-270,
+				10
+			]
+		},
+		{
+			"name": "Hazard_9_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-130,
+				10
+			]
+		},
+		{
+			"name": "Hazard_10_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-110,
+				10
+			]
+		},
+		{
+			"name": "Hazard_17_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				30,
+				10
+			]
+		},
+		{
+			"name": "Hazard_18_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				50,
+				10
+			]
+		},
+		{
+			"name": "Hazard_19_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				70,
+				10
+			]
+		},
+		{
+			"name": "Hazard_1_9",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-290,
+				30
+			]
+		},
+		{
+			"name": "Hazard_10_9",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-110,
+				30
+			]
+		},
+		{
+			"name": "Hazard_29_11",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				270,
+				70
+			]
+		},
+		{
+			"name": "Hazard_29_12",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				270,
+				90
+			]
+		},
+		{
+			"name": "Hazard_0_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-310,
+				110
+			]
+		},
+		{
+			"name": "Hazard_1_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-290,
+				110
+			]
+		},
+		{
+			"name": "Hazard_2_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-270,
+				110
+			]
+		},
+		{
+			"name": "Hazard_8_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-150,
+				110
+			]
+		},
+		{
+			"name": "Hazard_9_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-130,
+				110
+			]
+		},
+		{
+			"name": "Hazard_10_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-110,
+				110
+			]
+		},
+		{
+			"name": "Hazard_16_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				10,
+				110
+			]
+		},
+		{
+			"name": "Hazard_17_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				30,
+				110
+			]
+		},
+		{
+			"name": "Hazard_18_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				50,
+				110
+			]
+		},
+		{
+			"name": "Hazard_19_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				70,
+				110
+			]
+		},
+		{
+			"name": "Hazard_26_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				210,
+				110
+			]
+		},
+		{
+			"name": "Hazard_20_14",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				90,
+				130
+			]
+		}
+	],
+	"enemies": [],
+	"doors": [],
+	"is_resupply": false,
+	"is_junction": false
+}

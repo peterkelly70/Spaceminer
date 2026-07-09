@@ -1,75 +1,59 @@
 # RetroSpeech.gd
-# Public API for the SAM-inspired retro speech synthesiser.
+# Public API for SpaceMiner speech.
 #
-# Usage (from any Node):
-#
-#   # Simple one-shot speak using default voice
-#   RetroSpeech.new().speak("BEWARE THE FOREST", $AudioStreamPlayer)
-#
-#   # Render to AudioStreamWAV and assign manually
-#   var wav := RetroSpeech.render_to_stream("DANGER")
-#   $AudioStreamPlayer.stream = wav
-#   $AudioStreamPlayer.play()
-#
-#   # Use a named voice profile
-#   var wav := RetroSpeech.render_to_stream("KILLAPEDE", RetroSpeech.VOICE_BUG)
-#
+# This is now a thin compatibility wrapper over the upstream SAM binary
+# bridge in SamBridge.gd, so the project follows the real implementation
+# path rather than the earlier approximation.
 class_name RetroSpeech
 extends RefCounted
+
+const SAM_BRIDGE := preload("res://scripts/audio/SamBridge.gd")
 
 # ---------------------------------------------------------------------------
 # Built-in voice profiles
 # ---------------------------------------------------------------------------
 
-## Standard old-computer voice: 8 kHz, heavy crunch, flat delivery.
+## Standard old-computer voice: crunchy, flat, 8-bit style.
 static var VOICE_OLD_COMPUTER: SamVoice:
 	get:
 		var v := SamVoice.new()
 		v.sample_rate = 8000
-		v.pitch       = 64
-		v.speed       = 1.0
-		v.throat      = 100
-		v.mouth       = 110
-		v.crunch      = 0.85
+		v.pitch = 64
+		v.speed = 1.0
+		v.throat = 100
+		v.mouth = 110
+		v.crunch = 0.85
 		v.crunch_bits = 4
-		v.volume      = 0.9
+		v.volume = 0.9
 		return v
 
-## Robot voice: low pitch, deliberate pace, hard resonances.
+## Robot voice: lower pitch, slower pace, harder resonance.
 static var VOICE_ROBOT: SamVoice:
 	get:
 		var v := SamVoice.new()
 		v.sample_rate = 8000
-		v.pitch       = 90
-		v.speed       = 0.75
-		v.throat      = 160
-		v.mouth       = 100
-		v.crunch      = 0.5
+		v.pitch = 90
+		v.speed = 0.75
+		v.throat = 160
+		v.mouth = 100
+		v.crunch = 0.5
 		v.crunch_bits = 5
-		v.volume      = 0.9
+		v.volume = 0.9
 		return v
 
-## Bug voice: high pitch, rapid-fire, clipped.
+## Bug voice: high pitch, quick, clipped.
 static var VOICE_BUG: SamVoice:
 	get:
 		var v := SamVoice.new()
 		v.sample_rate = 11025
-		v.pitch       = 30
-		v.speed       = 2.0
-		v.throat      = 80
-		v.mouth       = 200
-		v.crunch      = 0.6
+		v.pitch = 30
+		v.speed = 2.0
+		v.throat = 80
+		v.mouth = 200
+		v.crunch = 0.6
 		v.crunch_bits = 5
-		v.volume      = 0.85
+		v.volume = 0.85
 		return v
-
-# ---------------------------------------------------------------------------
-# Internal helpers
-# ---------------------------------------------------------------------------
-
-var _reciter  := SamReciter.new()
-var _parser   := SamParser.new()
-var _renderer := SamRenderer.new()
 
 
 # ---------------------------------------------------------------------------
@@ -77,7 +61,6 @@ var _renderer := SamRenderer.new()
 # ---------------------------------------------------------------------------
 
 ## Speak text through an AudioStreamPlayer.
-## Uses the default voice if none is provided.
 func speak(text: String, player: AudioStreamPlayer, voice: SamVoice = null) -> void:
 	var wav := render_to_stream(text, voice)
 	if wav == null:
@@ -87,52 +70,34 @@ func speak(text: String, player: AudioStreamPlayer, voice: SamVoice = null) -> v
 	player.play()
 
 
-## Render text to an AudioStreamWAV.
-## Returns null on error.
+## Render text to an AudioStreamWAV using the upstream SAM binary.
 func render_to_stream(text: String, voice: SamVoice = null) -> AudioStreamWAV:
-	var pcm := render_to_pcm(text, voice)
-	if pcm.is_empty():
-		return null
-	var eff_voice := voice if voice != null else _default_voice()
-	return RetroAudioUtil.build_wav_8bit(pcm, eff_voice.sample_rate)
+	return SAM_BRIDGE.render_text_to_stream(text, _effective_voice(voice))
 
 
-## Render text to a raw 8-bit PCM PackedByteArray (128 = silence).
+## Render text to raw unsigned 8-bit PCM.
 func render_to_pcm(text: String, voice: SamVoice = null) -> PackedByteArray:
-	var eff_voice := voice if voice != null else _default_voice()
-	var phoneme_string := _reciter.text_to_phonemes(text)
-	return render_phonemes_to_pcm(phoneme_string, eff_voice)
+	return SAM_BRIDGE.render_text_to_pcm(text, _effective_voice(voice))
 
 
-## Render a pre-built phoneme string directly to an AudioStreamWAV.
-## Useful for testing specific pronunciations.
+## Render a phoneme string directly to an AudioStreamWAV.
 func render_phonemes_to_stream(phoneme_string: String, voice: SamVoice = null) -> AudioStreamWAV:
-	var pcm := render_phonemes_to_pcm(phoneme_string, voice)
-	if pcm.is_empty():
-		return null
-	var eff_voice := voice if voice != null else _default_voice()
-	return RetroAudioUtil.build_wav_8bit(pcm, eff_voice.sample_rate)
+	return SAM_BRIDGE.render_phonemes_to_stream(phoneme_string, _effective_voice(voice))
 
 
-## Render a phoneme string to raw 8-bit PCM.
+## Render a phoneme string to raw unsigned 8-bit PCM.
 func render_phonemes_to_pcm(phoneme_string: String, voice: SamVoice = null) -> PackedByteArray:
-	var eff_voice := voice if voice != null else _default_voice()
-	var frames := _parser.parse(phoneme_string)
-	if frames.is_empty():
-		push_warning("RetroSpeech: no frames produced from phoneme string: %s" % phoneme_string)
-		return PackedByteArray()
-	return _renderer.render(frames, eff_voice)
+	return SAM_BRIDGE.render_phonemes_to_pcm(phoneme_string, _effective_voice(voice))
 
 
-## Convert plain text to its phoneme string without rendering.
-## Useful for the debug label in the test scene.
+## Convert plain text to the phoneme string emitted by the SAM reciter.
 func text_to_phoneme_string(text: String) -> String:
-	return _reciter.text_to_phonemes(text)
+	return SAM_BRIDGE.text_to_phoneme_string(text)
 
 
 # ---------------------------------------------------------------------------
 # Private
 # ---------------------------------------------------------------------------
 
-func _default_voice() -> SamVoice:
-	return VOICE_OLD_COMPUTER
+func _effective_voice(voice: SamVoice) -> SamVoice:
+	return voice if voice != null else VOICE_OLD_COMPUTER

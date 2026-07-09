@@ -1,0 +1,2787 @@
+JSWED v2.2.9
+
+John Elliott
+
+Abstract
+
+JSWED is an editor for games based on the Jet Set Willy 
+and Manic Miner engines. This document describes how to 
+use it.
+
+Table of Contents
+
+Changes since previous versions
+    Since 2.2.8, the last stable version
+    Since previous 2.2.x versions
+Legal Bits
+Installing JSWED 
+    Installing under Windows
+    Installing under Unix
+    Installing under BeOS
+Running JSWED
+    Load file
+        +3DOS file support
+    Save file
+    Edit game
+    Configure
+    About JSWED
+    Leave program
+The user interface
+Editing games
+    Game
+        Upgrading to 128k / Converting to JSW64
+        Adjacent ropes
+        Black Willy
+        Fall any height
+        No auto pause
+        Monochrome
+        Jet Set Wibble
+        Items wobble
+        Items jiggle
+        Fix bug in 'fast JSW'
+        Softricks death
+        Attract mode
+        No infinite death (48k games only)
+        Fix victory bug (Henry's Hoard only)
+    Message
+    Memory
+    Sprites
+        Importing / Exporting
+    The Room Editor
+        Moving between rooms
+        Editing exits
+        Clipboard
+        Room options
+        Guardians
+        Conveyor options
+        Guardian / guardian start frame
+        Cell editors
+    Teleport editor
+    Start position editor
+    Font editor
+    Screen editor
+        The Zoom window
+        Editing pixels
+        Editing attributes
+        Grids
+        Next / Previous
+        Undo
+        Import / Export
+    The Music editor
+        The Assembly file format
+    The Hex editor
+The Guardian editor
+    On Guardian Classes
+    Editor overview
+    Guardian types
+    Editing conventional guardians
+    Rope editing
+    Arrow editing
+    Hex editing
+    Geoff Mode bounds
+Good Advice 
+Editing Games
+    Game
+    Message
+    Sprites
+    The Room Editor
+        Moving between rooms
+        Guardians
+        Editing cells
+        Room options
+        Conveyor options
+        Item options
+    Guardians page
+    Portal editor
+    Screen editor
+The Guardian editor
+    No Guardian Classes
+    Editor overview
+    Guardian types
+JSW64 Overview
+    Game
+    Variants
+Memory Map
+Rooms
+    Cells
+        Extra cell types
+    Room properties
+    Room-specific graphics
+    Conveyor animation
+    Final Barrier
+Guardians
+    Guardian editor
+        Skylabs
+        Angry Eugenes
+        Triggers
+        Switches
+        Vanishing Walls
+        Stoppers
+    Guardian table
+Teleport editor
+Start position / Portal editor
+    Portal special effect
+JSW64 Good advice
+JSW64 for machine-code programmers
+    JSW64 Room Formats
+        Bytes 00-B5 for formats V and X
+        Bytes 00-B5 for formats W, Y and Z
+        Bytes 00-B5 for format [
+        Bytes B5-FF (all formats)
+        Bytes 100h onwards: Format V
+        Bytes 100h onwards: Format W
+        Bytes 100h onwards: Format X
+        Bytes 100h onwards: Format Y
+        Bytes 100h onwards: Format Z
+        Bytes 100h onwards: Format [
+    Cell Types Table (formats W, Y, Z)
+    Cell Types Table (format [)
+    JSW64 Guardians
+        Horizontal and Diagonal Guardians
+        Ropes
+        Arrows
+    Patch Vectors
+        Patch Vector Jumpblock
+        Music Jumpblock
+    Guardian Patch Vectors
+    Memory Map
+        Banks 1,3,4,6
+        Bank 7 memory map
+
+
+
+ Changes since previous versions
+
+ Since 2.2.8, the last stable version
+
+ A memory-corruption bug has been fixed, which could 
+  cause a crash if the game being edited had a start 
+  room with a higher number than 64.
+
+ Memory accesses have also been checked using the 
+  valgrind tool, resulting in a number of corrections 
+  which should improve stability.
+
+ JSW64 games are upgraded to Hacklevel 12, which allows "Trap"
+   cells. 
+
+ If you put Maria and the bathroom toilet in the same 
+  room, the game engine will be automatically patched 
+  to support this.
+
+ The cyan highlight is correctly drawn on the JSW64 "portals"
+   screen.
+
+ Since previous 2.2.x versions
+
+ Bug fix: Items were not shown in games based on the 
+  JSW64 engine.
+
+ Bug fix: Guardians whose sprites were local to a room 
+  were not displayed.
+
+ Guardians and items are now drawn with transparent 
+  backgrounds, rather than having a little block of 
+  colour follow them about.
+
+ A tune import/export facility has been added. See 
+  section [sub:musicedit].
+
+ More room navigation keys: CTRL+P takes you to the 
+  previous room; CTRL+J allows you to jump to an 
+  arbitrary room number; CTRL+L refreshes the current room.
+
+ Multiple items can be placed in a single position by 
+  holding down SHIFT while placing the items.
+
+ An autosave facility has been added.
+
+ Bug fix: If a portal is using sprites local to the 
+  room, then when the sprite is changed the portal in 
+  the room display will immediately be updated to match it.
+
+ The Manic Miner and JSW64 cell graphic editors now 
+  preview in colour. 
+
+ Bugfix: Preview bitmaps no longer have their last row 
+  endlessly repeated. 
+
+ Bugfix: Drawing in the font editor now immediately 
+  updates the list view. 
+
+ Bugfix: The sprite chooser for guardians now displays 
+  all 8 frames of the sprites. 
+
+ Bugfix: A race condition in the guardian editor could 
+  cause a crash. 
+
+ Bugfix: Various values for multicolour vertical 
+  guardians can now be edited. 
+
+ Bugfix: When switching between two views of the same 
+  room, out-of-date data (eg. guardian paths) were 
+  being cached. 
+
+ A hex editor utility has been added, allowing 
+  arbitrary changes to be made to the internal 
+  structure of a game.
+
+ The HOME and END keys now have functions. HOME takes 
+  you to the start of a line of text; END to the end. 
+  SHIFT+HOME takes you to the top of a scrolling list; 
+  SHIFT+END to the end.
+
+ The file selector now remembers what its current 
+  directory is.
+
+ A simple screenshot utility has been added. To use it, 
+  switch to the 'Rooms' screen and press F8. Each room 
+  in the game will be saved as a numbered .PNG file in 
+  the current directory.
+
+ Bug fix: Rope positioning now works in JSW64 rooms
+
+ Bugfix in the JSW128 to JSW64 conversion, where the 
+  target JSW64 game has 64 rooms.
+
+ Sprites can be imported and exported from the sprite 
+  editor.JSW128 games can be converted to JSW64 format, 
+  at the cost of some of their rooms.
+
+ Arrows converted from JSW48/128 to JSW64 don't end up 
+  as four dots.
+
+ WRITETYPER mode works correctly in the V/W variants of 
+  JSW64. 
+
+ The title screen editor can export images (in Spectrum 
+  SCREEN$ or PNG format) and import them (in SCREEN$, 
+  PNG, BMP and JPG formats).
+
+ Legal Bits
+
+This version of JSWED is released under the GNU General 
+Public License(sic). If you are just using JSWED, this 
+won't affect you; but if you intend to distribute 
+copies, then you must distribute all the source code as 
+well as the programs. See the file COPYING (in the 
+Windows version, COPYING.TXT) for details.
+
+The Z80 patches (room_*.hex, rtime*bin) which are 
+loaded as part of a JSW64 game are not covered by the 
+GPL (since this would make it impossible to link them 
+with the JSW engine). They are released under the 
+zlib/libpng licence.
+
+ Installing JSWED 
+
+ Installing under Windows
+
+This release of JSWED requires Windows 95, 98, ME, NT, 
+2000 or XP (and it'll probably work on future versions 
+like Vista as well). The .ZIP file contains the setup 
+programs; unzip it and run SETUP.EXE. 
+
+If you are troubled by frequent crashes, this is 
+probably caused by bugs in JSWED. However, it may also 
+be an idea to stop JSWED using DirectX, to see if this 
+improves stability. To disable DirectX under Windows 
+9x/ME, add the following line to your AUTOEXEC.BAT file:
+
+SET SDL_VIDEODRIVER=windib
+
+and reboot. Under Windows NT/2000/XP, you need to add 
+an environment variable, which is done using the System 
+control panel. Set the new variable's name to 
+SDL_VIDEODRIVER and its value to windib.
+
+ Installing under Unix
+
+Provided you have the SDL and SDL_image libraries on 
+your system, you should just be able to get away with
+
+./configure
+
+make
+
+su root
+
+make install
+
+ Installing under BeOS
+
+This should behave the same way as Unix, though you may 
+have to use --prefix= options in the './configure' line.
+
+ Running JSWED
+
+In Windows, double-click JSWED.EXE, start it from the 
+Start menu or change to the directory where JSWED is 
+installed and type jswed {filename} . In Unix, type 
+jswed {filename} at a command prompt, or set up a 
+shortcut to it in your preferred desktop environment. 
+If {filename} is present, it should be the name of a 
+file to load.
+
+When JSWED is started, the main window will appear. 
+There will be six menu options:
+
+ Load file
+
+Brings up a file selector from which you can choose the 
+file to load. JSWED supports +3DOS, TAP, SNA and Z80 
+formats. Note that 128k .SNA files can be saved and 
+loaded by JSWED, but may not be compatible with 
+emulators. If you intend to use +3DOS files you should 
+read the notes below (section [sec: p3dos]).
+
+To change to a different drive (Windows only), tab to 
+the filename field at the bottom of the screen, clear 
+out what's in there (Press CTRL+Y) and type its drive 
+name, followed by a colon. Then press RETURN.
+
+Once a file is successfully loaded the top line of the 
+screen shows the loaded file and its type (48k, 128k, 
+Softricks, Henry's Hoard, etc.).
+
+ <sec: p3dos>+3DOS file support
+
+As far as 48k games go, this is quite easy. The file 
+format JSWED uses is a single file, CODE 32768,32768. 
+The fun comes with 128k games, because they are stored 
+in multiple +3DOS files.
+
+When loading or saving, JSWED must be given the 
+filename of the BASIC loader (JetSet.128). The other 
+files that make up JSW128 are assumed to be in the same 
+directory as the loader, and have the standard +3DOS 
+filenames for JSW files (rtime.js2, rooms.js6 etc.) Be 
+especially careful when saving, because files with 
+these names will be overwritten without asking.
+
+The loader program (JetSet.128) saved in +3DOS mode is 
+a 'universal' loader that ought to work on cassette or disc.
+
+ Save file
+
+Brings up the same sort of file selector, so you can 
+save the game. The type of file used will be the same 
+as the one used in loading, unless you changed it while editing.
+
+ Edit game
+
+This is the heart of JSWED and is described fully in 
+section [sec: editing].
+
+ Configure
+
+This is used to set up the Spectrum emulator used for 
+testing, and the Autosave feature. There are three 
+fields to enter:
+
+ The Spectrum emulator filename; you should enter the 
+  full path to the emulator. The emulator in question 
+  must be able to load .Z80 files.
+
+ The Autosave filename. This should be the name of a 
+  .Z80 snapshot, which will be saved at the specified interval.
+
+ The Autosave interval, in seconds. Enter 0 to disable 
+  Autosave completely. 
+
+ About JSWED
+
+Displays the current version, and supported game types.
+
+ Leave program
+
+Will leave JSWED instantly. Unsaved work will be lost. 
+Closing the JSWED window also has this effect.
+
+ The user interface
+
+The JSWED user interface is based on the Spectrum 128 
+editor, plus features from more recent GUIs. On most 
+screens, the current control will be highlighted by a 
+blue dotted border, and you can use TAB to move from 
+one to the next. Text controls contain a blue/white 
+flashing cursor, which can be moved by the cursor keys 
+(the control will scroll if there's more text than can 
+be seen).
+
+In the menus, use the cursor keys and ENTER to choose 
+an option; PageUp/PageDown allow scrolling menus to 
+move a page at a time. Press ESCAPE to cancel the menu.
+
+Jet Set Willy (JSW48 and JSW128)
+
+ <sec: editing>Editing games
+
+The game editor is composed of a series of pages, with 
+a list in the top left-hand corner. To choose a page, 
+click on its title or use ALT+UP / ALT+DOWN to choose 
+between them.
+
+Each page has a context menu, which can be accessed by 
+right-clicking the screen or pressing the "menu" key 
+(next to the bottom right-hand CTRL key).
+
+At any time while editing a game, you can press F2 to 
+save your file, or F5 to run it in a Spectrum emulator.
+
+The screens are:
+
+ Game
+
+This page allows you to change the file format used for 
+saving (note that 128k games saved in SNA format can be 
+reloaded in JSWED, but the 128k SNA format may not be 
+compatible with emulators). The page also contains a 
+list of patches which can be applied to the game 
+engine. Each patch is accompanied by a tickbox which is 
+either ticked (the patch is applied), empty (the patch 
+can be applied) or shaded (the patch cannot be 
+applied). 
+
+ Upgrading to 128k / Converting to JSW64
+
+At the bottom of the Game screen is a button. In 48k 
+games it is marked "Upgrade to 128k"; in 128k games, it 
+reads "Convert to JSW64". If you click it, it will offer 
+a choice of formats to convert your game to:
+
++------------++--------+-------------------+--------------------+-------------------+
+| Upgrade to || Rooms  | Guardians / room  | Cell types / room  | Free space / room |
++------------++--------+-------------------+--------------------+-------------------+
++------------++--------+-------------------+--------------------+-------------------+
+|   JSW128   ||  256   |        8          |         4          |         0         |
++------------++--------+-------------------+--------------------+-------------------+
+|  JSW64 V   ||  128   |        13         |         8          |     64 bytes      |
++------------++--------+-------------------+--------------------+-------------------+
+|  JSW64 W   ||  128   |        8          |        13*         |         0         |
++------------++--------+-------------------+--------------------+-------------------+
+|  JSW64 X   ||  64    |       13**        |         8          |     576 bytes     |
++------------++--------+-------------------+--------------------+-------------------+
+|  JSW64 Y   ||  64    |       8**         |        13*         |     512 bytes     |
++------------++--------+-------------------+--------------------+-------------------+
+|  JSW64 Z   ||  64    |       8**         |       13***        |     256 bytes     |
++------------++--------+-------------------+--------------------+-------------------+
+|  JSW64 [   ||  64    |       4**         |        16          |     512 bytes     |
++------------++--------+-------------------+--------------------+-------------------+
+
+
+  * There are 13 cell types defined per room, and three 
+  'global' ones which are the same in all rooms.
+
+  ** The guardian table can be moved into the free 
+  space, giving you up to 32 guardians per room.
+
+  *** JSW64 Z allows any attribute to be used in a 
+  room; so there are actually 256 cell types, of which 
+  240 behave like 'water' blocks.
+
+If you click the button and then confirm your request, 
+you will see all the upgrades being applied and then be 
+returned to the main menu. Geoff Mode games and Henry's 
+Hoard games cannot be upgraded to 128k. Games patched 
+in other ways (for example, with Andrew Broad's custom 
+sprite code) may upgrade cleanly to JSW128, but will 
+not upgrade to JSW64. 
+
+Warning: If you convert a JSW128 game to JSW64, only 
+the first 128 (or 64) rooms will be converted; the 
+others will be lost.
+
+The patches that can be applied are:
+
+ Adjacent ropes
+
+Normally, if you want multiple ropes in a room, you 
+have to put blank guardians between them. If you turn 
+this patch on, it becomes possible to have all eight 
+guardian slots occupied by ropes. Note that there are 
+(old) and (new) versions of this patch; The (old) one 
+was supplied in previous JSWED versions; the (new) one 
+is the one you should use in new games.
+
+ Black Willy
+
+Make Willy black. You will need to set backgrounds to 
+light colours. 
+
+ Fall any height
+
+Stop Willy dying if he falls too far.
+
+ No auto pause
+
+Normally JSW pauses if left by itself for too long. To 
+disable it, apply this patch.
+
+ Monochrome
+
+The entire game area will be drawn in white on black, 
+like the Dragon 32 version of JSW. 
+
+ Jet Set Wibble
+
+Break the player's brain by turning the entire game 
+engine upside-down.
+
+ Items wobble
+
+Collectable items wobble from side to side. Designed 
+for use in conjunction with the 'Monochrome' patch, 
+since items no longer colour-cycle if the screen is monochrome.
+
+ Items jiggle
+
+The same sort of thing as the previous patch, except 
+that the items move up and down rather than right and left.
+
+ Fix bug in 'fast JSW'
+
+This should be used in conjunction with Mark Woodmass's "
+marginally faster" Jet Set Willy engine. It moves the 
+rope coordinates table from 8300h to 9F00h, so that the 
+ropes are no longer all over the place. If you use it 
+on a normal JSW engine, it will do no harm but you lose 
+the use of the sprite page at 9F00h.
+
+ Softricks death
+
+For some reason games written with the Softricks editor 
+show the title screen briefly when Willy dies, and the "death"
+ sound effect is different. This patch switches the 
+effect on and off.
+
+ Attract mode
+
+After the title screen music has played, all the 
+screens in the game will be displayed in turn.
+
+ No infinite death (48k games only)
+
+Switches to Ian Collier's "No infinite death" mode, in 
+which every room definition contains a safe start 
+position. If Willy dies, he will reappear in this position.
+
+Note that if you turn this effect on, on a game which 
+previously didn't have it, it is essential to set up a 
+valid restart position in every room, and to set the 
+initial room again. Otherwise the game will crash on 
+startup or when Willy loses a life.
+
+ Fix victory bug (Henry's Hoard only)
+
+The earlier (1985) version of Henry's Hoard doesn't 
+show the victory screen when you win the game. Put a 
+tick in this box to fix the bug.
+
+ Message
+
+This page contains messages printed by the game - the 
+title screen message, the "Game Over" message, and the "
+objects collected" message. You can edit them as you 
+like; the program will not allow you to enter more text 
+than will fit.
+
+If you are editing Henry's Hoard, then the messages 
+will all be in capitals. The game engine can only print 
+in capitals, so don't try entering lower-case messages.
+
+ Memory
+
+This page is only present on JSW128 and JSW64 versions. 
+It shows the memory being used for various game aspects 
+such as sprites and guardian tables. Click on a cell 
+(or tab to it and press SPACE) to change its meaning; 
+note that to allocate a guardian table you will need 
+four consecutive memory pages (eight for upgraded 
+Softricks games).
+
+ Sprites
+
+The sprite editor screen is divided into two parts. The 
+bottom half contains a list of sprites; select these 
+using the left and right cursor keys (use 
+PageUp/PageDown to move faster) and click or press 
+ENTER on the chosen sprite. You can also scroll the 
+list with the mouse, by clicking on the arrows in the 
+bottom corners.
+
+Once you have chosen a sprite, switch to the editor 
+using TAB and use the four cursor keys to move the 
+cursor, SPACE to toggle the cell colour (or use the 
+mouse). 
+
+Press CTRL+Z or CTRL+U to undo changes to the current 
+sprite. Press it again to undo the undo.
+
+ Importing / Exporting
+
+Right-click on the bitmap editor and you will be given 
+the option to perform bitmap operations (reflect, 
+rotate, invert and so on), or to export or import.
+
+When exporting, you are asked to specify the first and 
+last sprite to be exported, and the file format to use 
+(+3DOS or PNG). The +3DOS format saves as a chunk of 
+Spectrum memory; PNG as an image with all the sprites 
+side by side. 
+
+When importing, JSWED will detect the file format in 
+use (+3DOS, PNG, BMP or JPG). It will then ask which is 
+the first sprite to be replaced; the last sprite to 
+replace is then calculated automatically. If you click 
+'Preview' at this point, you will be able to see the 
+sprites in the file being imported.
+
+Imported images should be 16 pixels high, with the 
+sprites side by side in black on white.
+
+ The Room Editor
+
+The room editor is controlled a bit differently from 
+the other screens. Instead of using TAB to move between 
+controls and SPACE to select, the cursor keys are used 
+to move the blue/white cursor in the room display. The 
+keyboard is used to choose what to do under that 
+cursor. The full list of keys is:
+
++-------------------+-----------------------------------------------------------------------+
+|       Key         |                                Meaning                                |
++-------------------+-----------------------------------------------------------------------+
++-------------------+-----------------------------------------------------------------------+
+|   Cursor keys     |                           Move room cursor                            |
++-------------------+-----------------------------------------------------------------------+
+| CTRL+Cursor keys  |              Go to another room, following the JSW exits              |
++-------------------+-----------------------------------------------------------------------+
+|       < >         |                Go to room numbered 1 higher or 1 lower                |
++-------------------+-----------------------------------------------------------------------+
+|        J          |                    Go to a room chosen from a menu                    |
++-------------------+-----------------------------------------------------------------------+
+|        X          |                Set up the room's exits [sec: exits]()                 |
++-------------------+-----------------------------------------------------------------------+
+|        B          |                     Clipboard [sec: clipboard].()                     |
++-------------------+-----------------------------------------------------------------------+
+|        O          |                    Room options [sec: roomopts]()                     |
++-------------------+-----------------------------------------------------------------------+
+|        G          |                      Guardians. [sec: guards]()                       |
++-------------------+-----------------------------------------------------------------------+
+|      ALT+C        |                 Conveyor options [sec: conveyopts]()                  |
++-------------------+-----------------------------------------------------------------------+
+|       1-8         |             Choose guardian to position using the cursor              |
++-------------------+-----------------------------------------------------------------------+
+|     ALT+1-8       |            Change guardian start frame [sec: guardopts]()             |
++-------------------+-----------------------------------------------------------------------+
+|     A/W/E/F       | Draw Air/Water/Earth/Fire cell under the cursor when SPACE is pressed |
++-------------------+-----------------------------------------------------------------------+
+|        R          |                              Ramp editor                              |
++-------------------+-----------------------------------------------------------------------+
+|        C          |                            Conveyor editor                            |
++-------------------+-----------------------------------------------------------------------+
+|        I          |          Toggle item under the cursor when SPACE is pressed           |
+|                   |      (Use SHIFT+SPACE to place multiple items in the same place)      |
++-------------------+-----------------------------------------------------------------------+
+|      CTRL+P       |        Go to the previous room you were looking at (if any).          |
++-------------------+-----------------------------------------------------------------------+
+|      CTRL+J       |              Go to another room by entering its number.               |
++-------------------+-----------------------------------------------------------------------+
+|      CTRL+L       |    Refresh this room, as if you had gone to another and come back.    |
++-------------------+-----------------------------------------------------------------------+
+| CTRL+Z or CTRL+U  |                     Undo changes to current room.                     |
++-------------------+-----------------------------------------------------------------------+
+
+
+ <sec: moving>Moving between rooms
+
+The panel in the bottom left-hand corner contains 
+controls used to move between rooms. When you go to 
+another room the current room is saved.
+
+The four arrows (corresponding to CTRL+cursor keys) 
+move you to neighbouring rooms in the JSW map. The < > 
+signs use the room number sequence, and "Enter no." 
+(press J) lets you choose the new room from a menu.
+
+ <sec: exits>Editing exits
+
+When you ask to edit exits, a menu appears showing the 
+current exit assignments. Press ESC to leave them as 
+they are, or choose the exit to set. If you chose an 
+exit, a list of rooms then appears for you to choose 
+the new destination.
+
+ <sec: clipboard>Clipboard
+
+The clipboard allows you the usual copy/cut/paste 
+options, plus the ability to clear the room to any of 
+the four cell types and to mirror the structure of the 
+room horizontally or vertically. Note that mirroring 
+does not alter ramps, conveyors or exit assignments.
+
+ <sec: roomopts>Room options
+
+The room options menu gives you three options: 
+
+ General: Allows you to set the border colour, room 
+  title and (in 128k games) Willy's sprite.
+
+ Shapes: Shows the bitmaps for the seven cell types, 
+  and allows you to edit them. Right-click a bitmap for 
+  reflect/rotate/move options, as in the sprite editor.
+
+ Colours: Allows you to edit the colours of the cells.
+
+ <sec: guards>Guardians
+
+If you don't have a guardian currently selected, you 
+are given the option of adding another one (assuming, 
+that is, that you don't have eight in the room 
+already). If you do have a guardian selected, you are 
+also able to delete it from the room or to edit it 
+(section [sec: gedit]). 
+
+ <sec: conveyopts>Conveyor options
+
+Use the conveyor options menu to set four special 
+conveyor types:
+
+ Ramp left / Ramp right: Turn the ramp into a conveyor 
+  ramp (escalator), with no separate conveyor.
+
+ Sticky / off: The conveyor is stationary. 
+
+ <sec: guardopts>Guardian / guardian start frame
+
+To choose a guardian to work with, click its number in 
+the second menu from the right. The guardian's eight 
+frames will appear at the bottom of the screen, and an 
+outline of its path will be visible at the top. To 
+position a guardian, use the cursor or mouse. 
+
+To change the guardian's start frame, press 
+ALT+numbers, or click on the animations within the 
+guardian list.
+
+ Cell editors
+
+Rooms in JSW are composed of the four elements known to 
+Greek philosophy - Air, Earth, Water and Fire. They can 
+also have at most one ramp and one conveyor.
+
+Edit the layout of the room by pressing A,E,W,F,R or C, 
+moving the cursor to where you want, and pressing SPACE 
+or clicking the mouse. You can drag the mouse to draw shapes.
+
+The ramp and conveyor editors need two presses of SPACE 
+(or two clicks), one at each end. For a ramp, start at 
+the bottom; as you press left/right, the ramp will 
+grow. For a conveyor, start at the "from" end and move 
+the cursor towards the "to" end. If you press SPACE twice 
+without moving in between, the ramp/conveyor will be 
+deleted; to create a ramp/conveyor one character long, 
+grow it to two characters and then shrink it.
+
+Items are superimposed on the other cell types. Select 
+the item type by pressing "I". To add an item, click 
+where one is not; to remove it, click where one is.
+
+ Teleport editor
+
+The teleport overlay is supported for JSW48, JSW128 and 
+JSW64 games. By default teleportation is not supported; 
+to get teleporter support you must load the overlay. In 
+JSW48 you then have to sacrifice a room to the 
+teleporter code; in JSW128/JSW64 it is allocated from 
+the memory map.
+
+Once the teleporter overlay is loaded, you can click on 
+the room to create a teleporter (which will appear as 
+an orange "T"). You will then be asked to choose its destination.
+
+If you click on an existing teleporter, you can delete 
+it or change its destination.
+
+ Start position editor
+
+This editor allows you to position three special 
+sprites - Willy's initial position, Maria and the 
+toilet. Click the sprites (or press W / M / T) and then 
+position them in the room you want. Note that in 
+Henry's Hoard you can only position Willy/Henry. In a 
+Geoff Mode game you can't have Maria and the toilet in 
+the same room; in a normal game, you can. 
+
+If you have the "No infinite death" patch turned on, 
+there will be a fourth special sprite - the safe 
+restart position (a green version of Willy). This must 
+be set to a valid value for each room in the game; if 
+Willy dies in a room where this position has not been 
+set, the game will crash!
+
+ <sec: fontedit>Font editor
+
+The font editor works exactly like the sprite editor - 
+click on a letter, and edit its bitmap.
+
+ Screen editor
+
+The screen editor works like the room editor - use 
+cursor keys or the mouse to move the cursor within the 
+image, and press SPACE or click the mouse to draw. 
+Depending on which screen you are editing, you may be 
+able to edit just the pixels, just the attributes, or 
+both. Press the "M" key or click the "Mode" icon to switch 
+between pixel and attribute modes.
+
+ The Zoom window
+
+To the left of the main screen window is a zoom window. 
+This shows a scaled-up version of the character cell 
+the cursor is currently in. Clicks in this window have 
+no effect; it's for viewing only.
+
+ Editing pixels
+
+Click on a pixel to toggle it between ink and paper; 
+you can drag the mouse to set several pixels to the 
+same colour. The keyboard control may be more useful 
+here because moving the mouse by one pixel at a time is 
+quite fiddly.
+
+ Editing attributes
+
+The current attribute that will be used is set using 
+I(nk), P(aper), B(right), F(lash). Once you have chosen 
+the attribute combination you want, click on a 
+character square to set its colours.
+
+ Grids
+
+Press "G" or click on the "Grid" icon to switch between the 
+two available grids. They are the Pixel grid 
+(attributes show as normal, but a pattern of squares 
+appears instead of the pixels) and the Attribute grid 
+(pixels show as normal, but the attributes are a fixed 
+pattern). 
+
+ Next / Previous
+
+Press "<" / ">" or click the same symbols onscreen to move 
+from one picture to the next. The following pictures 
+exist in the different games:
+
++----------------+-------------+-----------------------------+--------------------------------+
+|     Game       | Screen no.  |        Screen name          |            Comments            |
++----------------+-------------+-----------------------------+--------------------------------+
++----------------+-------------+-----------------------------+--------------------------------+
+|    JSW 48k     |     1       |        Bottom third         |    256x64, attributes only     |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     2       |        Title screen         |    256x128, attributes only    |
++----------------+-------------+-----------------------------+--------------------------------+
++----------------+-------------+-----------------------------+--------------------------------+
+|   JSW 128k     |     1       |        Bottom third         |    256x64, attributes only     |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     2       |        Title screen         | 256x128, bitmap and attributes |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     3       |   Title screen animation    |        attributes only         |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     4       |   Title screen animation    |        attributes only         |
++----------------+-------------+-----------------------------+--------------------------------+
++----------------+-------------+-----------------------------+--------------------------------+
+| Henry's Hoard  |     1       |    Title screen 2 of 3      |  Only present in 1985 version  |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     2       |       Victory screen        |      256x64, bitmap only       |
++----------------+-------------+-----------------------------+--------------------------------+
++----------------+-------------+-----------------------------+--------------------------------+
+|  JSW64 games   |     1       |        Bottom third         |    256x64, attributes only     |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     2       |     Air-remaining bar       |     256x8, attributes only     |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     3       |        Title screen         | 256x128, bitmap and attributes |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     4       |   Title screen animation    |        attributes only         |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     5       |   Title screen animation    |        attributes only         |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     6       |  'Final Barrier' screen 1   | 256x64, bitmap and attributes  |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     7       |  'Final Barrier' screen 2   | 256x64, bitmap and attributes  |
++----------------+-------------+-----------------------------+--------------------------------+
++----------------+-------------+-----------------------------+--------------------------------+
+|  Manic Miner   |     1       |        Bottom third         |    256x64, attributes only     |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     2       |  Title screen, top third    | 256x64, bitmap and attributes  |
++----------------+-------------+-----------------------------+--------------------------------+
+|                |     3       | Title screen, middle third  | 256x64, bitmap and attributes  |
++----------------+-------------+-----------------------------+--------------------------------+
+
+
+ Undo
+
+Press Control-Z or Control-U to undo everything you 
+have done to a picture since the last "<" or ">". Press 
+Control-Z again to undo the undo.
+
+ Import / Export
+
+Right-click on the screen being edited and you are 
+given the option to import or export the current image. 
+Images can be exported as PNG or Spectrum SCREEN$; they 
+can be imported as SCREEN$, PNG, BMP or JPG. 
+
+Trying to import an image for a screen where you can 
+only edit the attributes (for example, the "bottom third" 
+graphic) will generate an imported screen, and then 
+load only that screen's attributes.
+
+ <sub:musicedit>The Music editor
+
+The music editor is present only in 128k games (JSW128 
+and JSW64). It allows the three tunes to be played, 
+exported or imported. Under the description of each 
+tune are three buttons:
+
+  Test runs the game in an emulator, just as pressing 
+  F5 does; except that the title screen tune is changed 
+  to be the tune you want to test.
+
+  Export saves the selected tune. Two formats are 
+  supported: +3DOS (this just saves the tune as a block 
+  of memory) and Assembly (a text format, described 
+  more fully below).
+
+  Import loads a new tune over the currently selected 
+  one. Both formats are supported. If the new tune 
+  won't fit in the space available, the import will 
+  fail. JSWED will automatically fix-up the file as it 
+  loads, so you can load a tune into a slot other than 
+  the one it was saved from.
+
+ The Assembly file format
+
+The Assembly file format is the most suitable format 
+for editing a tune file or creating a new one (though 
+that's not saying much). It's in the form of an 
+assembly language listing, compatible with Udo Munk's 
+Z80ASM assembler. The only directives used (and the 
+only ones that will be recognised on import) are:
+
+org  defw  defb  end
+
+A tune specified in Assembly format should be laid out 
+as follows:
+
+
+
+        org     0f700h
+
+The org (origin) directive should be the first one in 
+the file. The value following it should be greater than 
+4000h but is otherwise comparatively unimportant. In 
+the case of tunes saved by JSWED, it gives the address 
+where the tune was saved from.
+
+The next three directives must be the addresses of the 
+three channels:
+
+        defw    Gf706
+
+        defw    Gf751
+
+        defw    Gf752 
+
+Usually these are stored as label names, but you could 
+use numerical addresses if you wanted. JSWED outputs 
+labels of the form Gxxxx, but you might want to use 
+more memorable names - eg:
+
+        defw    channel1
+
+        defw    channel2
+
+        defw    channel3
+
+Following the channel addresses, the remainder of the 
+file describes the tune data. For example:
+
+GF706:  defb    0FEh    ;Call subroutine
+
+        defw    Gf732
+
+        defb    0FEh    ;Call subroutine
+
+        defw    Gf742
+
+        defb    03eh,00ah
+
+        defb    03bh,00ah
+
+        defb    03eh,014h
+
+        defb    03dh,028h 
+
+The first line in the listing has a label. You can put 
+a label on any line of the file, but it only makes 
+sense to put them at the start of channels and at the 
+start of subroutines.
+
+Each channel is formed of a series of instructions, 
+constructed using defb and defw directives. The first 
+byte is a command byte, which may then be followed by 
+parameter bytes. These can be on the same line or on 
+different lines; JSWED doesn't care.
+
+Any text on a line after a ; is ignored.
+
+        end
+
+JSWED's output files end with the 'end' directive, but 
+this is optional.
+
++---------------+----------------------------+-------------------------------------------------------------+
+| Command byte  | Number of parameter bytes  |                           Meaning                           |
++---------------+----------------------------+-------------------------------------------------------------+
++---------------+----------------------------+-------------------------------------------------------------+
+|     000h      |             1              |    Rest. The parameter byte is the duration in jiffies.     |
++---------------+----------------------------+-------------------------------------------------------------+
+|  001h-0F8h    |             1              | Play a note. The parameter byte is the duration in jiffies. |
+|               |                            | The command byte is the pitch in semitones; 48 is middle C. |
++---------------+----------------------------+-------------------------------------------------------------+
+|     0F9h      |             1              |      Set waveform effect (like 'W' in a PLAY command)       |
++---------------+----------------------------+-------------------------------------------------------------+
+|     0FAh      |             1              |      Set waveform period (like 'X' in a PLAY command)       |
++---------------+----------------------------+-------------------------------------------------------------+
+|     0FBh      |             1              |         Set the volume (like 'V' in a PLAY command)         |
+|               |                            |  If you want to use waveforms, set the volume to 16 first.  |
++---------------+----------------------------+-------------------------------------------------------------+
+|     0FCh      |             3              |         Loop - used to repeat a preceding section.          |
+|               |                            |   The first and second parameter bytes should both be set   |
+|               |                            | to the loop count. The third is the relative address of the |
+|               |                            |               start of the section to repeat.               |
++---------------+----------------------------+-------------------------------------------------------------+
+|     0FDh      |             0              |                   Return from a sub-tune.                   |
++---------------+----------------------------+-------------------------------------------------------------+
+|     0FEh      |             2              |      Call a sub-tune, which must end with a 0FDh byte.      |
+|               |                            |   The 2 parameter bytes are the address of the sub-tune.    |
++---------------+----------------------------+-------------------------------------------------------------+
+|     0FFh      |             0              |      End of channel. All channels must end with this.       |
++---------------+----------------------------+-------------------------------------------------------------+
+
+
+Note that on the import side, JSWED is very restricted 
+compared to a real assembler. You can't use EQU 
+directives, conditional assembly or arithmetic. If you 
+need any of these, use a proper assembler.
+
+ <sub:hexedit>The Hex editor
+
+The Hex editor is pretty much the same in all games, 
+though the keys to access the 128k memory banks only 
+apply in 128k games. 
+
+Be warned that it's very easy to damage your game 
+beyond repair using the Hex editor. Only use it if you 
+are sure you know what you are doing!
+
+When using the Hex editor, remember the following:
+
+ Any outstanding changes you make are shown in magenta. 
+  Until you click "Write" (or press Control-W), they will 
+  not be applied to the game.
+
+ You can click "Undo" (or press Control-Z) to remove all 
+  outstanding changes.
+
+ Switching to another screen and back also removes all 
+  outstanding changes.
+
+The Hex editor displays three columns of data. The left 
+column gives addresses; the middle column gives the hex 
+values of the bytes at those addresses; and the right 
+column gives ASCII equivalents (if any). Values that 
+can't be edited (such as bytes which would not be saved 
+in a snapshot) are shown in blue. The bottom bar shows 
+the address that the cursor is currently on.
+
+The following keys can be used:
+
+  Cursors: Move left/right/up/down.
+
+  Page Up / Page Down: Move up/down a page (27 lines) at a time.
+
+  Home / End: Move to the start/end of the current line.
+
+  Shift+Home / Shift+End: Move to addresses 0 and 0FFFFh 
+  respectively.
+
+  Tab: Switches between the 'hex' and 'text' columns. 
+
+  Control-A: Enter address. This moves the cursor to 
+  the specified address.
+
+  Control-F: Find bytes. Enter a sequence of Hex bytes 
+  to find. The search will start at the byte after the 
+  current one.
+
+  Control-G: Find again. Repeats the last search, 
+  starting at the byte after the current one. You can 
+  also use F3 to get the same effect.
+
+  Control-W: Write data. All outstanding changes (shown 
+  in magenta) are applied to the game.
+
+  Control-Z: Undo. All outstanding changes are reversed.
+
+  Control-0 to Control-7: Select memory bank at 0C000h. 
+  For 128k games only. Note that banks 5 and 2 are 
+  always present at 4000h and 8000h respectively.
+
+  Other keys: If the cursor is in the 'hex' column, 0-9 
+  and A-F allow the Hex values to be modified. If it's 
+  in the 'text' column, then any key producing an ASCII 
+  value will insert that value at the current location. 
+  This includes ALT+P for Copyright.
+
+ <sec: gedit>The Guardian editor
+
+ On Guardian Classes
+
+In Jet Set Willy games (other than JSW64), guardians in 
+a room are drawn from a table of guardian classes, with 
+up to 127 entries (Softricks games have 255 entries in 
+their guardian table; 128k games can have more than one 
+guardian table). 
+
+The guardian editor operates on the entries in this 
+table. So if you change a guardian that's present in 
+more than one room, you'll find that it changes in all 
+the rooms that have the guardian. For example, in the 
+original JSW, changing the flag in "On top of the house" 
+will also affect the moon-faced guardian in "Under the Drive".
+
+ Editor overview
+
+When a guardian is being edited, the top half of the 
+screen shows a preview of the result, while the bottom 
+half contains controls. The controls shown vary for 
+different guardian types, but include:
+
++------------------+--------------------------------+----------------------------------------------------+
+|     Control      |             Types              |                     Description                    |
++------------------+--------------------------------+----------------------------------------------------+
++------------------+--------------------------------+----------------------------------------------------+
+|      Type        |              All               |                Change guardian type                |
++------------------+--------------------------------+----------------------------------------------------+
+|     Sprite       |    All except arrow & rope     |                 Change sprite page                 |
++------------------+--------------------------------+----------------------------------------------------+
+|        Y         |      Horizontal, diagonal      |                  Vertical position                 |
++------------------+--------------------------------+----------------------------------------------------+
+|        Y         |            Vertical            |              Initial vertical position             |
++------------------+--------------------------------+----------------------------------------------------+
+|   right of Y     |       Vertical, diagonal       |                    Vertical step                   |
++------------------+--------------------------------+----------------------------------------------------+
+|      L/R?        |      All except vertical       |          Initial direction - left or right         |
++------------------+--------------------------------+----------------------------------------------------+
+| Colour & bright  |    All except arrow & rope     |                   Guardian colour                  |
++------------------+--------------------------------+----------------------------------------------------+
+|    Animation     |    All except arrow & rope     |                   Animation type                   |
++------------------+--------------------------------+----------------------------------------------------+
+|     Bounds       |    All except arrow & rope     |       Left/right or up/down limits of travel       |
++------------------+--------------------------------+----------------------------------------------------+
+|      Fast        |            Vertical            |                 Uses fast animation                |
++------------------+--------------------------------+----------------------------------------------------+
+|      Fast        | Horizontal, diagonal (JSW128)  |                Moves at double speed               |
++------------------+--------------------------------+----------------------------------------------------+
+|      Slow        | Horizontal, diagonal (JSW128)  |                 Moves at half speed                |
++------------------+--------------------------------+----------------------------------------------------+
+|     Stopped      |         Rope (JSW128)          |         If ticked, the rope does not move.         |
++------------------+--------------------------------+----------------------------------------------------+
+|    Rope pos      |              Rope              |              Initial position of rope.             |
++------------------+--------------------------------+----------------------------------------------------+
+|    Rope len.     |              Rope              |                 Length of the rope                 |
++------------------+--------------------------------+----------------------------------------------------+
+|   Rope swing     |              Rope              |             How far the rope swings out            |
++------------------+--------------------------------+----------------------------------------------------+
+|     Bitmap       |             Arrow              |             Top / bottom of the arrow.             |
++------------------+--------------------------------+----------------------------------------------------+
+|    Start pos     |             Arrow              |           Initial position of the arrow.           |
++------------------+--------------------------------+----------------------------------------------------+
+|        !         |              All               |  Edit the guardian as hex (section [sec: hexedit]) |
++------------------+--------------------------------+----------------------------------------------------+
+|      Wrap        |           Geoff Mode           |              Is the guardian one-way?              |
++------------------+--------------------------------+----------------------------------------------------+
+|      H/D?        |           Geoff Mode           |               Horizontal or diagonal?              |
++------------------+--------------------------------+----------------------------------------------------+
+
+
+ Guardian types
+
+In JSW48, there are four guardian types - horizontal, 
+vertical, arrow and rope. In JSW128 there are ten; the 
+four mentioned earlier, two diagonal types, and 
+flashing versions of all except the arrow and the rope. 
+In general JSWED tries to preserve guardian data when 
+changing from one type to another, but this is not 
+always possible; so changing from a vertical guardian 
+to a rope and back won't give you the guardian you had before.
+
+In Geoff Mode, there are four guardian types 
+(horizontal/diagonal, vertical, arrow and rope). Use 
+the "H/D" setting to switch between horizontal and diagonal.
+
+ Editing conventional guardians
+
+There are no real pitfalls with editing conventional 
+guardians. If for some reason the preview of the 
+guardian's bounding rectangle gets out of step with the 
+values you are entering, it is possible to force a 
+recalculation. To do this, click [!] for the hex 
+editor, and then click [OK] to dismiss it - don't 
+change any of the fields!
+
+ Rope editing
+
+The initial position of the rope is positive if the 
+rope starts in the right-hand half of the screen, 
+negative if the rope starts in the left-hand half, and 
+zero if the rope starts dead centre. It should be less 
+than the rope "swing" value.
+
+The rope length can be 1-32; 32 is the usual value.
+
+Unless you are using the (new) "adjacent ropes" patch, 
+ropes must be stored last in a room, or be followed by 
+an arrow, or by an instance of a blank guardian such as 
+Guardian 0. This is because a bug (or feature?) in the 
+game engine causes a rope to write bytes into the 
+following guardian's data.
+
+ Arrow editing
+
+Arrows have 256 possible positions. Numbers 0-31 are 
+onscreen; the others are offscreen. This is set up by 
+the "start pos" field. The small bitmap editor above it 
+is used to set the pattern used on the top and bottom 
+of the arrow.
+
+ <sec: hexedit>Hex editing
+
+Press the [!] button to edit a guardian as hexadecimal 
+bytes. It is possible to create guardians that crash 
+JSW by doing this, so take care.
+
+ Geoff Mode bounds
+
+In Geoff Mode, the guardian bounds are, respectively, 
+an "initial frame count" and a "maximum frame count", 
+rather than "left limit" and "right limit".
+
+ Good Advice 
+
+The following notes are based on the documentation of 
+Paul Rhodes's JSW editor, with additional suggestions 
+by Andrew Broad. Note that if you have the 'Black 
+Willy' patch applied, any reference to 'white' below 
+should be read as 'black'.
+
+ Don't put anything (except items) in the path of a 
+  guardian. Guardian collisions are pixel based; you 
+  have to be sure that none of the guardian's pixels 
+  touches any pixels already on the screen.
+
+ Don't have arrows passing through anything with white 
+  INK. 
+
+ If you have white background INK, any items in the 
+  room on background cells will be automatically 
+  collected on entry to the room (see swimming pool). 
+
+ Be careful if you have two cell types with the same 
+  attributes. In particular, don't make other cells the 
+  same colour as Fire, and don't make Fire the same as 
+  Air but with white ink.
+
+ Having the same attributes for ramp and conveyor 
+  creates an escalator (see Chapel). Other combinations 
+  that may be useful are giving Water or Earth the same 
+  attributes as the ramp or conveyor.
+
+ Avoid having Fire cells at the top of the screen above 
+  a gap at the bottom (see right-hand half of Under the 
+  Roof). 
+
+ Do not put anything in the path of a rope (try it and 
+  see!), and do not allow an arrow to pass through a 
+  rope (especially not a white rope). Note that putting 
+  the arrow after the rope in the room's guardian 
+  instance list is OK - but putting it before the rope 
+  results in a collision.
+
+ Never allow guardians to collide. Their paths can 
+  overlap if you make sure that only one guardian 
+  enters the overlapping space at any one time. 
+
+ Objects on top of other cell types (floors, walls, 
+  etc.) cannot be collected by Willy. They can be 
+  collected by being touched with white arrows or white 
+  guardians.
+
+ It is possible for a JSW game to contain 
+  infinite-death scenarios, where Willy loses all his 
+  lives and you can do nothing about it. For example, 
+  jumping off the end of the upper platform in The 
+  Front Door does this. Try to stop these occurring 
+  unless the player deliberately does something 
+  suicidal (as in the above example). 
+
+ Quirky features are a pathway to many abilities some 
+  consider to be unnatural. Learn to recognise them, 
+  and you'll be able to spot any unintended loopholes 
+  in games. Learn to use them, and you will achieve a 
+  power far greater than any Jedi.
+
+ Playtest every room thoroughly, especially all 
+  possible exits from the room. If you make even a 
+  trivial change to a room, never forget to playtest it again.
+
+ Do a complete playtest to make sure the final revision 
+  of the game is fully completable (to the point where 
+  Willy sticks his head down the toilet) before you 
+  release it.
+
+ Save your work regularly by pressing F2.
+
+ Hard-drives fail, floppy disks get corrupted, CDs 
+  become unreadable, buildings burn down and files 
+  uploaded to the Internet get removed, but if you 
+  regularly save your files in three completely 
+  different places, then the probability of losing your 
+  game is very slim.
+
+<sec: mmediting>Manic Miner
+
+ Editing Games
+
+The game editor behaves in the same way as the Jet Set 
+Willy one, but with fewer pages. 
+
+ Game
+
+This page acts like the JSW 'Game' page, but there is 
+only one patch - "Specials by room". This allows each 
+room to control whether it has vertical guardians, 
+skylabs, solar power, Kong or Eugene (instead of these 
+options being hard-coded).
+
+ Message
+
+This page contains messages printed by the game - the 
+title screen message, the "Game Over" message, and the "score"
+ message. You can edit them as you like; the program 
+will not allow you to enter more text than will fit.
+
+ Sprites
+
+The sprite editor screen is divided into two parts. The 
+bottom half contains a list of sprites; select these 
+using the left and right cursor keys (use 
+PageUp/PageDown to move faster) and click or press 
+ENTER on the chosen sprite. You can also scroll the 
+list with the mouse, by clicking on the arrows in the 
+bottom corners.
+
+Once you have chosen a sprite, switch to the editor 
+using TAB and use the four cursor keys to move the 
+cursor, SPACE to toggle the cell colour (or use the 
+mouse). The context menu for this screen allows you to 
+reflect, rotate, move, invert and clear the bitmap.
+
+Press CTRL+Z or CTRL+U to undo changes to the current 
+sprite. Press it again to undo the undo.
+
+Note that this only covers Willy and guardian sprites, 
+not portals, Eugene or other special graphics.
+
+ The Room Editor
+
+The room editor is similar to the JSW version, but the 
+following functions are different:
+
+ Moving between rooms
+
+Since Manic Miner has no exits at the edges of rooms, 
+there are no arrows to move between rooms. Likewise, 
+there is no option to set up the exits.
+
+ Guardians
+
+The guardians are set up on a separate screen - see 
+section [mmguard].
+
+ Editing cells
+
+In the JSW room editor, there are two options on the "Options"
+ menu - "Shapes" and "Colours". In the Manic Miner editor, 
+these are combined as "Shapes". The Manic Miner shape 
+editor only shows one of the cell types at a time; use 
+the "<" and ">" buttons to see the others.
+
+Manic Miner supports more cell types than Jet Set 
+Willy's 4-element system. It allows:
+
+ Air
+
+ Water
+
+ Water 2: If the room has a Kong beast, this is used 
+  for switches. Otherwise it's another type of Water cell.
+
+ Crumbly - disintegrates when Willy walks on it.
+
+ Earth
+
+ Convey - animated conveyor. You can only have one 
+  animaetd conveyor in a room.
+
+ Conv 2 - non-animated conveyor. You can have as many 
+  cells of this type as you like.
+
+ Fire
+
+ Fire 2
+
+ ? - user-defined attribute. Not normally useful.
+
+ Room options
+
+Selecting "Room options" takes you straight to the room 
+property screen. You can set the border colour and the 
+amount of air remaining.
+
+ General: Allows you to set the border colour, room 
+  title and air remaining.
+
+ Shapes: Shows the bitmaps and colours for the eight 
+  cell types, and allows you to edit them. Right-click 
+  a bitmap for reflect/rotate/move options, as in the 
+  sprite editor.
+
+ Conveyor options
+
+Use the conveyor options menu to set the conveyor to be 
+Off or Sticky. It also allows you to move the conveyor 
+animation up and down.
+
+ Item options
+
+Use this screen to design the item graphic, and to set 
+the colours of the up to five items in the room. The 
+item graphic will be the same for all of them.
+
+ <mmguard>Guardians page
+
+The guardians page is used to position guardians within 
+a room. Select the guardian you want from the list at 
+the bottom of the screen, and then you can set its 
+start position using the mouse (or cursor keys plus space).
+
+Right-click to add a new guardian, or to edit or delete 
+the currently selected one. 
+
+ Portal editor
+
+This editor allows you to edit Willy's start position 
+in each room, and the portal which takes you to the 
+next room. If the "specials by room" patch has been 
+applied, then you can also control whether the room has 
+the various special features.
+
+Keypresses you can use here are:
+
+  B Set whether portal is bright.
+
+  D Set Willy's starting direction (facing left / 
+  facing right).
+
+  E Toggle whether Eugene operates in this room.
+
+  F Set whether portal flashes. If the portal is 
+  flashing Willy can go to the next level whether or 
+  not he has collected all the keys.
+
+  G Edit the portal graphic and the special graphic (if 
+  one's applicable to the room - such as the swordfish, 
+  plinth, boot or Eugene).
+
+  I Set the ink colour for the portal.
+
+  K Toggle whether there is a Kong Beast in this room.
+
+  N Set Willy's start frame.
+
+  P Set the paper colour for the portal.
+
+  S Toggle whether there is solar power in this room.
+
+  V Toggle whether there are vertical guardians in this room.
+
+  W Set Willy's start position.
+
+  X Set the position of the portal.
+
+  Y Toggle whether there are skylabs in this room 
+  (skylabs aren't quite the same as vertical guardians).
+
+ Screen editor
+
+The screen editor has three screens to edit. The first 
+one only allows attributes to be changed; the other two 
+can have both bitmaps and attributes changed.
+
++--------------+-------------+-----------------------+-------------------------------+
+|    Game      | Screen no.  |     Screen name       |           Comments            |
++--------------+-------------+-----------------------+-------------------------------+
++--------------+-------------+-----------------------+-------------------------------+
+| Manic Miner  |     1       |     Bottom third      |    256x64, attributes only    |
++--------------+-------------+-----------------------+-------------------------------+
+|              |     2       |  Title screen, top    | 256x64, bitmap and attributes |
++--------------+-------------+-----------------------+-------------------------------+
+|              |     3       | Title screen, middle  | 256x64, bitmap and attributes |
++--------------+-------------+-----------------------+-------------------------------+
+
+
+ The Guardian editor
+
+ No Guardian Classes
+
+In Manic Miner, guardians are set up by room; changing 
+a guardian in one room will not affect that guardian in 
+any other room.
+
+Note that the guardian editor does not allow you to set 
+a guardian's start position - you do that through the 
+guardian page from which the editor was launched.
+
+ Editor overview
+
+When a guardian is being edited, the top half of the 
+screen shows a preview of the result, while the bottom 
+half contains controls. The controls shown vary for 
+different guardian types, but include:
+
++-------------------+------------------+----------------------------------------------------+
+|     Control       |      Types       |                     Description                    |
++-------------------+------------------+----------------------------------------------------+
++-------------------+------------------+----------------------------------------------------+
+|   Start frame     |       All        |                    Initial frame                   |
++-------------------+------------------+----------------------------------------------------+
+|      Speed        | Vertical, Skylab |             Initial speed and direction            |
++-------------------+------------------+----------------------------------------------------+
+|       L/R?        |    Horizontal    |          Initial direction - left or right         |
++-------------------+------------------+----------------------------------------------------+
+|       U/D?        | Vertical, Skylab |           Initial direction - up or down           |
++-------------------+------------------+----------------------------------------------------+
+|      Flash        | Vertical, Skylab |                Does guardian flash?                |
++-------------------+------------------+----------------------------------------------------+
+|       Slow        |    Horizontal    |          Does guardian move at half speed?         |
++-------------------+------------------+----------------------------------------------------+
+| Colours & bright  |       All        |                   Guardian colour                  |
++-------------------+------------------+----------------------------------------------------+
+|      Bounds       |       All        |       Left/right or up/down limits of travel       |
++-------------------+------------------+----------------------------------------------------+
+|        !          |       All        |  Edit the guardian as hex (section [sec: hexedit]) |
++-------------------+------------------+----------------------------------------------------+
+
+
+ Guardian types
+
+Manic Miner allows up to four horizontal guardians, and 
+up to four vertical guardians/skylabs. You can't change 
+this ratio and have (eg) five horizontal and three 
+vertical. It's not a good idea to put vertical 
+guardians (or skylabs) in rooms 0, 1 or 2, because they 
+overwrite the "Swordfish", "Barrel" and "Foot" sprites.
+
+<par:JSW64-games>JSW64 games
+
+ JSW64 Overview
+
+JSW64 is a redesign of the Jet Set Willy engine 
+intended to remove a lot of the limits on what you can 
+have in rooms. For example, in standard JSW games, a 
+room can have at most one ramp and one conveyor. JSW64 
+makes "ramp" and "conveyor" into standard cell types, so 
+you can have as many of either as you like (though, as 
+in Manic Miner, only one conveyor will be animated). To 
+accommodate the extra data, the JSW64 room definition 
+is larger than the original JSW one, and there are 
+fewer rooms (128 or 64, compared to the 256 in JSW128).
+
+Another difference is that there isn't just one JSW64 
+engine - there are six. They all have similar feature 
+sets, but make different tradeoffs in the way the rooms 
+are stored. One variant can't be changed to another 
+after the fact, so you have to get it right at the time 
+you first upgrade a 48k game to JSW64.
+
+Most of the pages in the JSW64 editor are the same as 
+their JSW48 / JSW128 counterparts. This part of the 
+documentation describes the ones that are different.
+
+ Game
+
+One patch not present in the JSW48 games is 'Diagonal 
+guards bug'. If this bug is introduced, diagonal 
+guardians affect the behaviour of subsequent guardians 
+in the room, making them stop and start as the diagonal 
+guardian moves one way and the other. It has been left 
+as an option in case anyone wants to make a game that 
+takes advantage of this.
+
+ Variants
+
+The six variants of JSW64 are:
+
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+| Variant || Rooms  | Guardians  | Cell types per room  | Global cell types  | Cell types set |  Free |
++---------++--------+------------+----------------------+--------------------+----------------+-------+
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+|    V    ||  128   |    13      |          8           |         0          |    by room     |   64  |
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+|    W    ||  128   |     8      |         13           |         3          |    globally    |   0   |
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+|    X    ||  64    |    13      |          8           |         0          |    by room     |  576  |
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+|    Y    ||  64    |     8      |         13           |         3          |    globally    |  512  |
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+|    Z    ||  64    |     8      |        256**         |         3          |    globally    |  256  |
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+|    [    ||  64    |     4      |         16           |         0          |    globally    |  512  |
++---------++--------+------------+----------------------+--------------------+----------------+-------+
+
+
+The "free" figure is the amount of unused space in the 
+room definition. It is possible to put guardian 
+definitions, patch vector code or sprites in this space.
+
+** Although there are 256 cell types, only 13 of them 
+are 'real'; the others behave like differently-coloured 
+water cells. 
+
+ Memory Map
+
+JSW64 does not have guardian tables. Otherwise this 
+screen is identical to the JSW128 one.
+
+ Rooms
+
+As with the Manic Miner editor, the guardians have been 
+moved to a page of their own. Other differences are:
+
+ Cells
+
+In Manic Miner, JSW48 and JSW128, the meaning of cells 
+is fixed - the first cell is air, the second is water, 
+and so on. In JSW64, this is controlled by the game 
+itself. In the V and X variants, the cell types are set 
+up by room; so one room could have three types of 
+'fire' cell and no conveyors, while another could have 
+one fire, and two conveyors (one going each way). In 
+the other four variants, the cell type is set up 
+globally; your choice of cell behaviour affects all rooms.
+
+Because of this definable behaviour, the room editor 
+doesn't use shortcuts like A=Air, W=Water, E=Earth and 
+so on. It uses 0,1,2,3 and so on to choose the 
+first,second,third... pattern. Ramps and conveyors are 
+just normal cell types.
+
+As with Manic Miner, the "shapes" and "colours" screen have 
+been combined - this time into a screen called "Cells". 
+This handles both shapes and colours. It also has a "Type"
+ control which can be used to set the behaviour of each 
+cell. Remember that in variants other than V and X, 
+changing a cell type affects every room in the game.
+
+ Extra cell types
+
+JSW64 has the following cell types:
+
+  Air/Water/Earth/Fire behave like their JSW48 / JSW128 
+  counterparts.
+
+  Ramps and conveyors are now normal cells rather than 
+  one-offs. You can therefore have as many of either as 
+  you want in a room.
+
+  Crumbling blocks behave as in Manic Miner.
+
+  Trampolines are an addition from the Dragon 32 
+  version of JSW. When Willy stands on one, he is 
+  forced to jump.
+
+  Traps are based on Andrew Broad's "harmless fire" 
+  patch. If any part of Willy is above a trap, he 
+  falls. Traps should be used with caution; letting 
+  Willy jump up onto a trap from below can have 
+  unexpected consequences.
+
+The editor also lets you position three other "cell" types:
+
+  Item lets you position items, exactly as in JSW48 / JSW128.
+
+  Solar is used to set the start point of the Solar 
+  Power beam (if the room has solar power). The start 
+  position of the beam is indicated by an orange sun. 
+  Note that the editor will only let you put the sun in 
+  the top half of the room. You must also set colours 
+  for the solar beam in the room properties screen 
+  before positioning the sun; to remove it, set its 
+  colours to black on black.
+
+  Custom (Variant Z only): Place any combination of 
+  foreground and background attributes. These will be 
+  drawn with the pattern of cell 1 (cell 0 is usually 
+  used for air and therefore is unlikely to have a 
+  pattern). In the game, custom cells will behave as Water.
+
+ Room properties
+
+The "Room properties" screen has a few more options than 
+the JSW48 / JSW128 one. These are:
+
+  Willy Set Willy's colour.
+
+  Solar Set the colours for the Solar Power beam. If 
+  you don't want a room to have solar power, set these 
+  to black on black, with Bright and Flash unticked.
+
+  Air The amount of air in the room. 162 (the maximum 
+  value) means "air is not limited".
+
+  Rigor Mortis If this is ticked, guardians in the room 
+  will not move until all the items in the room are collected.
+
+  No Kamikaze If this is ticked, when Willy dies he 
+  loses any items he collected since entering the room. 
+  This is intended for compatibility with Manic 
+  Miner-style rooms, but a sadistic game designer may 
+  decide to use it in other circumstances.
+
+  Bonus Room If this is ticked, each item collected 
+  gives Willy an extra life.  
+
+  Escalator Tick this to make all ramps in the room 
+  into escalators. There is a second tickbox to control 
+  whether you want them to be 'up' or 'down' 
+  escalators. 
+
+  Land softly (aka "Fall any height"). If this is ticked, 
+  Willy cannot die through falling (in this room).
+
+ Room-specific graphics
+
+JSW64 variants allow some space in the room definition 
+to be used for 16x16 graphics (eg, for a portal). 
+Variants X,Y,Z and [ can store a complete set of frames 
+(eg, for a custom sprite for Willy).
+
+To edit these sprites, choose "Sprites" from the room 
+options menu. You can then edit the sprites in the 
+room, in the same way that you can edit the systemwide sprites.
+
+ Conveyor animation
+
+As in Manic Miner, the conveyor animation in JSW64 
+games is independent of the actual conveyor. Unlike 
+when you are editing a Manic Miner game, drawing 
+conveyor cells does not update the animation (or vice 
+versa). You have to do the animation separately; press 
+V and then draw the animation over the blocks. With 
+this system it's quite possible to have a conveyor that 
+goes in one direction and animates in the other!
+
+ Final Barrier
+
+JSW64 contains two graphical buffers that can be used 
+to draw particular levels (as the title screen is used 
+in Manic Miner to draw the Final Barrier). To set a 
+room to use one or other of these buffers (or with the 
+top/bottom half of the title screen), select "Final Barrier"
+ from the room options menu. A screen will then appear 
+showing the room, with two lists. One selects the 
+buffer to use for the top half of the room; the other 
+selects the bottom.
+
+ Guardians
+
+In JSW64, as in Manic Miner, guardians are set up 
+individually in each room. The number of guardian slots 
+available varies depending on the JSW variant you are 
+using, and can be further customised by room.
+
+The guardian choice screen shows a list of guardian 
+slots; each one is shown as "Grd" if there is a guardian 
+in it, or "--" if it is empty. Click on the screen to set 
+the start position of the guardian; right-click to get 
+the "Guardians" menu. The start frame is set in the 
+guardian editor rather than using ALT+1 - ALT+8.
+
+Unlike in JSW48 / JSW128, guardians in JSW64 are not 
+shared between rooms. 
+
+ Guardian editor
+
+The guardian editor behaves just like the JSW128 one, 
+with these exceptions:
+
+ There are two "Animation" fields. The left-hand one is 
+  the start frame of the guardian.
+
+ The arrow editor allows you to set the arrow colour, 
+  and the bitmap pattern used by the middle of the arrow.
+
+ Extra guardian types are supported: Skylabs, Angry 
+  Eugenes, Triggers, Switches and Vanishing Walls.
+
+ <sub:skylab64>Skylabs
+
+A Skylab behaves like a vertical guardian, except that 
+it does not animate until it reaches the end of its 
+travel. At this point, it starts again at the 
+beginning, 8 columns to the right.
+
+The Skylabs are based on those in Manic Miner. However, 
+these Skylabs can also go up. If so, the first bound is 
+the bottom bound and the second bound is the top (the 
+other way round from all other vertical guardians).
+
+ Angry Eugenes
+
+Angry Eugene behaves like a vertical guardian until his 
+Y-coordinate equals either of its bounds (it is 
+therefore usual to set both bounds to the same value). 
+Once Eugene has reached his destination, he stops.
+
+Be warned: If the bound value cannot be reached exactly 
+(eg: Y-coordinate is 4, bounds are both 50, speed is 4) 
+then Eugene will just keep going, probably colliding 
+with something undesirable.
+
+There are three Eugene types - normal, multicolour, and 
+multicolour 2. The second multicolour option exactly 
+duplicates the way Manic Miner does a multicoloured 
+Eugene; it will only work in a room with a limited air supply.
+
+ Triggers
+
+A trigger is used to modify the behaviour of the 
+subsequent guardian in the table. When you edit a 
+trigger, you will see two buttons:
+
+  Source is the event that causes the trigger to 
+  activate. It can be one of:
+
+   Willy collecting the last item in the room.
+
+   An angry Eugene stopping.
+
+   A switch being turned on.
+
+   A wall vanishing.
+
+  Effect brings up another guardian editor, in which 
+  you can decide exactly what will happen when the 
+  trigger takes effect. The trigger can only change 
+  bytes 0 and 4-7 of a guardian; so you can't change 
+  position, colour or animation settings. 
+
+If the trigger is last in the guardian list, then a 
+bright red warning will be displayed on the guardian 
+editor. If you save a game with a trigger at the end of 
+the list, then the game will probably crash when the 
+trigger is activated.
+
+ Switches
+
+A switch is a guardian, but it's harmless for Willy to 
+touch it. At any time, it is turned off or on; if Willy 
+touches it, he may change its state.
+
+By itself, a switch just sits there. But other 
+guardians can monitor the state of a switch and take 
+action based on its setting.
+
+The options when editing a switch are:
+
+  Sprite The switch graphic. Unlike the other 
+  guardians, the switch is only 8 pixels high (it is 
+  still 16 pixels wide). The top half of its sprite 
+  graphic is the "off" image; the bottom half is the "on" image.
+
+  Colour/Bright as normal.
+
+  Animation chooses which sprite in the page will draw 
+  the switch.
+
+  On/Off sets the initial state of the switch
+
+  Stays off If this is ticked, then once the switch is 
+  turned off it can't be turned on.
+
+  Stays on If this is ticked, then once the switch is 
+  turned on it can't be turned off.
+
+If you leave both the "Stays" options unticked, then 
+while Willy is touching the switch it will rapidly 
+alternate between states. If both are ticked the switch 
+becomes a useless ornament.
+
+ Vanishing Walls
+
+A vanishing wall section, when activated, removes a 
+section of the room - one character wide, and an 
+arbitrary height. Like the trigger, it only activates 
+after another event has taken place, and the same "Source"
+ button is used to select this. The other control on 
+the screen - height - selects how many wall pixels will 
+be removed. 
+
+It is possible to use a vanishing wall as a delay 
+system, by putting it on top of air cells. It then has 
+no visible effect, but still completes a fixed time 
+after it was started. 
+
+ Stoppers
+
+Guardians which appear in the list after a stopper do 
+not appear in the game. The intention is to have a 
+trigger followed by a stopper; when the trigger is 
+activated, the stopper is changed to a blank guardian - 
+at which point the guardians after the stopper are drawn.
+
+There are two types of stopper. The first one inhibits 
+movement and drawing, so that the extra guards aren't 
+visible. The second one only inhibits movement - so you 
+can have a 'rigor mortis'-like effect on only some 
+guardians in a room.
+
+ Guardian table
+
+In JSW64, a room's guardian list can have a variable 
+number of slots. To amend this (either to increase the 
+number of guardians in the room, or to decrease it and 
+use the memory for something else), right-click in the 
+guardian choice screen and select "Table". You will then 
+see a memory map of the room, coloured as follows:
+
+  Red Guardian table
+
+  Green Free space
+
+  Blue Used for other purposes
+
+  Cyan Used for sprites
+
+There is also a +/- control which adjusts the number of 
+slots in the guardian table. As you alter this, the 
+memory map will be updated to match.
+
+If you change the size or position of a room's guardian 
+table, cross-references in triggers and opening walls 
+will become incorrect and must be set up again. 
+
+ Teleport editor
+
+This works exactly like the JSW48 / JSW128 teleport 
+editor, with one extension. From the right-click menu, 
+you can choose to have a visual effect when Willy 
+enters a teleporter:
+
+  No special effect behaves like JSW48 and JSW128; 
+  teleporters act as a jump-cut. This is the proper 
+  setting to use if you are using teleporters to 
+  simulate switches.
+
+  Screen flashes makes the screen fade to dark blue (as 
+  it does when you enter a portal in Manic Miner).
+
+  Air runs down makes the air remaining decrease to zero. 
+  This has no effect if the room doesn't have a limited 
+  air supply.
+
+  Both the above does both, one after the other - like a 
+  true portal.
+
+ Start position / Portal editor
+
+This editor is similar to the JSW48 / JSW128 one, but 
+it also allows you to add a portal to each room. 
+Portals work the same way as in Manic Miner; they're 
+inactive until Willy has collected all the items in the 
+room, and then he can step into one and arrive anywhere 
+else in the game. Here's a feature comparison:
+
++-------------------------------+-----------------------------------------------+
+|    JSW48/128 teleporters      |                    Portals                    |
++-------------------------------+-----------------------------------------------+
++-------------------------------+-----------------------------------------------+
+| As many as you like per room  |                0 or 1 per room                |
++-------------------------------+-----------------------------------------------+
+|          Invisible            |                    Visible                    |
++-------------------------------+-----------------------------------------------+
+|        Always active          | Active once items collected, or when flashing |
++-------------------------------+-----------------------------------------------+
+|      Optional extension       |              Part of game engine              |
++-------------------------------+-----------------------------------------------+
+
+
+Keypresses you can use here are:
+
+  B Set whether portal is bright.
+
+  D Set the portal destination. You will first be asked 
+  for the room; then you can place Willy's arrival 
+  position within it. 
+
+  F Set whether portal flashes. If the portal is 
+  flashing Willy can go to the next level whether or 
+  not he has collected all the items in this room.
+
+  G Choose the sprite to use for the portal.
+
+  I Set the ink colour for the portal.
+
+  M Set the position of Maria.
+
+  P Set the paper colour for the portal.
+
+  T Set the position of the toilet. Note that you can't 
+  have Maria and the toilet in the same room.
+
+  W Set Willy's start position.
+
+  X Set the position of the portal.
+
+To remove a portal from a room, press G and select "No portal"
+. If you're adding a portal, it's advisable to set the 
+colour before choosing the sprite.
+
+ Portal special effect
+
+As with teleporters, it's possible to set the special 
+effect that occurs when you enter a portal. To choose 
+the effect, right-click and select "Portal effect". It 
+can be one of:
+
+  No effect Willy is instantly transported to the portal 
+  destination.
+
+  Screen flashes The screen fades to blue but the air 
+  (if limited) does not run down.
+
+  Screen flash + air The screen fades and the air runs down.
+
+The portal effect is set by room, rather than systemwide.
+
+ JSW64 Good advice
+
+ If Willy stands on a trampoline in a room with 
+  Superjump turned on, he will shoot straight up until 
+  he either:
+
+   Arrives in the room above;
+
+   Loses a life;
+
+   Hits something solid. 
+
+ Make sure the Solar Power beam doesn't go off the 
+  screen, or the game engine will crash. Block it with 
+  Earth if necessary.
+
+ Unlike in JSW48 and JSW128, you can't combine the 
+  behaviour of different cells by setting them to the 
+  same attribute.
+
+ JSW64 for machine-code programmers
+
+The internal data format and mechanisms of JSW48 are 
+very well known (which is one reason why there are many 
+more JSW editors than, for example, Mutant Monty 
+editors). This section is an attempt to document JSW64 
+to a similar level of detail. 
+
+ JSW64 Room Formats
+
+Notes:
+
+ In the format description below, fields marked 
+  'reserved' may be used by future versions of the 
+  JSW64 engine. Fields marked 'unused' will not; they 
+  are intended for your own data.
+
+ For more information on the Manic Miner 'Air' and 
+  'Portal' features, see Andrew Broad's Manic Miner 
+  room format at 
+  
+  
+  
+  
+  
+  <http://www.geocities.com/andrewbroad/spectrum/willy/mm_format.html>
+
+Formats W, Y and [ use a 4-bit room map, so they can 
+all specify 16 block types. But rooms in W and Y only 
+have space for 13 block types, so the other three are 
+defined globally (in bank 7).
+
+ Bytes 00-B5 for formats V and X
+
+  00-68 Up to 13 guardian instances for the room, 
+  terminated with 0FFh.
+
+  69-6D Meanings of the following 8 cell types. 
+
+  First byte low nybble = type of first cell
+
+  First byte high nybble = type of second cell
+
+  2nd byte low nybble = type of third cell
+
+  etc.
+
+  6E-B5 Attributes and bitmap for the 8 cell types
+
+  Cell types are:
+
+  0 Air
+
+  1 Water
+
+  2 Earth
+
+  3 Fire
+
+  4 Ramp \
+
+  5 Ramp /
+
+  6 Conveyor <<
+
+  7 Conveyor >>
+
+  8 Crumbling floor
+
+  9 Trampoline
+
+  10-15 reserved. 
+
+ Bytes 00-B5 for formats W, Y and Z
+
+  00-40 Up to 8 guardian instances for the room, 
+  terminated with 0FFh.
+
+  41-B5 Attributes and bitmap for 13 cell types
+
+ Bytes 00-B5 for format [
+
+  00-20 Up to 4 guardian instances for the room, 
+  terminated with 0FFh.
+
+  21-25 Reserved.
+
+  26-B5 Attributes and bitmap for 16 cell types
+
+ Bytes B5-FF (all formats)
+
+  B6-D5 The room name, ASCII.
+
+  D6 Conveyor animation, and the Final Barrier flags.
+
+  Bits 5,6,7: Source of bottom half
+
+  Bits 2,3,4: Source of top half
+
+    Sources are:
+
+    0: Normal
+
+    1: Title screen, top half
+
+    2: Title screen, bottom half
+
+    3: Screen buffer 1
+
+    4: Screen buffer 2
+
+    5,6,7: Reserved.
+
+  Bit 1,0: Conveyor settings
+
+    0: Animate left
+
+    1: Animate right
+
+    2: All conveyors in room deactivated
+
+    3: All conveyors in room are sticky 
+
+  D7-D8 Conveyor animation position
+
+  D9 Conveyor animation length
+
+  DA-DB Address of the guardian instance table used by 
+  this room. Normally 8000h, but if a larger guardian 
+  instance table is needed it will be the address of 
+  that table, either in the room record or elsewhere in 
+  memory. The original guardian table will then be 
+  available for your own purposes.
+
+  DC Solar Power beam entry point. Low 5 bits are 
+  X-coordinate; high 3 bits are Y-coordinate (solar 
+  power must start in the top 8 lines). 
+
+  DD Attribute of the solar beam. If this is zero, the 
+  room has no solar power. Note that unlike in Manic 
+  Miner, the solar beam does not require a green 
+  background. If you want a harmless solar beam, you'll 
+  have to set the room not to limit air supply.
+
+  DE Border and flags
+
+  Bits 0-2: Border
+
+  Bits 3-5: Willy's colour
+
+  Bit 6: Rigor Mortis. If set, guardians are stationary 
+    until all objects in the room have been collected.
+
+  Bit 7: Superjump.
+
+  DF Air supply, major value. See Andrew Broad's Manic 
+  Miner room format for full details of this field.
+
+  E0 Air supply, minor value. Must be a multiple of 4, 
+  or 0xFF if the room does not have a limited air supply.
+
+  E1 Item bitmap
+
+  E9-EC Exits
+
+  ED Willy's sprite page. If less than 80h, uses the 
+  standard Willy.
+
+  EE-EF The address of the 16x16 graphic to use for the 
+  portal. Set to 0 if this room does not have a portal.
+
+  F0-F1 Position of portal attribute (based at 5C00h).
+
+  F2-F3 Position of portal bitmap (based at 6000h). 
+
+  F4 Portal attribute. If it is flashing the portal can 
+  be entered even if there are still items to be collected.
+
+  F5 Portal destination room number.
+
+  F6-F7 Portal destination: Position of Willy 
+  attributes (based at 5C00h). 
+
+  F8 Portal destination: Willy's new Y-coordinate 
+  (based at 6000h).
+
+  F9-FA 'Portal' patch vector
+
+  FB-FC 'Room setup' patch vector
+
+  FD-FE 'Main loop' patch vector 
+
+  FF More flags:
+
+  Bit 0 set if Willy loses the items he's collected in 
+    the current room when he loses a life.
+
+  Bit 1 set if escalators are down, 0 if up.
+
+  Bit 2 set if ramps are escalators.
+
+  Bit 3 set if Willy can fall any height in this room.
+
+  Bits 4,5,6 reserved.
+
+  Bit 7 set if this is a bonus room (each item gives 
+    Willy an extra life)
+
+ Bytes 100h onwards: Format V
+
+  100-13F Unused. Available to designer for portal 
+  graphic or patch vector(s).
+
+  140-1FF Room layout, 3 bits per cell.
+
+ Bytes 100h onwards: Format W
+
+  100-1FF Room layout, 4 bits per cell.
+
+ Bytes 100h onwards: Format X
+
+  100-33F Unused. Available to designer for portal 
+  graphic, patch vector(s), sprites, guardians, or all 
+  of the above.
+
+  340-3FF Room layout, 3 bits per cell.
+
+ Bytes 100h onwards: Format Y
+
+  100-2FF Unused. Available to designer for portal 
+  graphic, patch vector(s), sprites, guardians, or all 
+  of the above.
+
+  300-3FF Room layout, 4 bits per cell.
+
+ Bytes 100h onwards: Format Z
+
+  100-1FF Unused. Available to designer for portal 
+  graphic, patch vector(s), sprites or guardians.
+
+  200-3FF Room layout, 8 bits per cell. Unknown 
+  attributes take the 'water' graphic.
+
+ Bytes 100h onwards: Format [
+
+  100-2FF Unused. Available to designer for portal 
+  graphic, patch vector(s), sprites, guardians or all 
+  of the above.
+
+  300-3FF Room layout, 4 bits per cell.
+
+ Cell Types Table (formats W, Y, Z)
+
+In these formats, the meaning of each cell is 
+determined globally rather than by room. There is a 
+16-byte table at F4FFh in bank 7. Each byte defines the 
+meaning of a cell (so byte 0 refers to the first cell 
+in the room definition, byte 1 to the second, and so on).
+
+Cell types are:
+
+  0 Air
+
+  1 Water
+
+  2 Earth
+
+  3 Fire
+
+  4 Ramp \
+
+  5 Ramp /
+
+  6 Conveyor <<
+
+  7 Conveyor >>
+
+  8 Crumbling floor
+
+  9 Trampoline
+
+  10 Trap
+
+  11-15 reserved. 
+
+After these 16 bytes are the attributes and bitmaps for 
+the three "global" cells -- the ones which are the same 
+in every room.
+
+ Cell Types Table (format [)
+
+The cell type table is at F519h and is 16 bytes long. 
+There are no global cell definitions.
+
+ JSW64 Guardians
+
+The guardians in JSW64 are based on the JSW128 
+guardians, but with a few added features. A guardian 
+definition is 8 bytes long; I refer to them as GB0-GB7. 
+
+The low 4 bits of GB0 give the guardian type. This is 
+one of:
+
+  0 Blank
+
+  1 Horizontal
+
+  2 Vertical
+
+  3 Rope
+
+  4 Arrow
+
+  5 Diagonal 1
+
+  6 Diagonal 2
+
+  7 Vertical, colour-cycling 
+
+  8 Extended guardian. Top 4 bits give subtype:
+
+  08: Skylab. Behaves like a vertical guardian, except 
+    that at the end of its travel it 'crashes' and then 
+    reappears 8 columns to the right (wrapping, of 
+    course). Other bytes as vertical guardian, except 
+    that byte 7 is 'crash' position and byte 6 is 
+    'restart' position. So for an upward skylab, byte 7 
+    must be less than byte 6.
+
+  18: Angry Eugene. Other bytes as vertical guardian, 
+    except that byte 1 is colour; high bits must be 
+    zero. An Angry Eugene goes to the end of his travel 
+    and stops dead.
+
+  28: Angry Eugene (colour-cycling based on air supply)
+
+  38: Angry Eugene (colour-cycling using JSW64 method).
+
+  88: Trigger.
+
+    Byte 0: 88h
+
+    Bytes 1-2: Address of a flag. When this flag becomes 
+      zero, bytes 3-7 are applied to the next guardian 
+      in the table; and byte 0 of this guardian is 
+      cleared so it doesn't happen again.
+
+    Byte 3: New byte 0 of next guardian.
+
+    Bytes 4-7: New bytes 4-7 of next guardian. 
+
+  98: Switch.
+
+    Byte 0: 98h.
+
+    Byte 1: Ink.
+
+    Byte 2: X-coordinate and frame. The top half of the 
+      guardian sprite will be the 'off' switch and the 
+      bottom half will be the 'on' switch.
+
+    Byte 3: Y-coordinate.
+
+    Byte 4: State. 1=Off 0=On.
+
+    Byte 5: Sprite page. 
+
+    Byte 6: If it's off and Willy hits it, change state 
+      to this.
+
+    Byte 7: If it's on and Willy hits it, change state 
+      to this.
+
+  A8: Opening wall.
+
+    Byte 0: A8h.
+
+    Bytes 1-2: Address of flag (same as for the Trigger).
+
+    Byte 3: Number of vertical lines this will remove.
+
+    Byte 4: State. Initialised by JSWED to 1. It will 
+      become 0 when all lines are removed.
+
+    Byte 5: Number of lines removed so far. Initialised 
+      by JSWED to 0.
+
+    Byte 6: X-coordinate of wall to open.
+
+    Byte 7: Y-coordinate of wall to open.
+
+  9 - Horizontal, colour-cycling
+
+  A - Vertical
+
+  B - Reserved
+
+  C - Reserved
+
+  D - Diagonal 1, colour-cycling
+
+  E - Diagonal 2, colour-cycling
+
+  F - Vertical, colour-cycling
+
+ Horizontal and Diagonal Guardians
+
+These guardian types behave like the standard JSW48 
+horizontal guardian. 
+
+Diagonal ones use GB4 as their vertical speed.
+
+The top 3 bits of GB7 have these meanings:
+
+  Bit 5: Half speed. Guardian will only move every other frame.
+
+  Bit 6: Half-speed ticker (used when the game is 
+  running). 
+
+  Bit 7: Double speed. Guardian will be animated twice 
+  per frame. This means you only get two animation 
+  images instead of four, but the guardian now goes 
+  twice as fast as Willy!
+
+ Ropes
+
+Set bit 6 of GB0 to have a stationary rope. JSW64 has 
+been patched so that a rope definition fits in 8 bytes; 
+a rope can be followed by other guardians than arrows 
+and it won't corrupt them.
+
+ Arrows
+
+GB1 is the ink colour to use for the arrow. Bits 3-7 of 
+this byte will also be ORed to the screen, so it's best 
+to leave them as 0.
+
+GB3 is the bitmap for the middle line of the arrow.
+
+ Patch Vectors
+
+There are three patch vectors in the room data. In 
+order, these are:
+
+ Portal vector. This is called when Willy enters a 
+  portal. The Patch Vector Jumpblock (below) provides 
+  two possible implementations of this; or you could 
+  write your own.
+
+ Note that when you return from the Portal vector, the 
+  game will assume you have moved to a new room and set 
+  things up accordingly. If you want Willy to stay in 
+  the same room, return with
+
+POP BC
+
+RET
+
+ Room Setup vector. This is called when Willy enters a 
+  new room, after the room attributes and bitmap 
+  patterns have been generated. This can be used to put 
+  custom graphics in a room (like the Final Barrier 
+  does in Manic Miner). The default implementation is 
+  just to return.
+
+ Main Loop vector. This is called in the main game 
+  loop, just after the screen has been drawn and just 
+  before Willy moves. It corresponds to the patch 
+  vector in 'Geoff Mode' JSW.
+
+ Patch Vector Jumpblock
+
+The following entry points are provided as helper 
+functions for patches that you write. More may be added 
+later. 
+
+The jumpblock is at a fixed location, and this will 
+stay fixed in future JSW64 versions.
+
+869F RET 
+
+For rooms without patches, the Room Setup and Main Loop 
+patch vectors should be set to this address.
+
+86A0 JP portal_with_fx_and_air
+
+This is the default portal patch vector. It takes Willy 
+to the location specified in the room's portal 
+settings. The portal special effect occurs (as in Manic 
+Miner); and if the room has a limited air supply, it 
+will be run down to zero with a whining noise (again, 
+as in Manic Miner).
+
+86A3 JP portal_with_fx 
+
+As above, but does not do the 'air-running-down' thing.
+
+86A6 JP portal_without_fx
+
+As above, but with no special effects at all (like the 
+JSW128 teleporter).
+
+86A9 JP ptl_fx
+
+This performs the portal special effect only.
+
+86AC JP airend
+
+This performs the air-running-down-to-zero effect.
+
+86AF JP ptl_both
+
+This performs the above two effects, one after the other.
+
+86B2 RST 0
+
+The last entry in the jump block is always RST 0. If 
+more entries are added, they will go at 86B2h and the 
+RST 0 will move to the new end of the jump block.
+
+ Music Jumpblock
+
+The following entry points are provided as helper 
+functions for patches that might want to amend the game 
+music system.
+
+The jumpblock is at a fixed location, and this will 
+stay fixed in future JSW64 versions. It is also present 
+in JSW128 (HL9 and later).
+
+FEC0 JP tuneoff 
+
+This will stop the in-game tune playing. Returns NZ if 
+the tune was not playing, Z if it was.
+
+FEC3 JP tuneon
+
+This will set the tune going. Note that the tune 
+pointers at 0FE8Eh must have been set to point to the 
+start of the selected tune.
+
+FEC6 JP newtune
+
+Change the in-game tune. Enter with HL pointing to the 
+6-byte header of the new in-game tune. If no tune is 
+playing, nothing obvious happens; if a tune is playing, 
+it is stopped and the new tune starts.
+
+FEC9 DEFS 6
+
+A copy of the 6-byte header of the last tune selected 
+with NEWTUNE (FEC6). This is the tune that will be 
+played when the current in-game tune comes to an end 
+(used to make the tune into a continous loop)
+
+ Guardian Patch Vectors
+
+It is possible to define new guardian types, or change 
+the behaviour of existing guardian types (JSW64:Manic 
+Miner does, for example). The JSW64 engine supports up 
+to 30 guardian types, the behaviour of which is defined 
+in four tables:
+
+  84D2-84F1: Table of 16 movement routines, for 
+  guardian types 0-15 (types 0 and 8 should not be 
+  altered). The movement routine updates the guardian's 
+  position and colour, but does not usually test for 
+  collisions. At the end of a movement routine, jump to 
+  the movement handler for type 0; if you RETurn 
+  instead, guardians after your custom guardian will 
+  not move.
+
+  EC66-EC85: Table of 16 drawing routines, for guardian 
+  types 0-15 (types 0 and 8 should not be altered). As 
+  with movement, you should jump to the type 0 drawing 
+  routine rather than RETurn. If Willy should lose a 
+  life, jump to MANDEAD1, 90B7h.
+
+  EC98-ECB7: Table of 16 movement routines for guardian 
+  types 08h, 18h, 28h... 
+
+  ECB8-ECD7: Table of 16 drawing routines for guardian 
+  types 08h, 18h, 28h...
+
+A standard JSW64 game leaves guardian types 0Bh, 0Ch, 
+48h, 58h, 68h, 78h, D8h, E8h and F8h undefined. 
+JSW64:Manic Miner defines 58h, 68h and D8h as custom 
+guardian types, though only D8h is used in the game 
+itself. 
+
+ Memory Map
+
+This section lists memory areas or addresses that might 
+be useful to a machine-code programmer writing JSW64 
+patch vectors or other custom code. The list does not 
+attempt to cover every change between JSW48 and JSW64.
+
+In normal use, memory bank 0 is present at 0C000h. The 
+other banks are mainly used to store data, though some 
+room-initialisation code is present in bank 7.
+
+  8200-82FF: In formats V and W, this memory is free 
+  for the game designer to put sprites or other data in 
+  (JSWED does not support this yet). In formats X, Y, Z 
+  and [ it contains the third page of the currently 
+  loaded room definition. Note that in formats X, Y and 
+  [, this is part of the 'free space' in the room, and 
+  may contain patch vectors, guardians or sprites.
+
+  8300-83FF: In formats V and W, this memory is free 
+  for the game designer to put sprites or other data 
+  in. In formats X, Y, Z and [ it contains the fourth 
+  page of the current room definition. In format X (but 
+  not Y, Z or [) the first 64 bytes of this page are 
+  part of the 'free space' in the room.
+
+  8553: Number of objects in the current room that 
+  haven't yet been collected. 
+
+  85C9: Engine variant, 'V' to '['. Not used by the 
+  game, but essential for JSWED.
+
+  85CA: Number of items in the game (in JSW48 and 
+  JSW128 this is at A3FF).
+
+  8640-869E: Memory map, as in JSW128, but starts 12 
+  bytes sooner.
+
+  87B2: Call a function in memory bank 7. Enter with 
+  HL=address of function. DE, IX and IY will be passed 
+  unchanged to the function; AF and BC are used by this routine.
+
+  8D33-8D52: Runtime cell type table - expanded from 
+  the table in the room definition (variants V,X) or 
+  the global table (other variants). Two bytes per cell 
+  type; the first is the attribute, and the second is 
+  the behaviour (0=Air, 1=Water etc.). This could be 
+  changed by patch vector code at run time. Note that 
+  in variants V and X, only the first 8 entries in the 
+  table are used.
+
+  97E0-97FF: The attributes used to draw the 'air 
+  remaining' bar.
+
+  C000-C0FF: In formats V and W, contains object 
+  locations. In variants X, Y, Z and [ this is unused. 
+  It's possible to extend the font into this area if 
+  you want characters 0-31 to be printable.
+
+  C100-C3FF: The font.
+
+ Banks 1,3,4,6
+
+These memory banks hold the room definitions. Bank 1 
+holds the first 32 rooms (V and W); or the first 16 
+rooms (other variants). Then Bank 3 holds the next 
+32/16 rooms, and so on.
+
+ Bank 7 memory map
+
+  C000-D5FF: Title screen
+
+  D600-DAFF: Scrolly message
+
+  DB00-DB05: Bank 7 jumpblock (JSW64 internal, unlikely 
+  to be useful in patch vectors).
+
+  DB06-DD93: Room decompression code (size varies, 
+  depending which variant we're talking about)
+
+  DD94-E2FE: Reserved
+
+  E2FF-F4FE: The two 'top third' screens. Each is 
+  formed of 2k bitmap and 256 bytes attributes.
+
+  F4FF-F529: Cell map and global cell definitions
+
+  F52A-FFFF: Title screen music

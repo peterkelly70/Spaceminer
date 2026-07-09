@@ -86,7 +86,7 @@ func reset_to_default_state() -> void:
 	
 	current_town_map_data = {}
 	
-	Logger.info(self, "State reset to defaults.")
+	print("State reset to defaults.")
 	emit_signal("game_reset")
 	# Emit signals to update UI after reset
 	for key in resources:
@@ -98,18 +98,18 @@ func reset_to_default_state() -> void:
 func get_resource_amount(resource_key: String) -> int:
 	if resources.has(resource_key) and resources[resource_key].has("current"):
 		return resources[resource_key]["current"]
-	Logger.error(self, "Tried to get amount for uninitialized/unknown resource '%s'" % resource_key)
+	push_error("Tried to get amount for uninitialized/unknown resource '%s'" % resource_key)
 	return 0
 
 func get_resource_generation(resource_key: String) -> int:
 	if resources.has(resource_key) and resources[resource_key].has("generation"):
 		return resources[resource_key]["generation"]
-	Logger.error(self, "Tried to get generation for uninitialized/unknown resource '%s'" % resource_key)
+	push_error("Tried to get generation for uninitialized/unknown resource '%s'" % resource_key)
 	return 0
 
 func set_resource_amount(resource_key: String, new_amount: int) -> void:
 	if not resources.has(resource_key):
-		Logger.error(self, "Tried to set amount for unknown resource '%s'" % resource_key)
+		push_error("Tried to set amount for unknown resource '%s'" % resource_key)
 		return
 	
 	var old_amount = resources[resource_key].get("current", 0)
@@ -119,7 +119,7 @@ func set_resource_amount(resource_key: String, new_amount: int) -> void:
 
 func set_resource_generation(resource_key: String, new_generation: int) -> void:
 	if not resources.has(resource_key):
-		Logger.error(self, "Tried to set generation for unknown resource '%s'" % resource_key)
+		push_error("Tried to set generation for unknown resource '%s'" % resource_key)
 		return
 
 	var old_generation = resources[resource_key].get("generation", 0)
@@ -129,7 +129,7 @@ func set_resource_generation(resource_key: String, new_generation: int) -> void:
 
 func add_to_resource(resource_key: String, amount_to_add: int) -> void:
 	if not resources.has(resource_key):
-		Logger.error(self, "Tried to add to unknown resource '%s'" % resource_key)
+		push_error("Tried to add to unknown resource '%s'" % resource_key)
 		return
 	
 	var current_val = get_resource_amount(resource_key)
@@ -157,14 +157,14 @@ func get_max_workers() -> int:
 
 func get_assigned_workers(building_type: String) -> int:
 	if not buildings.has(building_type):
-		Logger.error(self, "Tried to get assigned workers for unknown building '%s'" % building_type)
+		push_error("Tried to get assigned workers for unknown building '%s'" % building_type)
 		return 0
 	
 	return buildings[building_type]["assigned_workers"]
 
 func adjust_worker_assignment(building_type: String, amount: int) -> void:
 	if not buildings.has(building_type):
-		Logger.error(self, "Tried to adjust workers for unknown building '%s'" % building_type)
+		push_error("Tried to adjust workers for unknown building '%s'" % building_type)
 		return
 	
 	var current_assigned = buildings[building_type]["assigned_workers"]
@@ -174,12 +174,12 @@ func adjust_worker_assignment(building_type: String, amount: int) -> void:
 	if amount > 0:
 		# Check if we have enough available workers
 		if available_workers < amount:
-			Logger.error(self, "Not enough available workers to assign %s workers" % amount)
+			push_error("Not enough available workers to assign %s workers" % amount)
 			return
 		
 		# Check if the building can hold more workers
 		if current_assigned + amount > max_workers_for_building:
-			Logger.error(self, "Building '%s' cannot hold more than %s workers" % [building_type, max_workers_for_building])
+			push_error("Building '%s' cannot hold more than %s workers" % [building_type, max_workers_for_building])
 			return
 		
 		# Assign workers
@@ -190,7 +190,7 @@ func adjust_worker_assignment(building_type: String, amount: int) -> void:
 	elif amount < 0:
 		# Check if there are enough assigned workers to remove
 		if current_assigned < abs(amount):
-			Logger.error(self, "Not enough assigned workers to remove %s workers from '%s'" % [abs(amount), building_type])
+			push_error("Not enough assigned workers to remove %s workers from '%s'" % [abs(amount), building_type])
 			return
 		
 		# Remove workers
@@ -239,7 +239,7 @@ func _update_resource_generation() -> void:
 
 func get_building_data(building_type: String) -> Dictionary:
 	if not buildings.has(building_type):
-		Logger.error(self, "Tried to get data for unknown building '%s'" % building_type)
+		push_error("Tried to get data for unknown building '%s'" % building_type)
 		return {"count": 0, "level": 1, "production_per_worker": 1.0, "max_workers": 0, "assigned_workers": 0}
 	
 	return buildings[building_type]
@@ -266,7 +266,7 @@ func advance_turn() -> void:
 		current_year += 1
 	
 	emit_signal("turn_advanced", turn_number, current_year, current_season)
-	Logger.info(self, "Turn Advanced: %s, Year: %s, Season: %s" % [turn_number, current_year, current_season])
+	print("Turn Advanced: %s, Year: %s, Season: %s" % [turn_number, current_year, current_season])
 
 # --- Save/Load --- 
 func get_save_data() -> Dictionary:
@@ -293,10 +293,10 @@ func load_from_data(data: Dictionary) -> bool:
 		if loaded_resources[key] is Dictionary:
 			resources[key] = loaded_resources[key].duplicate(true)
 		else: # Fallback for older save format if necessary, or error
-			Logger.error(self, "Malformed resource data for key '%s' during load." % key)
+			push_error("Malformed resource data for key '%s' during load." % key)
 			# Ensure a valid structure even if data is bad
 			if not DEFAULT_RESOURCES.has(key):
-				Logger.error(self, "Critical error - Default resource '%s' not found during faulty load recovery." % key)
+				push_error("Critical error - Default resource '%s' not found during faulty load recovery." % key)
 				resources[key] = {"current":0, "generation":0}
 			else:
 				resources[key] = DEFAULT_RESOURCES[key].duplicate(true)
@@ -305,7 +305,7 @@ func load_from_data(data: Dictionary) -> bool:
 	game_start_timestamp = data.get("game_start_timestamp", Time.get_unix_time_from_system())
 	last_save_timestamp = data.get("last_save_timestamp", 0)
 	
-	Logger.info(self, "Data loaded.")
+	print("Data loaded.")
 	emit_signal("game_loaded")
 	# Manually emit resource_updated for all resources to refresh UI
 	for key in resources:
@@ -325,13 +325,13 @@ func save_game_to_file(file_path: String = "user://ironhaven_save.dat") -> void:
 		file.close()
 		self.last_save_timestamp = save_data.last_save_timestamp # Update model's timestamp
 		emit_signal("game_saved")
-		Logger.info(self, "Game saved to: %s" % file_path)
+		print("Game saved to: %s" % file_path)
 	else:
-		Logger.error(self, "Error saving game to %s" % file_path)
+		push_error("Error saving game to %s" % file_path)
 
 func load_game_from_file(file_path: String = "user://ironhaven_save.dat") -> bool:
 	if not FileAccess.file_exists(file_path):
-		Logger.error(self, "Save file not found at %s" % file_path)
+		push_error("Save file not found at %s" % file_path)
 		return false
 	
 	var file = FileAccess.open(file_path, FileAccess.READ)
@@ -341,10 +341,10 @@ func load_game_from_file(file_path: String = "user://ironhaven_save.dat") -> boo
 		
 		var parse_result = JSON.parse_string(json_string)
 		if parse_result == null:
-			Logger.error(self, "Error parsing save file JSON from %s" % file_path)
+			push_error("Error parsing save file JSON from %s" % file_path)
 			return false
 
 		return load_from_data(parse_result)
 	else:
-		Logger.error(self, "Error loading game from %s" % file_path)
+		push_error("Error loading game from %s" % file_path)
 		return false

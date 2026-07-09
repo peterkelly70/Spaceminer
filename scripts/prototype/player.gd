@@ -29,6 +29,10 @@ const LASER_DURATION := 0.10        # seconds the beam stays visible
 
 # Magnetic boots
 const BOOT_DRAIN := 12.0            # battery % per second when active
+const MAGNET_SNAP_RANGE := 24.0
+const MAGNET_STICK_FORCE := 2400.0
+const MAGNET_ROTATE_SPEED := 16.0
+const CLOAK_DRAIN_PER_DAMAGE := 18.0
 
 # ── State ──────────────────────────────────────────────────────────────────────
 var facing_dir       := 1.0
@@ -49,8 +53,12 @@ const GRAPPLE_AIM_RADIUS := 72.0
 const GRAPPLE_AIM_SPEED  := 2.2           # radians/sec of sweep
 
 var _mag_active      := false
+var _mag_attached    := false
+var _mag_surface_normal := Vector2.UP
+var _cloak_active := false
 var _jetpack_sfx_armed := false
 var _jetpack_hold_time := 0.0
+var _jetpack_active := false
 var _jump_active := false
 var _jump_lock_dir := 1.0
 
@@ -59,6 +67,20 @@ const CLIMB_SPEED := 110.0
 const FEET_OFFSET := 16.0          # half of the 32px collision box
 var _climbing := false
 var _climb_saved_mask := 0
+
+# Drop-through: one-way platforms live on collision layer 2 (mask bit 2). Clearing
+# that bit briefly lets the player fall down through the platform they're stood on.
+const PLATFORM_MASK_BIT := 2
+const DROP_THROUGH_TIME := 0.20
+var _drop_timer := 0.0
+
+# Equipment hotkeys: tap = activate, hold = drop the item where the player stands.
+const EQUIPMENT_SLOT_COUNT := 6
+const EQUIPMENT_DROP_HOLD_SECONDS := 0.6
+const EQUIPMENT_PICKUP_SCENE := preload("res://scenes/prototype/EquipmentPickup.tscn")
+const DROPPED_PICKUP_GRACE_SECONDS := 1.2
+var _eq_hold_time: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+var _eq_hold_consumed: Array[bool] = [false, false, false, false, false, false]
 
 var _laser_line      : Line2D = null
 var _laser_timer     : float  = 0.0
@@ -89,12 +111,21 @@ func respawn(at_position: Vector2) -> void:
 	_grapple_reeling = false
 	_grapple_reel_timer = 0.0
 	_mag_active      = false
+	_mag_attached = false
+	_mag_surface_normal = Vector2.UP
 	_jetpack_hold_time = 0.0
+	_jetpack_active = false
 	_jump_active = false
 	_jump_lock_dir = 1.0
+	rotation = 0.0
+	body_sprite.rotation = 0.0
+	body_sprite.modulate = Color.WHITE
 	if _climbing:
 		collision_mask = _climb_saved_mask
 		_climbing = false
+	if _drop_timer > 0.0:
+		_drop_timer = 0.0
+		collision_mask |= PLATFORM_MASK_BIT
 	_grounded_last_frame = false
 	_fall_origin_y = at_position.y
 	if _grapple_line:
@@ -134,11 +165,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 	# Equipment slots — activate equipment by slot index
-	for i in range(1, 7):
-		if event.is_action_pressed("equipment_%d" % i):
-			_activate_equipment_slot(i)
-			get_viewport().set_input_as_handled()
-			return
+	# Equipment slots are polled in _physics_process (_update_equipment_hotkeys):
+	# tap activates, holding drops the item at the player's feet.
 
 	# Map overlay toggle
 	if event.is_action_pressed("map_toggle"):
@@ -148,11 +176,17 @@ func _unhandled_input(event: InputEvent) -> void:
 # ── Physics ───────────────────────────────────────────────────────────────────
 
 func _physics_process(delta: float) -> void:
-	var h           := _h_input()
+	var h            := _h_input()
 	var jump_pressed := Input.is_action_just_pressed("jump") and not Input.is_key_pressed(KEY_SHIFT)
-	var thrust_held := Input.is_action_pressed("thrust") or Input.is_action_pressed("ui_up")
 	var grounded    := is_on_floor()
 	var has_jetpack := _has_equipment("jetpack")
+	var has_cloak := _has_equipment("visibility_cloak")
+
+	# Restore one-way platform collision once the drop-through window elapses.
+	if _drop_timer > 0.0:
+		_drop_timer -= delta
+		if _drop_timer <= 0.0:
+			collision_mask |= PLATFORM_MASK_BIT
 
 	# Reset on landing
 	if grounded:
@@ -163,6 +197,7 @@ func _physics_process(delta: float) -> void:
 		_grapple_reel_timer = 0.0
 		_jetpack_hold_time = 0.0
 		_jetpack_sfx_armed = false
+		_jetpack_active = false
 		_jump_active = false
 		if _grapple_line and not _grappling:
 			_grapple_line.queue_free()
@@ -192,23 +227,31 @@ func _physics_process(delta: float) -> void:
 		if _grapple_reeling:
 			_grapple_reel_timer = maxf(_grapple_reel_timer, 0.02)
 
+	if grounded:
+		_jetpack_active = false
+	elif jump_pressed and has_jetpack and not _climbing and not _grapple_aiming and not _grappling and not _grapple_reeling:
+		_jetpack_active = true
+		jump_pressed = false
+
 	# Ladder climbing — up/down move along a ladder; jetpack is disabled while climbing
 	var ladder := _current_ladder()
-	var climb_up := Input.is_action_pressed("thrust") or Input.is_action_pressed("ui_up")
-	var climb_down := Input.is_action_pressed("ui_down") or Input.is_action_pressed("interact")
+	var climb_up := _up_held()
+	var climb_down := _down_held()
 	if ladder and not _climbing and (climb_up or climb_down):
 		_begin_climb()
 	if _climbing and ladder == null:
 		_end_climb()
 
-	# Suppress jetpack thrust while climbing (up is repurposed to climb)
-	var thrusting := _apply_jetpack_thrust(thrust_held and not _climbing, has_jetpack, delta)
+	# Drop through a one-way platform: hold down + jump while standing on one.
+	if not _climbing and grounded and climb_down and jump_pressed:
+		_drop_through_platform()
+		jump_pressed = false
+
+	# Jetpack uses an airborne jump-press to arm, then WASD/arrow keys steer.
+	var thrusting := _apply_jetpack_thrust(_jetpack_active and not _climbing, has_jetpack, climb_up, climb_down, delta)
+	if not has_jetpack or _get_fuel() <= 0.0:
+		_jetpack_active = false
 	_update_jetpack_visuals(has_jetpack, thrusting)
-	_apply_horizontal_move(h, grounded and not _climbing, thrusting, delta)
-	if _climbing:
-		_apply_ladder_climb(ladder, h, jump_pressed, climb_up, climb_down, delta)
-	else:
-		_apply_vertical_move(jump_pressed, grounded, has_jetpack, thrusting, delta)
 
 	# Grapple pull
 	if _grappling:
@@ -217,14 +260,20 @@ func _physics_process(delta: float) -> void:
 		_apply_grapple_reel(delta)
 
 	# Magnetic boots
+	var boots_attached := false
 	if _mag_active and _has_equipment("magnetic_boots"):
-		if _get_battery() <= 0.0:
-			_mag_active = false
+		boots_attached = _apply_magnetic_boots(h, jump_pressed, delta)
+	else:
+		_mag_attached = false
+		up_direction = Vector2.UP
+		body_sprite.rotation = lerp_angle(body_sprite.rotation, 0.0, clampf(delta * MAGNET_ROTATE_SPEED, 0.0, 1.0))
+
+	if not boots_attached:
+		_apply_horizontal_move(h, grounded and not _climbing, thrusting, delta)
+		if _climbing:
+			_apply_ladder_climb(ladder, h, jump_pressed, climb_up, climb_down, delta)
 		else:
-			_drain_battery(BOOT_DRAIN * delta)
-			# Slow fall significantly so player can drift to ceiling
-			if velocity.y > 0.0:
-				velocity.y -= gravity * delta * 0.8
+			_apply_vertical_move(jump_pressed, grounded, has_jetpack, thrusting, delta)
 
 	# Laser line fade
 	if _laser_line:
@@ -233,12 +282,23 @@ func _physics_process(delta: float) -> void:
 			_laser_line.queue_free()
 			_laser_line = null
 
-	_update_animation(h)
+	_update_equipment_hotkeys(delta)
+
+	_cloak_active = has_cloak and _get_battery() > 0.0
+	_update_cloak_visuals()
+	_update_animation(h, grounded or _climbing or boots_attached)
 	move_and_slide()
 	_grounded_last_frame = grounded
 
-func handle_hazard_hit() -> void:
+func handle_hazard_hit(damage: float = 1.0) -> bool:
+	if _cloak_active and _has_equipment("visibility_cloak") and _get_battery() > 0.0:
+		var battery_cost := maxf(damage, 0.0) * CLOAK_DRAIN_PER_DAMAGE
+		_drain_battery(battery_cost)
+		_cloak_active = _get_battery() > 0.0
+		_update_cloak_visuals()
+		return false
 	player_defeated.emit()
+	return true
 
 # ── Movement ─────────────────────────────────────────────────────────────────
 
@@ -248,15 +308,26 @@ func _h_input() -> float:
 	if left == right: return 0.0
 	return -1.0 if left else 1.0
 
-func _apply_horizontal_move(h: float, grounded: bool, thrusting: bool, delta: float) -> void:
-	if thrusting:
-		_jump_active = false
-		if h != 0.0:
-			velocity.x = move_toward(velocity.x, h * move_speed, air_control_accel * delta)
-			facing_dir = sign(h)
-			body_sprite.flip_h = facing_dir < 0.0
-		return
+# Vertical intent — W/Up climbs ladders; jump can also feed the jetpack once airborne.
+func _up_held() -> bool:
+	return Input.is_action_pressed("move_up") or Input.is_action_pressed("ui_up")
 
+func _down_held() -> bool:
+	return Input.is_action_pressed("move_down") or Input.is_action_pressed("ui_down")
+
+# Temporarily stop colliding with one-way platforms so gravity carries the player
+# down through the platform they're standing on. Solid floor/walls (layer 1) stay
+# active, so the player still lands on the next surface below.
+func _drop_through_platform() -> void:
+	if _drop_timer > 0.0:
+		return
+	collision_mask &= ~PLATFORM_MASK_BIT
+	_drop_timer = DROP_THROUGH_TIME
+	# Nudge downward so we immediately separate from the platform surface.
+	velocity.y = maxf(velocity.y, 40.0)
+	global_position.y += 1.0
+
+func _apply_horizontal_move(h: float, grounded: bool, air_control: bool, delta: float) -> void:
 	if grounded:
 		if h != 0.0:
 			velocity.x = h * move_speed
@@ -268,25 +339,113 @@ func _apply_horizontal_move(h: float, grounded: bool, thrusting: bool, delta: fl
 				velocity.x = 0.0
 		return
 
-	if _jump_active:
-		velocity.x = _jump_lock_dir * JUMP_HORIZONTAL_SPEED
+	# Old-school fixed jump arc: horizontal speed is locked at takeoff and cannot
+	# be steered mid-air. Only the jetpack (a deliberate equipment override) grants
+	# air control, via the `air_control` flag passed in while thrusting.
+	if air_control and h != 0.0:
+		velocity.x = move_toward(velocity.x, h * move_speed, air_control_accel * delta)
+		facing_dir = sign(h)
+		body_sprite.flip_h = facing_dir < 0.0
 
-func _apply_jetpack_thrust(thrust_held: bool, has_jetpack: bool, delta: float) -> bool:
-	if not has_jetpack:
+func _apply_magnetic_boots(h: float, jump_pressed: bool, delta: float) -> bool:
+	if not _mag_active or not _has_equipment("magnetic_boots"):
+		_mag_attached = false
 		return false
-	if thrust_held and _get_fuel() > 0.0:
-		_jetpack_hold_time += delta
-		if _jetpack_hold_time >= JETPACK_IGNITION_DELAY:
-			velocity.y -= JETPACK_THRUST * delta
-			_drain_fuel(JETPACK_FUEL_DRAIN * delta)
-			if not _jetpack_sfx_armed:
-				_play_jetpack_sfx()
-				_jetpack_sfx_armed = true
-			return true
+	if _get_battery() <= 0.0:
+		_mag_active = false
+		_mag_attached = false
+		return false
+
+	_drain_battery(BOOT_DRAIN * delta)
+	if _get_battery() <= 0.0:
+		_mag_active = false
+		_mag_attached = false
+		return false
+
+	var probe := _probe_magnetic_surface()
+	if not probe.is_empty():
+		_mag_surface_normal = probe.get("normal", _mag_surface_normal)
+		_mag_attached = true
+	elif not _mag_attached:
+		up_direction = Vector2.UP
+		return false
+
+	if _mag_surface_normal == Vector2.ZERO:
+		_mag_surface_normal = Vector2.UP
+
+	# Treat the contacted surface as "floor" and keep the player glued to it.
+	up_direction = _mag_surface_normal
+	var surface_rotation := (-_mag_surface_normal).angle() - PI / 2.0
+	body_sprite.rotation = lerp_angle(body_sprite.rotation, surface_rotation, clampf(delta * MAGNET_ROTATE_SPEED, 0.0, 1.0))
+
+	var tangent := Vector2(_mag_surface_normal.y, -_mag_surface_normal.x)
+	var tangential_speed := velocity.dot(tangent)
+	if h != 0.0:
+		tangential_speed = move_toward(tangential_speed, h * move_speed, air_control_accel * delta)
+	elif absf(tangential_speed) > 1.0:
+		tangential_speed = move_toward(tangential_speed, 0.0, ground_friction * delta)
 	else:
+		tangential_speed = 0.0
+	if jump_pressed:
+		velocity = tangent * tangential_speed + _mag_surface_normal * -JUMP_SPEED * 0.85
+		_mag_attached = false
+		_mag_active = false
+		return false
+
+	var stick_speed := maxf(MAGNET_STICK_FORCE * delta, 80.0)
+	velocity = tangent * tangential_speed + (-_mag_surface_normal * stick_speed)
+	facing_dir = sign(tangent.dot(Vector2.RIGHT) * h if h != 0.0 else facing_dir)
+	if h != 0.0:
+		body_sprite.flip_h = h < 0.0
+	return true
+
+func _probe_magnetic_surface() -> Dictionary:
+	var probes := [
+		{"offset": Vector2(0.0, 14.0), "dir": Vector2.DOWN},
+		{"offset": Vector2(0.0, -14.0), "dir": Vector2.UP},
+		{"offset": Vector2(-12.0, 0.0), "dir": Vector2.LEFT},
+		{"offset": Vector2(12.0, 0.0), "dir": Vector2.RIGHT},
+	]
+	var best := {}
+	var best_dist := INF
+	for probe in probes:
+		var from: Vector2 = global_position + probe["offset"]
+		var to: Vector2 = from + probe["dir"] * MAGNET_SNAP_RANGE
+		var query := PhysicsRayQueryParameters2D.create(from, to, 0x7FFFFFFF)
+		query.exclude = [self]
+		var result := get_world_2d().direct_space_state.intersect_ray(query)
+		if result.is_empty():
+			continue
+		var dist: float = from.distance_to(result["position"])
+		if dist < best_dist:
+			best_dist = dist
+			best = result
+	return best
+
+func _apply_jetpack_thrust(active: bool, has_jetpack: bool, up_held: bool, down_held: bool, delta: float) -> bool:
+	if not has_jetpack or not active:
 		_jetpack_hold_time = 0.0
 		_jetpack_sfx_armed = false
-	return false
+		return false
+
+	var thrust_dir := 0.0
+	if up_held:
+		thrust_dir -= 1.0
+	if down_held:
+		thrust_dir += 1.0
+
+	if is_zero_approx(thrust_dir) or _get_fuel() <= 0.0:
+		_jetpack_hold_time = 0.0
+		_jetpack_sfx_armed = false
+		return false
+
+	_jetpack_hold_time += delta
+	velocity.y += thrust_dir * JETPACK_THRUST * delta
+	_drain_fuel(JETPACK_FUEL_DRAIN * delta)
+	if not _jetpack_sfx_armed:
+		_play_jetpack_sfx()
+		_jetpack_sfx_armed = true
+	return true
 
 func _apply_vertical_move(jump_pressed: bool, grounded: bool, has_jetpack: bool, thrusting: bool, delta: float) -> void:
 	if jump_pressed and grounded:
@@ -639,6 +798,66 @@ func _has_equipment(item: String) -> bool:
 	var rm := get_node_or_null("/root/RunManager")
 	return rm.has_equipment(item) if rm and rm.has_method("has_equipment") else false
 
+# Tap a slot key (1-6) to activate that item; hold it to drop the item at the
+# player's feet as a pickup other rooms' logic can re-collect.
+func _update_equipment_hotkeys(delta: float) -> void:
+	for i in range(1, EQUIPMENT_SLOT_COUNT + 1):
+		var action := "equipment_%d" % i
+		if not InputMap.has_action(action):
+			continue
+		var idx := i - 1
+		if Input.is_action_just_pressed(action):
+			_eq_hold_time[idx] = 0.0
+			_eq_hold_consumed[idx] = false
+		elif Input.is_action_pressed(action):
+			_eq_hold_time[idx] += delta
+			if not _eq_hold_consumed[idx] and _eq_hold_time[idx] >= EQUIPMENT_DROP_HOLD_SECONDS:
+				_eq_hold_consumed[idx] = true
+				_drop_equipment_slot(i)
+		elif Input.is_action_just_released(action):
+			if not _eq_hold_consumed[idx]:
+				_activate_equipment_slot(i)
+			_eq_hold_time[idx] = 0.0
+			_eq_hold_consumed[idx] = false
+
+func _drop_equipment_slot(slot: int) -> void:
+	var rm := get_node_or_null("/root/RunManager")
+	if rm == null or not rm.has_method("get_equipment_list") or not rm.has_method("remove_equipment"):
+		return
+	var equip_list: Array = rm.get_equipment_list()
+	var idx := slot - 1
+	if idx < 0 or idx >= equip_list.size():
+		return
+	var item_id: String = str(equip_list[idx])
+	rm.remove_equipment(item_id)
+	# Dropping active gear also shuts it off
+	match item_id:
+		"magnetic_boots":
+			_mag_active = false
+			_mag_attached = false
+			body_sprite.rotation = 0.0
+		"jetpack":
+			_jetpack_active = false
+		"visibility_cloak":
+			_cloak_active = false
+			_update_cloak_visuals()
+	var pickup := EQUIPMENT_PICKUP_SCENE.instantiate()
+	if pickup.has_method("configure"):
+		pickup.configure({"item_id": item_id, "display_name": item_id.replace("_", " ")})
+	pickup.global_position = global_position
+	# Grace period so the drop doesn't instantly re-collect under the player's feet
+	pickup.set_deferred("monitoring", false)
+	get_parent().add_child(pickup)
+	var re_arm := get_tree().create_timer(DROPPED_PICKUP_GRACE_SECONDS)
+	re_arm.timeout.connect(func() -> void:
+		if is_instance_valid(pickup):
+			pickup.set_deferred("monitoring", true))
+	if pickup.has_signal("picked_up"):
+		pickup.picked_up.connect(func(picked_id: String) -> void:
+			var run_mgr := get_node_or_null("/root/RunManager")
+			if run_mgr and run_mgr.has_method("grant_equipment"):
+				run_mgr.grant_equipment(picked_id))
+
 # Activate equipment by slot number (1-based). Maps slot to named equipment actions.
 func _activate_equipment_slot(slot: int) -> void:
 	var rm := get_node_or_null("/root/RunManager")
@@ -652,17 +871,24 @@ func _activate_equipment_slot(slot: int) -> void:
 	match item_id:
 		"magnetic_boots":
 			_mag_active = not _mag_active
+			if not _mag_active:
+				_mag_attached = false
+				body_sprite.rotation = 0.0
 		"grappling_hook":
 			_begin_grapple_aim()
 		"laser_pistol":
 			_fire_laser(facing_dir)
+		"visibility_cloak":
+			# Passive ability; selection just refreshes the visual state.
+			_cloak_active = _get_battery() > 0.0
+			_update_cloak_visuals()
 		_:
 			pass  # future equipment types handled here
 
 # ── Animation ─────────────────────────────────────────────────────────────────
 
-func _update_animation(h: float) -> void:
-	if not is_on_floor():
+func _update_animation(h: float, grounded_like: bool) -> void:
+	if not grounded_like:
 		_play_animation("jump")
 	elif h != 0.0:
 		_play_animation("walk")
@@ -672,6 +898,12 @@ func _update_animation(h: float) -> void:
 func _play_animation(anim: StringName) -> void:
 	if body_sprite.animation != anim:
 		body_sprite.play(anim)
+
+func _update_cloak_visuals() -> void:
+	if not body_sprite:
+		return
+	var active := _cloak_active and _has_equipment("visibility_cloak") and _get_battery() > 0.0
+	body_sprite.modulate = Color(1.0, 1.0, 1.0, 0.38 if active else 1.0)
 
 # ── Audio ─────────────────────────────────────────────────────────────────────
 

@@ -269,6 +269,61 @@ func has_equipment(item_id: String) -> bool:
 	var equipment: Array = active_run.get("equipment", [])
 	return equipment.has(item_id)
 
+# Owned equipment in pickup order — slot N (1-based) is equip_list[N-1].
+# Backs both the equipment_1..6 hotkeys and the HUD quick-slot display.
+func get_equipment_list() -> Array:
+	if active_run.is_empty():
+		return []
+	return active_run.get("equipment", [])
+
+func remove_equipment(item_id: String, should_save: bool = true) -> void:
+	if item_id.is_empty() or active_run.is_empty():
+		return
+	var equipment: Array = active_run.get("equipment", [])
+	if not equipment.has(item_id):
+		return
+	equipment.erase(item_id)
+	active_run["equipment"] = equipment
+	if item_id == "jetpack":
+		# Mirror grant_equipment's capacity bump in reverse
+		var upgrades := maxi(int(active_run.get("jetpack_upgrades", 1)) - 1, 0)
+		active_run["jetpack_upgrades"] = upgrades
+		var capacity := BASE_FUEL_CAPACITY + maxf(float(upgrades) - 1.0, 0.0) * FUEL_CAPACITY_PER_JETPACK
+		if upgrades == 0:
+			capacity = 0.0
+		active_run["fuel_capacity_pct"] = capacity
+		active_run["fuel_pct"] = minf(float(active_run.get("fuel_pct", 0.0)), capacity)
+	active_run["updated_at"] = Time.get_unix_time_from_system()
+	if should_save:
+		save_current_run(str(active_run.get("run_name", "Run")))
+
+# ── Collected-ore persistence (per room, per run) ─────────────────────────────
+# Ore stays collected across room revisits and death resets, JSW-style.
+
+func mark_ore_collected(room_id: String, ore_key: String) -> void:
+	if room_id.is_empty() or ore_key.is_empty() or active_run.is_empty():
+		return
+	if not active_run.has("collected_ore_by_room") or not (active_run["collected_ore_by_room"] is Dictionary):
+		active_run["collected_ore_by_room"] = {}
+	var by_room: Dictionary = active_run["collected_ore_by_room"]
+	if not by_room.has(room_id) or not (by_room[room_id] is Array):
+		by_room[room_id] = []
+	var keys: Array = by_room[room_id]
+	if not keys.has(ore_key):
+		keys.append(ore_key)
+	by_room[room_id] = keys
+	active_run["collected_ore_by_room"] = by_room
+	active_run["updated_at"] = Time.get_unix_time_from_system()
+
+func get_collected_ore(room_id: String) -> Array:
+	if active_run.is_empty():
+		return []
+	var raw: Variant = active_run.get("collected_ore_by_room", {})
+	if not (raw is Dictionary):
+		return []
+	var by_room: Dictionary = raw
+	return by_room.get(room_id, [])
+
 func grant_security_card(card_id: String, should_save: bool = true) -> void:
 	if card_id.is_empty():
 		return

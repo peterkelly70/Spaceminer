@@ -12,6 +12,7 @@ signal activated(station_type: String)
 @onready var hold_bar: ProgressBar = $HoldBar if has_node("HoldBar") else null
 
 var _player_inside := false
+var _tracked_player: Node2D = null
 var _used_this_visit := false
 var _hold_progress := 0.0
 var _hold_seconds := 0.9
@@ -37,6 +38,8 @@ func _process(delta: float) -> void:
 	if not _player_inside:
 		_update_hold(0.0, false)
 		return
+	if hold_bar and _tracked_player:
+		hold_bar.global_position = _tracked_player.global_position + Vector2(-24.0, -58.0)
 	var pressed := _is_hold_action()
 	if pressed:
 		_update_hold(delta, true)
@@ -45,26 +48,22 @@ func _process(delta: float) -> void:
 
 func _is_hold_action(event: InputEvent = null) -> bool:
 	if event:
-		if InputMap.has_action("interact") and event.is_action_pressed("interact"):
-			return true
-		if event.is_action_pressed("ui_accept"):
-			return true
-		if event.is_action_pressed("ui_down"):
-			return true
-		return false
+		return InputMap.has_action("interact") and event.is_action_pressed("interact")
 	if InputMap.has_action("interact") and Input.is_action_pressed("interact"):
 		return true
-	return Input.is_action_pressed("ui_accept") or Input.is_action_pressed("ui_down")
+	return false
 
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("player") or body.is_in_group("prototype_player"):
 		_player_inside = true
+		_tracked_player = body as Node2D
 		_hold_progress = 0.0
 		_update_hold_bar()
 
 func _on_body_exited(body: Node) -> void:
 	if body.is_in_group("player") or body.is_in_group("prototype_player"):
 		_player_inside = false
+		_tracked_player = null
 		_hold_progress = 0.0
 		_update_hold_bar()
 

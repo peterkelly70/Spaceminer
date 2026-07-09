@@ -1,0 +1,116 @@
+{
+  "buildings": {
+    "mines": {
+      "display_name": "Mines",
+      "description": "Primary ore extraction.",
+      "position": {"x": 0, "y": 0},
+      "build_cost": {"ore": 10, "wood": 5},
+      "upgrade_cost": {"ore": 15, "wood": 8},
+      "max_workers": 5
+    },
+    "farms": {
+      "display_name": "Farms",
+      "description": "Food production.",
+      "position": {"x": 48, "y": 0},
+      "build_cost": {"ore": 8, "wood": 10},
+      "upgrade_cost": {"ore": 12, "wood": 14},
+      "max_workers": 5
+    },
+    "lumber": {
+      "display_name": "Lumber",
+      "description": "Timber production.",
+      "position": {"x": 96, "y": 0},
+      "build_cost": {"ore": 6, "wood": 8},
+      "upgrade_cost": {"ore": 9, "wood": 12},
+      "max_workers": 5
+    },
+    "quarry": {
+      "display_name": "Quarry",
+      "description": "Stone and ore digging.",
+      "position": {"x": 144, "y": 0},
+      "build_cost": {"ore": 12, "wood": 6},
+      "upgrade_cost": {"ore": 18, "wood": 8},
+      "max_workers": 5
+    },
+    "smithy": {
+      "display_name": "Smithy",
+      "description": "Metalworking and tools.",
+      "position": {"x": 192, "y": 0},
+      "build_cost": {"ore": 12, "wood": 4, "gold": 2},
+      "upgrade_cost": {"ore": 18, "wood": 6, "gold": 4},
+      "max_workers": 4
+    },
+    "carpenter": {
+      "display_name": "Carpenter",
+      "description": "Woodworking shop.",
+      "position": {"x": 240, "y": 0},
+      "build_cost": {"ore": 6, "wood": 12},
+      "upgrade_cost": {"ore": 9, "wood": 18},
+      "max_workers": 4
+    },
+    "stonemason": {
+      "display_name": "Stonemason",
+      "description": "Heavy construction.",
+      "position": {"x": 0, "y": 48},
+      "build_cost": {"ore": 14, "wood": 4},
+      "upgrade_cost": {"ore": 20, "wood": 6},
+      "max_workers": 4
+    },
+    "barracks": {
+      "display_name": "Barracks",
+      "description": "Trains warriors.",
+      "position": {"x": 48, "y": 48},
+      "build_cost": {"ore": 16, "wood": 10},
+      "upgrade_cost": {"ore": 24, "wood": 14},
+      "max_workers": 6
+    },
+    "brewery": {
+      "display_name": "Brewery",
+      "description": "Keeps morale up.",
+      "position": {"x": 96, "y": 48},
+      "build_cost": {"ore": 10, "wood": 8, "food": 6},
+      "upgrade_cost": {"ore": 14, "wood": 12, "food": 10},
+      "max_workers": 4
+    },
+    "alchemist": {
+      "display_name": "Alchemist",
+      "description": "Refines mana.",
+      "position": {"x": 144, "y": 48},
+      "build_cost": {"ore": 12, "gold": 6, "mana": 2},
+      "upgrade_cost": {"ore": 18, "gold": 10, "mana": 4},
+      "max_workers": 4
+    },
+    "runeforge": {
+      "display_name": "Runeforge",
+      "description": "Mystic crafting.",
+      "position": {"x": 192, "y": 48},
+      "build_cost": {"ore": 14, "gold": 8, "mana": 4},
+      "upgrade_cost": {"ore": 20, "gold": 12, "mana": 6},
+      "max_workers": 4
+    },
+    "ancestorshrine": {
+      "display_name": "Ancestor Shrine",
+      "description": "Lore and blessings.",
+      "position": {"x": 240, "y": 48},
+      "build_cost": {"wood": 12, "gold": 8, "lore": 2},
+      "upgrade_cost": {"wood": 18, "gold": 12, "lore": 4},
+      "max_workers": 3
+    },
+    "warhost": {
+      "display_name": "War Host",
+      "description": "Battle support.",
+      "position": {"x": 0, "y": 96},
+      "build_cost": {"ore": 18, "gold": 10, "warrior": 2},
+      "upgrade_cost": {"ore": 26, "gold": 16, "warrior": 4},
+      "max_workers": 6
+    },
+    "builbrakt": {
+      "display_name": "Builbrakt",
+      "description": "Crown production.",
+      "position": {"x": 48, "y": 96},
+      "build_cost": {"ore": 20, "gold": 12, "crown": 1},
+      "upgrade_cost": {"ore": 30, "gold": 18, "crown": 2},
+      "max_workers": 3
+    }
+  }
+}

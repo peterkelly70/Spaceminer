@@ -244,14 +244,14 @@ func _get_string_for_season_enum(season_enum: Season) -> String:
 		Season.FALL: return "FALL"
 		Season.WINTER: return "WINTER"
 		_: 
-			Logger.error(self, "Unknown season enum value: %s" % season_enum)
+			push_error("Unknown season enum value: %s" % season_enum)
 			return "UNKNOWN_SEASON"
 
 # Provides a BBCode description for a given season name (string)
 var season_defs: Dictionary = {}
 
 func _ready() -> void:
-	Logger.info(self, "Initializing...")
+	print("Initializing...")
 	
 	# [Fail Fast] Load all JSON data files
 	var load_success = true
@@ -267,12 +267,12 @@ func _ready() -> void:
 		var parsed = JSON.parse_string(content)
 		if parsed and parsed.has("buildings"):
 			building_data = parsed["buildings"]
-			Logger.info(self, "Loaded %d building definitions" % building_data.size())
+			print("Loaded %d building definitions" % building_data.size())
 		else:
-			Logger.error(self, "[Fail Fast] buildings.json missing 'buildings' key or failed to parse.")
+			push_error("[Fail Fast] buildings.json missing 'buildings' key or failed to parse.")
 			load_success = false
 	else:
-		Logger.error(self, "[Fail Fast] Could not open buildings.json!")
+		push_error("[Fail Fast] Could not open buildings.json!")
 		load_success = false
 	
 	# --- Workers ---
@@ -283,12 +283,12 @@ func _ready() -> void:
 		var parsed = JSON.parse_string(content)
 		if parsed and parsed.has("workers"):
 			worker_data = parsed["workers"]
-			Logger.info(self, "Loaded %d worker definitions" % worker_data.size())
+			print("Loaded %d worker definitions" % worker_data.size())
 		else:
-			Logger.error(self, "[Fail Fast] workers.json missing 'workers' key or failed to parse.")
+			push_error("[Fail Fast] workers.json missing 'workers' key or failed to parse.")
 			load_success = false
 	else:
-		Logger.error(self, "[Fail Fast] Could not open workers.json!")
+		push_error("[Fail Fast] Could not open workers.json!")
 		load_success = false
 	
 	# --- Seasons ---
@@ -300,12 +300,12 @@ func _ready() -> void:
 		if parsed and typeof(parsed) == TYPE_DICTIONARY:
 			season_data = parsed
 			season_defs = parsed # Also set season_defs to avoid duplicate loading
-			Logger.info(self, "Loaded %d season definitions" % season_data.size())
+			print("Loaded %d season definitions" % season_data.size())
 		else:
-			Logger.error(self, "[Fail Fast] seasons.json failed to parse.")
+			push_error("[Fail Fast] seasons.json failed to parse.")
 			load_success = false
 	else:
-		Logger.error(self, "[Fail Fast] Could not open seasons.json!")
+		push_error("[Fail Fast] Could not open seasons.json!")
 		load_success = false
 	
 	# --- Resources ---
@@ -316,21 +316,21 @@ func _ready() -> void:
 		var parsed = JSON.parse_string(content)
 		if typeof(parsed) == TYPE_ARRAY:
 			resource_list = parsed
-			Logger.info(self, "Loaded %d resource definitions" % resource_list.size())
+			print("Loaded %d resource definitions" % resource_list.size())
 		else:
-			Logger.error(self, "[Fail Fast] resources.json is not a valid array!")
+			push_error("[Fail Fast] resources.json is not a valid array!")
 			load_success = false
 	else:
-		Logger.error(self, "[Fail Fast] Could not open resources.json!")
+		push_error("[Fail Fast] Could not open resources.json!")
 		load_success = false
 	
 	# [Fail Loud] Report loading status
 	if load_success:
-		Logger.info(self, "All game data loaded successfully!")
+		print("All game data loaded successfully!")
 	else:
-		Logger.error(self, "[Fail Hard] One or more data files failed to load. Game may not function correctly!")
+		push_error("[Fail Hard] One or more data files failed to load. Game may not function correctly!")
 	
-	Logger.info(self, "Initialization complete")
+	print("Initialization complete")
 
 func get_season_description(season_name_str: String) -> String:
 	var key = season_name_str.to_upper()
@@ -368,11 +368,11 @@ func _reset_resources() -> void:
 		"warrior": 0
 	}
 	
-	Logger.info(self, "Resources reset to initial values")
+	print("Resources reset to initial values")
 
 # Start a new game
 func start_new_game() -> void:
-	Logger.info(self, "Starting new game")
+	print("Starting new game")
 	
 	# [Fail Fast] Reset game state
 	current_phase = GamePhase.ASSIGN_WORKERS
@@ -392,13 +392,13 @@ func start_new_game() -> void:
 	emit_signal("resources_updated", resources)
 	emit_signal("game_reset")
 	
-	Logger.info(self, "Game state initialized")
+	print("Game state initialized")
 	
 
 # Advance to the next phase
 func next_phase() -> void:
 	if not game_started:
-		Logger.warn(self, "Game not started, cannot advance phase.")
+		push_warning("Game not started, cannot advance phase.")
 		return
 		
 	var old_phase = current_phase
@@ -412,7 +412,7 @@ func next_phase() -> void:
 		# Advance to the next season/year
 		_advance_season()
 	
-	Logger.info(self, "Phase changed: %s -> %s" % [GamePhase.keys()[old_phase], GamePhase.keys()[current_phase]])
+	print("Phase changed: %s -> %s" % [GamePhase.keys()[old_phase], GamePhase.keys()[current_phase]])
 	
 	# Emit phase changed signal
 	emit_signal("phase_changed", current_phase)
@@ -432,7 +432,7 @@ func _advance_month() -> void:
 		_advance_season()
 	
 	# Log the month change
-	Logger.info(self, "Month changed: %d -> %d in %s" % [old_month, current_month, get_current_season_name()])
+	print("Month changed: %d -> %d in %s" % [old_month, current_month, get_current_season_name()])
 
 # Advance to the next season
 func _advance_season() -> void:
@@ -451,9 +451,9 @@ func _advance_season() -> void:
 	# Emit the turn started signal
 	emit_signal("turn_started", get_current_season_name(), current_year)
 	
-	Logger.info(self, "Season changed: %s -> %s" % [Season.keys()[old_season], Season.keys()[current_season]])
+	print("Season changed: %s -> %s" % [Season.keys()[old_season], Season.keys()[current_season]])
 	if current_year != old_year:
-		Logger.info(self, "Year changed: %d -> %d" % [old_year, current_year])
+		print("Year changed: %d -> %d" % [old_year, current_year])
 
 # Calculate resource generation based on worker assignments and tiers
 func _calculate_resource_generation() -> void:
@@ -848,7 +848,7 @@ You can implement this to open the appropriate dialog or trigger save logic.
 """
 func save_game_dialog() -> void:
 	# TODO: Implement save dialog logic for the current game state
-	Logger.info(self, "save_game_dialog() called - implement UI or logic here.")
+	print("save_game_dialog() called - implement UI or logic here.")
 	
 	# Emit the game_saved signal
 	emit_signal("game_saved")
@@ -859,7 +859,7 @@ You can implement this to open the appropriate dialog or trigger load logic.
 """
 func load_game_dialog() -> void:
 	# TODO: Implement load dialog logic for the current game state
-	Logger.info(self, "load_game_dialog() called - implement UI or logic here.")
+	print("load_game_dialog() called - implement UI or logic here.")
 	
 	# For now, just emit the signal to test the connection
 	# In a real implementation, this would be called after successfully loading game data
@@ -896,13 +896,13 @@ func next_turn() -> void:
 	# The sidebar will be updated via signals when the MainGameView is active
 	
 	# Emit signals for UI updates
-	Logger.debug(self, "Emitting turn_started with combined season: %s" % combined_season)
+	print("Emitting turn_started with combined season: %s" % combined_season)
 	emit_signal("turn_started", combined_season, current_year)
 	emit_signal("resources_updated", resources)
 	emit_signal("workers_updated")
 	emit_signal("update_sidebar")
 	
-	Logger.info(self, "Advanced to next turn: %d - %s (Month %d), Year %d" % [current_turn, get_current_season_name(), current_month, current_year])
+	print("Advanced to next turn: %d - %s (Month %d), Year %d" % [current_turn, get_current_season_name(), current_month, current_year])
 	
 	# Show the turn start popup
 	_show_turn_start_popup()
@@ -919,12 +919,12 @@ func _apply_seasonal_effects() -> void:
 		var food_consumed = int(total_population * 0.5) # Base consumption
 		resources["food"] = max(0, resources["food"] - food_consumed)
 		
-		Logger.info(self, "Winter food consumption: %d food consumed" % food_consumed)
+		print("Winter food consumption: %d food consumed" % food_consumed)
 		
 		# If food runs out, reduce morale
 		if resources["food"] <= 0:
 			military["morale"] = max(0, military["morale"] - 20)
-			Logger.warn(self, "Food shortage! Morale reduced to %d" % military["morale"])
+			push_warning("Food shortage! Morale reduced to %d" % military["morale"])
 	
 	# Apply any seasonal effects from the season data
 	if season_info.has("effects"):
@@ -942,7 +942,7 @@ func _apply_seasonal_effects() -> void:
 								var old_value = resource_generation[resource_name]
 								resource_generation[resource_name] = int(old_value * multiplier)
 								
-								Logger.info(self, "%s seasonal effect: %s generation %d -> %d (x%.1f)" % 
+								print("%s seasonal effect: %s generation %d -> %d (x%.1f)" % 
 									[season_name, resource_name, old_value, resource_generation[resource_name], multiplier])
 	
 	# Update UI
@@ -960,7 +960,7 @@ func _update_game_ui() -> void:
 	emit_signal("resources_updated", resources)
 	emit_signal("workers_updated")
 	
-	Logger.debug(self, "Emitted signals to update UI with new turn information: Season %s, Month %s, Year %d" % 
+	print("Emitted signals to update UI with new turn information: Season %s, Month %s, Year %d" % 
 		[season_name, month_name, current_year])
 
 # Show the initial turn popup when the game first loads
@@ -968,13 +968,13 @@ func _show_initial_turn_popup() -> void:
 	# [Fail Fast] Only proceed if the game is properly initialized
 	if not game_started:
 		game_started = true
-		Logger.info(self, "Setting game_started to true")
+		print("Setting game_started to true")
 	
 	# Wait a short time to ensure everything is fully initialized
 	await get_tree().create_timer(0.5).timeout
 	
 	# Show the turn start popup
-	Logger.info(self, "Showing initial turn popup")
+	print("Showing initial turn popup")
 	_show_turn_start_popup()
 
 # Show the turn start popup with current turn information

@@ -100,7 +100,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
-	if event.is_action_pressed("ui_up") or event.is_action_pressed("ui_down") or event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right"):
+	if _is_tab_focus_next(event):
+		_cycle_menu_focus(1)
+		get_viewport().set_input_as_handled()
+		return
+
+	if _is_tab_focus_prev(event):
+		_cycle_menu_focus(-1)
+		get_viewport().set_input_as_handled()
+		return
+
+	if _should_use_menu_focus_arrows() and (event.is_action_pressed("ui_up") or event.is_action_pressed("ui_down") or event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right")):
 		_move_menu_focus(event)
 		get_viewport().set_input_as_handled()
 		return
@@ -244,6 +254,7 @@ func _show_main_menu() -> void:
 		loadGamePanel.visible = false
 	_selected_save_path = ""
 	_refresh_save_list()
+	_configure_focus_chain(_current_focus_chain())
 	call_deferred("_focus_main_menu_default")
 
 func _show_new_game_page() -> void:
@@ -260,6 +271,7 @@ func _show_new_game_page() -> void:
 		seedInput.grab_focus()
 		seedInput.caret_column = seedInput.text.length()
 	_on_seed_text_changed(seedInput.text if seedInput else "")
+	_configure_focus_chain(_current_focus_chain())
 	call_deferred("_focus_new_game_default")
 
 func _expedition_name_for(seed_text: String) -> String:
@@ -281,6 +293,7 @@ func _show_load_page() -> void:
 		saveList.grab_focus()
 	else:
 		_set_load_detail_message("No save files found. Start a new run to create one.")
+	_configure_focus_chain(_current_focus_chain())
 	call_deferred("_focus_load_page_default")
 
 func _set_keyboard_focus_modes() -> void:
@@ -292,18 +305,25 @@ func _set_keyboard_focus_modes() -> void:
 	for button in focusable_buttons:
 		if button:
 			button.focus_mode = Control.FOCUS_ALL
+	if seedInput:
+		seedInput.focus_mode = Control.FOCUS_ALL
+	if saveList:
+		saveList.focus_mode = Control.FOCUS_ALL
 
 func _focus_main_menu_default() -> void:
+	_configure_focus_chain(_current_focus_chain())
 	if startBtn and startBtn.visible:
 		startBtn.grab_focus()
 
 func _focus_new_game_default() -> void:
+	_configure_focus_chain(_current_focus_chain())
 	if seedInput and seedInput.visible:
 		seedInput.grab_focus()
 	elif startNewBtn and startNewBtn.visible:
 		startNewBtn.grab_focus()
 
 func _focus_load_page_default() -> void:
+	_configure_focus_chain(_current_focus_chain())
 	if saveList and saveList.visible and saveList.item_count > 0:
 		saveList.grab_focus()
 	elif loadSelectedBtn and loadSelectedBtn.visible:
@@ -327,6 +347,62 @@ func _move_menu_focus(event: InputEvent) -> void:
 		return
 	index = (index + delta + controls.size()) % controls.size()
 	controls[index].grab_focus()
+
+func _configure_focus_chain(chain: Array[Control]) -> void:
+	if chain.is_empty():
+		return
+	var chain_size := chain.size()
+	for i in range(chain_size):
+		var current := chain[i]
+		if not current:
+			continue
+		var next_control := chain[(i + 1) % chain_size]
+		var prev_control := chain[(i - 1 + chain_size) % chain_size]
+		if next_control:
+			var next_path := current.get_path_to(next_control)
+			current.focus_next = next_path
+		if prev_control:
+			var prev_path := current.get_path_to(prev_control)
+			current.focus_previous = prev_path
+
+func _cycle_menu_focus(step: int) -> void:
+	var controls := _current_focus_chain()
+	if controls.is_empty():
+		return
+	var current := get_viewport().gui_get_focus_owner()
+	var index := controls.find(current)
+	if index < 0:
+		if step < 0:
+			controls[controls.size() - 1].grab_focus()
+		else:
+			controls[0].grab_focus()
+		return
+	index = (index + step + controls.size()) % controls.size()
+	controls[index].grab_focus()
+
+func _is_tab_focus_next(event: InputEvent) -> bool:
+	if event.is_action_pressed("ui_focus_next"):
+		return true
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_TAB and not event.shift_pressed:
+		return true
+	return false
+
+func _is_tab_focus_prev(event: InputEvent) -> bool:
+	if event.is_action_pressed("ui_focus_prev"):
+		return true
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_TAB and event.shift_pressed:
+		return true
+	return false
+
+func _should_use_menu_focus_arrows() -> bool:
+	var focus := get_viewport().gui_get_focus_owner()
+	if focus == null:
+		return true
+	if focus is LineEdit:
+		return false
+	if focus is ItemList:
+		return false
+	return true
 
 func _activate_focused_menu_item() -> void:
 	var focus := get_viewport().gui_get_focus_owner()
@@ -355,7 +431,7 @@ func _activate_focused_menu_item() -> void:
 	elif focus == loadBackBtn:
 		_on_back_to_main_pressed()
 	elif focus == seedInput:
-		seedInput.select_all()
+		_on_start_new_run_pressed()
 	elif focus == saveList and saveList.item_count > 0:
 		_on_load_selected_pressed()
 

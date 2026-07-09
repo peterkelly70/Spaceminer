@@ -13,7 +13,7 @@ const CONFIRM := {
 @onready var container = self  # Change if you want to add to a specific panel/child
 
 var scenes := {
-	"Splash": preload("res://scenes/states/Splash.tscn"),
+	"Splash": preload("res://scenes/cutscene/IntroNarrative.tscn"),
 	"MenuView": preload("res://scenes/states/MenuView.tscn"),
 	"SettingsView": preload("res://scenes/states/SettingsView.tscn"),
 	"CreditsView": preload("res://scenes/states/CreditsView.tscn"),
@@ -105,6 +105,12 @@ func _ready() -> void:
 	# Register notification themes and types
 	_register_notification_settings()
 
+	var hide_cutscenes: bool = SettingsManager.get_setting("gameplay", "hide_cutscenes", false)
+	if hide_cutscenes:
+		State_Manager.change_state(AppState.State.MAIN_MENU)
+	else:
+		State_Manager.change_state(AppState.State.SPLASH)
+
 	# Ensure this root does not block mouse input; delegate to scene children
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -132,15 +138,16 @@ func _ready() -> void:
 	
 	# CRITICAL: Only enable MenuView
 	if scene_nodes.has("MenuView"):
-		scene_nodes["MenuView"].visible = true
-		print("SHOW MENU EXCLUSIVELY")
+		scene_nodes["MenuView"].visible = hide_cutscenes
+		print("SHOW MENU EXCLUSIVELY" if hide_cutscenes else "SHOW INTRO EXCLUSIVELY")
 	else:
 		push_error("MenuView not found!")
 		
 	# CRITICAL: Force hide other scenes that may intercept input
 	if scene_nodes.has("Splash") and scene_nodes["Splash"] is Control:
-		scene_nodes["Splash"].visible = false
-		_hide_scene_ui(scene_nodes["Splash"]) # Also hide any Controls under CanvasLayers
+		scene_nodes["Splash"].visible = not hide_cutscenes
+		if hide_cutscenes:
+			_hide_scene_ui(scene_nodes["Splash"]) # Also hide any Controls under CanvasLayers
 
 	if scene_nodes.has("MainGameView") and scene_nodes["MainGameView"] is Control:
 		scene_nodes["MainGameView"].visible = false
@@ -163,13 +170,12 @@ func _ready() -> void:
 	else:
 		map_popup.visible = false
 
-	# CRITICAL: Trigger MAIN_MENU state so MenuController becomes interactive
+	# Trigger the visible startup flow after the controllers have registered.
+	# The intro scene will hand off to MAIN_MENU when the cutscene finishes.
 	await get_tree().process_frame
-	if State_Manager.get_current_state() == AppState.State.MAIN_MENU:
-		print("Transitioning to MAIN_MENU state")
+	if hide_cutscenes and State_Manager.get_current_state() != AppState.State.MAIN_MENU:
+		print("Cutscenes hidden; forcing MAIN_MENU state")
 		State_Manager.change_state(AppState.State.MAIN_MENU)
-	else:
-		print("Skipping MAIN_MENU reset; state already changed to %s" % AppState.State.keys()[State_Manager.get_current_state()])
 
 	print("Child tree state (post-visibility):")
 	for node in container.get_children():
@@ -192,7 +198,7 @@ func _open_pause_popup() -> void:
 	State_Manager.change_state(AppState.State.PAUSE)
 	if pause_popup:
 		pause_popup.visible = true
-		pause_popup.raise()
+		pause_popup.move_to_front()
 		if pause_popup.has_method("focus_default"):
 			pause_popup.call("focus_default")
 
@@ -231,7 +237,7 @@ func _open_map_popup() -> void:
 		if map_popup.has_method("setup"):
 			map_popup.call("setup", seed_text, room_name, campaign_name, room_count, manifest)
 		map_popup.visible = true
-		map_popup.raise()
+		map_popup.move_to_front()
 
 func _close_map_popup() -> void:
 	get_tree().paused = false
