@@ -62,8 +62,9 @@ func set_map_data(rooms: Dictionary, links: Array, current_room_id: String, seed
 	_seed_text = seed_text
 	_campaign_name = campaign_name
 	_room_count = room_count
-	_pan_pixels = Vector2.ZERO
-	_zoom = 1.0
+	# Deliberately does NOT reset _pan_pixels/_zoom — the MapPopup node is
+	# created once and reused for the whole session (see main.gd), so leaving
+	# these alone lets the player's zoom/pan position persist across opens.
 	queue_redraw()
 
 func _draw() -> void:
