@@ -220,8 +220,10 @@ func _on_delete_load_pressed() -> void:
 		return
 	if RunManager and RunManager.has_method("delete_save") and RunManager.delete_save(_selected_save_path):
 		_selected_save_path = ""
+		# _refresh_save_list() already selects the next remaining save (if any)
+		# and shows its summary, or an empty-list message otherwise — don't
+		# stomp on that with a generic "deleted" message.
 		_refresh_save_list()
-		_set_load_detail_message("Save deleted.")
 		if Audio_Manager:
 			Audio_Manager.play_sfx("click")
 		return
