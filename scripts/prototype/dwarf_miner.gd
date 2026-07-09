@@ -105,6 +105,11 @@ func _open() -> void:
 	var portrait := TextureRect.new()
 	portrait.texture = load("res://assets/images/dwarf.png")
 	portrait.custom_minimum_size = Vector2(120, 120)
+	# Without this, TextureRect's default EXPAND_KEEP_SIZE makes its real minimum
+	# size the source texture's full 256x256, ballooning the dialogue box past
+	# its border frame. IGNORE_SIZE lets custom_minimum_size actually govern the
+	# layout, so STRETCH_KEEP_ASPECT_CENTERED scales the portrait down to fit.
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	portrait.size_flags_vertical = Control.SIZE_SHRINK_CENTER
