@@ -14,7 +14,10 @@ const JUMP_HORIZONTAL_SPEED := 150.0
 
 # Jetpack
 const JETPACK_THRUST         := 1040.0  # counters gravity each physics tick
-const JETPACK_FUEL_DRAIN      := 8.0     # % per second while thrusting
+const JETPACK_FUEL_DRAIN      := 8.0     # % per second while thrusting vertically
+const JETPACK_LATERAL_FUEL_DRAIN := 4.0  # % per second while thrusting sideways (cheaper than vertical)
+const JETPACK_LATERAL_ACCEL  := 2200.0   # sideways accel while in jetpack mode
+const JETPACK_ACTIVATION_KICK := 90.0    # small upward hop when jetpack mode switches on
 const JETPACK_IGNITION_DELAY  := 0.08    # moonlander-style spool up
 
 # Grappling hook
@@ -59,6 +62,10 @@ var _cloak_active := false
 var _jetpack_sfx_armed := false
 var _jetpack_hold_time := 0.0
 var _jetpack_active := false
+# Toggled by the jetpack's equipment hotkey (Insert): flight mode stays on
+# until toggled off again, and while on, up/down/left/right all burn fuel
+# to move around (not just steer while already airborne from a jump).
+var _jetpack_mode := false
 var _jump_active := false
 var _jump_lock_dir := 1.0
 
@@ -90,6 +97,7 @@ var _jetpack_rig     : Node2D = null
 var _jetpack_pack    : Polygon2D = null
 var _jetpack_flame_l : Polygon2D = null
 var _jetpack_flame_r : Polygon2D = null
+var _jetpack_mode_light : Polygon2D = null  # red indicator lit while jetpack flight mode is on
 var _grapple_head    : Polygon2D = null
 var _grounded_last_frame := false
 var _fall_origin_y := 0.0
@@ -117,6 +125,7 @@ func respawn(at_position: Vector2) -> void:
 	_mag_surface_normal = Vector2.UP
 	_jetpack_hold_time = 0.0
 	_jetpack_active = false
+	_jetpack_mode = false
 	_jump_active = false
 	_jump_lock_dir = 1.0
 	rotation = 0.0
@@ -253,10 +262,14 @@ func _physics_process(delta: float) -> void:
 		_drop_through_platform()
 		jump_pressed = false
 
-	# Jetpack uses an airborne jump-press to arm, then WASD/arrow keys steer.
-	var thrusting := _apply_jetpack_thrust(_jetpack_active and not _climbing, has_jetpack, climb_up, climb_down, delta)
+	# Jetpack: either armed briefly by a jump press while airborne, or held in
+	# flight mode via its equipment hotkey (Insert) — in flight mode, all four
+	# directions burn fuel to move around, not just steer while falling.
+	var jetpack_engaged := (_jetpack_active or _jetpack_mode) and not _climbing
+	var thrusting := _apply_jetpack_thrust(jetpack_engaged, has_jetpack, climb_up, climb_down, h, delta)
 	if not has_jetpack or _get_fuel() <= 0.0:
 		_jetpack_active = false
+		_jetpack_mode = false
 	_update_jetpack_visuals(has_jetpack, thrusting)
 
 	# Grapple pull
@@ -275,7 +288,9 @@ func _physics_process(delta: float) -> void:
 		body_sprite.rotation = lerp_angle(body_sprite.rotation, 0.0, clampf(delta * MAGNET_ROTATE_SPEED, 0.0, 1.0))
 
 	if not boots_attached:
-		_apply_horizontal_move(h, grounded and not _climbing, thrusting, delta)
+		# Flight mode always steers like mid-air (smooth accel, no ground snap),
+		# even while still touching the ground, so it feels like actually flying.
+		_apply_horizontal_move(h, grounded and not _climbing and not _jetpack_mode, thrusting, delta)
 		if _climbing:
 			_apply_ladder_climb(ladder, h, jump_pressed, climb_up, climb_down, delta)
 		else:
@@ -428,7 +443,7 @@ func _probe_magnetic_surface() -> Dictionary:
 			best = result
 	return best
 
-func _apply_jetpack_thrust(active: bool, has_jetpack: bool, up_held: bool, down_held: bool, delta: float) -> bool:
+func _apply_jetpack_thrust(active: bool, has_jetpack: bool, up_held: bool, down_held: bool, h: float, delta: float) -> bool:
 	if not has_jetpack or not active:
 		_jetpack_hold_time = 0.0
 		_jetpack_sfx_armed = false
@@ -440,14 +455,23 @@ func _apply_jetpack_thrust(active: bool, has_jetpack: bool, up_held: bool, down_
 	if down_held:
 		thrust_dir += 1.0
 
-	if is_zero_approx(thrust_dir) or _get_fuel() <= 0.0:
+	var has_fuel := _get_fuel() > 0.0
+	var vertical_thrusting := not is_zero_approx(thrust_dir) and has_fuel
+	# Lateral movement only burns fuel in flight mode — a plain jump-armed
+	# hover still steers for free via normal air control.
+	var lateral_thrusting := _jetpack_mode and not is_zero_approx(h) and has_fuel
+
+	if not vertical_thrusting and not lateral_thrusting:
 		_jetpack_hold_time = 0.0
 		_jetpack_sfx_armed = false
 		return false
 
 	_jetpack_hold_time += delta
-	velocity.y += thrust_dir * JETPACK_THRUST * delta
-	_drain_fuel(JETPACK_FUEL_DRAIN * delta)
+	if vertical_thrusting:
+		velocity.y += thrust_dir * JETPACK_THRUST * delta
+		_drain_fuel(JETPACK_FUEL_DRAIN * delta)
+	if lateral_thrusting:
+		_drain_fuel(JETPACK_LATERAL_FUEL_DRAIN * delta)
 	if not _jetpack_sfx_armed:
 		_play_jetpack_sfx()
 		_jetpack_sfx_armed = true
@@ -710,6 +734,17 @@ func _ensure_fx_nodes() -> void:
 		_jetpack_flame_r.color = Color("#FF8A00")
 		_jetpack_flame_r.z_index = body_sprite.z_index - 1
 		_jetpack_rig.add_child(_jetpack_flame_r)
+	if not _jetpack_mode_light:
+		_jetpack_mode_light = Polygon2D.new()
+		_jetpack_mode_light.name = "ModeLight"
+		_jetpack_mode_light.polygon = PackedVector2Array([
+			Vector2(-1.5, -1.5), Vector2(1.5, -1.5), Vector2(1.5, 1.5), Vector2(-1.5, 1.5)
+		])
+		_jetpack_mode_light.color = Color("#FF1E2D")
+		_jetpack_mode_light.position = Vector2(0, -5)
+		_jetpack_mode_light.z_index = body_sprite.z_index
+		_jetpack_mode_light.visible = false
+		_jetpack_rig.add_child(_jetpack_mode_light)
 	if not _grapple_head:
 		_grapple_head = Polygon2D.new()
 		_grapple_head.name = "GrappleHead"
@@ -731,6 +766,11 @@ func _update_jetpack_visuals(has_jetpack: bool, thrusting: bool) -> void:
 	_jetpack_rig.position = Vector2(back_offset, -2.0)
 	if _jetpack_pack:
 		_jetpack_pack.visible = true
+	if _jetpack_mode_light:
+		_jetpack_mode_light.visible = _jetpack_mode
+		if _jetpack_mode:
+			var blink := 0.5 + 0.5 * sin(Time.get_ticks_msec() * 0.01)
+			_jetpack_mode_light.modulate.a = 0.5 + blink * 0.5
 	if _jetpack_flame_l:
 		_jetpack_flame_l.visible = thrusting
 	if _jetpack_flame_r:
@@ -857,6 +897,7 @@ func _drop_equipment_slot(slot: int) -> void:
 			body_sprite.rotation = 0.0
 		"jetpack":
 			_jetpack_active = false
+			_jetpack_mode = false
 		"visibility_cloak":
 			_cloak_active = false
 			_update_cloak_visuals()
@@ -886,6 +927,17 @@ func _activate_equipment_slot(slot: int) -> void:
 	if not _has_equipment(item_id):
 		return
 	match item_id:
+		"jetpack":
+			# Toggle flight mode on/off; a small hop makes the switch feel
+			# immediate even if the player was standing still.
+			if _get_fuel() <= 0.0 and not _jetpack_mode:
+				return
+			_jetpack_mode = not _jetpack_mode
+			if _jetpack_mode:
+				velocity.y -= JETPACK_ACTIVATION_KICK
+				_play_jetpack_sfx()
+			else:
+				_jetpack_active = false
 		"magnetic_boots":
 			_mag_active = not _mag_active
 			if not _mag_active:
