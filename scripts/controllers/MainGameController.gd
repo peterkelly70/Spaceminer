@@ -337,10 +337,10 @@ func _refresh_card_grids() -> void:
 	_refresh_card_grid(upgrade_cards_grid, SUIT_UPGRADES, false)
 	_refresh_quest_slots()
 
-# Quick-slot hotbar mirroring equipment_1..4 — slot N shows whatever equipment
-# is in RunManager.get_equipment_list()[N-1] (pickup order), same list the
-# player's number-key hotkeys index into. Empty slots show the hotkey number;
-# it disappears once an item lands in that slot.
+# Quest-item slots — distinct from equipment. Equipment always lives in the
+# fixed-position SecurityCards/UpgradeCards grids (see _setup_card_grids);
+# this hotbar is reserved for actual quest items and must never mirror
+# equipment into it (that previously made gear like the jetpack show up here).
 func _setup_quest_slots() -> void:
 	if not quest_slots_grid:
 		return
@@ -355,34 +355,15 @@ func _setup_quest_slots() -> void:
 func _refresh_quest_slots() -> void:
 	if not quest_slots_grid:
 		return
-	var equipped: Array = []
-	if RunManager and RunManager.has_method("get_equipment_list"):
-		equipped = RunManager.get_equipment_list()
+	# No quest-item inventory system exists yet — keep slots as empty
+	# numbered placeholders rather than falling back to showing equipment.
 	var index := 0
 	for child in quest_slots_grid.get_children():
 		if index >= QUEST_SLOT_COUNT:
 			break
-		if index < equipped.size():
-			var item_id := str(equipped[index])
-			var info := _find_upgrade_info(item_id)
-			if child.has_method("configure"):
-				child.call(
-					"configure",
-					item_id,
-					str(info.get("icon_path", "")),
-					info.get("accent_color", Color("#00D7FF")),
-					true,
-					index + 1
-				)
-		elif child.has_method("configure"):
+		if child.has_method("configure"):
 			child.call("configure", "", "", Color("#00D7FF"), false, index + 1)
 		index += 1
-
-func _find_upgrade_info(item_id: String) -> Dictionary:
-	for entry in SUIT_UPGRADES:
-		if str(entry.get("item_id", "")) == item_id:
-			return entry
-	return {}
 
 func _refresh_card_grid(grid: GridContainer, entries: Array, is_security: bool) -> void:
 	if not grid:
