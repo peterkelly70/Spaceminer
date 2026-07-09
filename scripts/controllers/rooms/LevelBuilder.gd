@@ -245,15 +245,7 @@ func _build_enemies(data: Dictionary) -> void:
 		var item: Dictionary = item_variant
 		if _item_overlaps_door(item, door_rects):
 			continue
-		var node := _add_instance(root, item)
-		if node and item.has("props"):
-			var props: Dictionary = item["props"]
-			for key in props.keys():
-				var value = props[key]
-				if value is Array:
-					node.set(key, PackedVector2Array(_array_to_vector2_array(value)))
-				else:
-					node.set(key, value)
+		_add_instance(root, item)  # props (incl. patrol paths) applied inside
 
 func _build_mechanisms(data: Dictionary) -> void:
 	var room := get_parent()
@@ -281,11 +273,7 @@ func _build_teleporters(data: Dictionary) -> void:
 	_clear_node_children(root)
 	for item_variant in data.get("teleporters", []):
 		var item: Dictionary = item_variant
-		var node := _add_instance(root, item)
-		if node and item.has("props"):
-			var props: Dictionary = item["props"]
-			for key in props.keys():
-				node.set(str(key), props[key])
+		_add_instance(root, item)  # props applied inside
 
 func _build_exits(data: Dictionary) -> void:
 	var room := get_parent()
@@ -352,13 +340,21 @@ func _add_instance(parent: Node, item: Dictionary) -> Node2D:
 		instance.position = item_position
 	if item.has("scale"):
 		instance.scale = _as_vec2(item.get("scale", [1.0, 1.0]))
+	# Plain (non-configure) props must be set BEFORE add_child: add_child fires
+	# _ready() immediately, and any visual setup a script does there (e.g.
+	# ResupplyStation picking its icon/label from station_type) would run
+	# against defaults if props were only applied afterward.
+	if not instance.has_method("configure") and item.has("props"):
+		var pre_props: Dictionary = item.get("props", {})
+		for pre_key in pre_props.keys():
+			var pre_value = pre_props[pre_key]
+			if pre_value is Array:
+				instance.set(str(pre_key), PackedVector2Array(_array_to_vector2_array(pre_value)))
+			else:
+				instance.set(str(pre_key), pre_value)
 	parent.add_child(instance)
 	if instance.has_method("configure"):
 		instance.call("configure", item)
-	elif item.has("props"):
-		var props: Dictionary = item.get("props", {})
-		for key in props.keys():
-			instance.set(str(key), props[key])
 	return instance
 
 func _clear_node_children(node: Node) -> void:

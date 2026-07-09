@@ -275,6 +275,16 @@ func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array
 	var solids: Array = []
 	solids.append({"name": "Floor", "kind": "floor", "anchor": "top", "position": [0, FLOOR_Y_CTR - PLAT_THICK], "size": [660, 16]})
 	_add_walls(solids, exits)
+	_add_door_walls(solids, exits)
+	# Landing ledges for any north/east/west door — without these, doors on
+	# those walls have nothing to stand on and are unreachable.
+	for landing in _exit_landings(exits):
+		solids.append({
+			"name": str(landing.get("name", "ExitLanding")), "kind": "platform", "anchor": "top",
+			"position": [float(landing["cx"]), float(landing["top_y"])],
+			"size": [float(landing["width"]), float(PLAT_THICK)], "one_way": true,
+		})
+	var ladders := _exit_ladders(exits)
 	# Three platform pedestals for the stations
 	var pedestal_xs := [-160, 0, 160]
 	var pedestal_cy := float(FLOOR_Y_CTR - PLAT_THICK)   # body.y=144, surface at 128
@@ -284,6 +294,8 @@ func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array
 			"position": [float(pedestal_xs[i]), pedestal_cy],
 			"size": [64.0, float(PLAT_THICK)],
 		})
+	# station_type drives the icon/color the station displays (see
+	# resupply_station.gd) so air/fuel/battery are visually distinct.
 	var station_types := ["air", "fuel", "battery"]
 	var station_labels := ["AIR", "FUEL", "BATT"]
 	var pickups: Array = []
@@ -300,6 +312,7 @@ func generate_resupply(rng: RandomNumberGenerator, room_index: int, exits: Array
 	return {
 		"spawn":        [-260, 128],
 		"solids":       solids,
+		"ladders":      ladders,
 		"decor":        [],
 		"collectibles": pickups,
 		"hazards":      [],
