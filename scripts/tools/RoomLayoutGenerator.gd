@@ -1175,14 +1175,14 @@ func _build_tiles(platfs: Array, room_index: int, floor_gaps: Array = []) -> Arr
 	# so shape top (walkable surface) = 160-16 = 144 = 9×16 → tile row 9.
 	var floor_tile_y  := (FLOOR_Y_CTR - PLAT_THICK) / TILE_SZ   # = 9
 
-	# Floor strip — full room width wall-to-wall, minus any carved chasms
+	# Floor strip — full room width wall-to-wall. The floor collision is solid
+	# everywhere (see _build_solids — floor_gaps get spikes instead of real
+	# holes), so the tile art must also cover the full width; skipping tiles
+	# over floor_gaps here left the walkable floor rendered as a black void.
 	var fc: Array = []
 	var wall_tx := WALL_X / TILE_SZ   # = 22
 	for i in range(wall_tx * 2):
 		var tx := i - wall_tx
-		var world_cx := float(tx) * TILE_SZ + TILE_SZ * 0.5
-		if _in_gaps(world_cx, floor_gaps):
-			continue
 		fc.append({"x": tx, "y": floor_tile_y, "tile": [175, 176, 177, 178][i % 4]})
 	layers.append({"name": "FloorTiles", "modulate": floor_col, "z_index": 1, "cells": fc})
 

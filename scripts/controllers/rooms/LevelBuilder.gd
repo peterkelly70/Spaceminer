@@ -222,8 +222,14 @@ func _build_hazards(data: Dictionary) -> void:
 	if not root:
 		return
 	_clear_node_children(root)
+	# Hazards are stationary, so one landing on a door's approach can block
+	# entry outright (worse than a roaming enemy near the same spot) — use a
+	# wider exclusion margin than enemies get.
+	var door_rects := _collect_door_rects(data, 32.0, 28.0)
 	for item_variant in data.get("hazards", []):
 		var item: Dictionary = item_variant
+		if _item_overlaps_door(item, door_rects):
+			continue
 		_add_instance(root, item)
 
 func _build_enemies(data: Dictionary) -> void:
@@ -237,7 +243,7 @@ func _build_enemies(data: Dictionary) -> void:
 	var door_rects := _collect_door_rects(data)
 	for item_variant in data.get("enemies", []):
 		var item: Dictionary = item_variant
-		if _enemy_overlaps_door(item, door_rects):
+		if _item_overlaps_door(item, door_rects):
 			continue
 		var node := _add_instance(root, item)
 		if node and item.has("props"):
@@ -300,7 +306,7 @@ func _build_exits(data: Dictionary) -> void:
 		var item: Dictionary = item_variant
 		_add_instance(root, item)
 
-func _collect_door_rects(data: Dictionary) -> Array:
+func _collect_door_rects(data: Dictionary, margin_x: float = 16.0, margin_y: float = 12.0) -> Array:
 	var door_rects: Array = []
 	var entries: Array = []
 	if data.has("exits"):
@@ -311,13 +317,13 @@ func _collect_door_rects(data: Dictionary) -> Array:
 		var item: Dictionary = item_variant
 		var pos := _as_vec2(item.get("position", [0, 0]))
 		var size := _door_size_for_exit(item)
-		# Expand slightly so enemies do not sit directly in the door opening or
-		# on the tiny landing just outside it.
-		var rect := Rect2(pos - (size * 0.5) - Vector2(16, 12), size + Vector2(32, 24))
+		# Expand slightly so nothing sits directly in the door opening or on
+		# the tiny landing just outside it.
+		var rect := Rect2(pos - (size * 0.5) - Vector2(margin_x, margin_y), size + Vector2(margin_x, margin_y) * 2.0)
 		door_rects.append(rect)
 	return door_rects
 
-func _enemy_overlaps_door(item: Dictionary, door_rects: Array) -> bool:
+func _item_overlaps_door(item: Dictionary, door_rects: Array) -> bool:
 	if door_rects.is_empty():
 		return false
 	var pos := _as_vec2(item.get("position", [0, 0]))
