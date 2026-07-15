@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://rn1gqpd021ko"]
+[gd_scene format=3 uid="uid://rn1gqpd021ko"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvh8rgt" path="res://assets/themes/default_theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://dnkql3lvj4elh" path="res://scripts/controllers/CreditsController.gd" id="2_controller"]
-[ext_resource type="Texture2D" uid="uid://c7ewlyefpihge" path="res://assets/images/background.png" id="3_bg"]
 [ext_resource type="Texture2D" uid="uid://dei22kos26si2" path="res://assets/images/menu.png" id="4_menu"]
 [ext_resource type="Texture2D" uid="uid://ce52rxcwcjv0o" path="res://assets/images/logo.png" id="5_pd27w"]
 
@@ -22,18 +21,6 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="ButtonStyle_Credits_Hover"]
-bg_color = Color(0.18, 0.18, 0.18, 0.9)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.8, 0.3, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [sub_resource type="StyleBoxFlat" id="ButtonStyle_Credits_Pressed"]
 bg_color = Color(0.08, 0.08, 0.08, 1)
 border_width_left = 2
@@ -46,7 +33,19 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="CreditsView" type="Control"]
+[sub_resource type="StyleBoxFlat" id="ButtonStyle_Credits_Hover"]
+bg_color = Color(0.18, 0.18, 0.18, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.3, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="CreditsView" type="Control" unique_id=976470997]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,19 +54,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_controller")
 
-[node name="Background" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_bg")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="TitleBackground" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=747857749]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -79,7 +66,19 @@ texture = ExtResource("4_menu")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="MainContainer" type="VBoxContainer" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1419428276]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.096204735, 0.09620475, 0.096204735, 1)
+
+[node name="MainContainer" type="VBoxContainer" parent="." unique_id=757277904]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -89,13 +88,13 @@ grow_vertical = 2
 theme = ExtResource("1_theme")
 theme_override_constants/separation = 20
 
-[node name="Header" type="PanelContainer" parent="MainContainer"]
+[node name="Header" type="PanelContainer" parent="MainContainer" unique_id=818938128]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme = ExtResource("1_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_6t7yc")
 
-[node name="HeaderLabel" type="Label" parent="MainContainer/Header"]
+[node name="HeaderLabel" type="Label" parent="MainContainer/Header" unique_id=33669985]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -106,102 +105,102 @@ text = "Credits"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer" unique_id=477398939]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CreditsContainer" type="VBoxContainer" parent="MainContainer/ScrollContainer"]
+[node name="CreditsContainer" type="VBoxContainer" parent="MainContainer/ScrollContainer" unique_id=1938177574]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 20
 
-[node name="CreditsMargin" type="MarginContainer" parent="MainContainer/ScrollContainer/CreditsContainer"]
+[node name="CreditsMargin" type="MarginContainer" parent="MainContainer/ScrollContainer/CreditsContainer" unique_id=607275591]
 layout_mode = 2
 theme_override_constants/margin_left = 100
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 20
 
-[node name="CreditsContent" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin"]
+[node name="CreditsContent" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin" unique_id=1970577550]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="GameTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+[node name="GameTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent" unique_id=1008773908]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
 theme_override_font_sizes/font_size = 32
 text = "Groot"
 horizontal_alignment = 1
 
-[node name="GameSubtitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+[node name="GameSubtitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent" unique_id=1378284300]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 24
 text = "A Godot 4 Game"
 horizontal_alignment = 1
 
-[node name="TeamSection" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+[node name="TeamSection" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent" unique_id=1540679927]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SectionTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+[node name="SectionTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection" unique_id=42526024]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
 theme_override_font_sizes/font_size = 28
 text = "Development Team"
 horizontal_alignment = 1
 
-[node name="TeamMember1" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+[node name="TeamMember1" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection" unique_id=1641020616]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Lead Developer: Your Name"
 horizontal_alignment = 1
 
-[node name="TeamMember2" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+[node name="TeamMember2" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection" unique_id=825895053]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Artist: Your Name"
 horizontal_alignment = 1
 
-[node name="TeamMember3" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection"]
+[node name="TeamMember3" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/TeamSection" unique_id=958502384]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Designer: Your Name"
 horizontal_alignment = 1
 
-[node name="MusicSection" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+[node name="MusicSection" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent" unique_id=1227163491]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="MusicTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+[node name="MusicTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection" unique_id=48478196]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
 theme_override_font_sizes/font_size = 28
 text = "Music"
 horizontal_alignment = 1
 
-[node name="MusicCredit" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+[node name="MusicCredit" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection" unique_id=191114359]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 20
 text = "Dark Synthwave Collection Vol. 1"
 horizontal_alignment = 1
 
-[node name="MusicArtist" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+[node name="MusicArtist" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection" unique_id=753214759]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 18
 text = "by Karl Casey @ White Bat Audio"
 horizontal_alignment = 1
 
-[node name="MusicLink" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+[node name="MusicLink" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection" unique_id=999857677]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 16
 text = "https://www.youtube.com/c/KARLCASEY"
 horizontal_alignment = 1
 
-[node name="MusicTracks" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection"]
+[node name="MusicTracks" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/MusicSection" unique_id=1301602878]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 14
@@ -211,68 +210,68 @@ Outrun the Reaper, Answer to the Black Orb, Subterranean Terror"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="SpecialThanks" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+[node name="SpecialThanks" type="VBoxContainer" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent" unique_id=1839780633]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SpecialThanksTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+[node name="SpecialThanksTitle" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks" unique_id=451186239]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.878, 0.824, 0.6, 1)
 theme_override_font_sizes/font_size = 24
 text = "Special Thanks"
 horizontal_alignment = 1
 
-[node name="SpecialThanks1" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+[node name="SpecialThanks1" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks" unique_id=486817136]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Karl Casey for the amazing synthwave soundtrack"
 horizontal_alignment = 1
 
-[node name="SpecialThanks2" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+[node name="SpecialThanks2" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks" unique_id=872371988]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Godot Engine Community"
 horizontal_alignment = 1
 
-[node name="SpecialThanks3" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks"]
+[node name="SpecialThanks3" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent/SpecialThanks" unique_id=427635049]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "All Our Playtesters"
 horizontal_alignment = 1
 
-[node name="Copyright" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent"]
+[node name="Copyright" type="Label" parent="MainContainer/ScrollContainer/CreditsContainer/CreditsMargin/CreditsContent" unique_id=1950291335]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 14
 text = " 2025 Your Company. All rights reserved."
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer" unique_id=1281607878]
 layout_mode = 2
 theme_override_constants/margin_bottom = 20
 
-[node name="Footer" type="HBoxContainer" parent="MainContainer/MarginContainer"]
+[node name="Footer" type="HBoxContainer" parent="MainContainer/MarginContainer" unique_id=817206815]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 20
 
-[node name="BackButton" type="Button" parent="MainContainer/MarginContainer/Footer"]
+[node name="BackButton" type="Button" parent="MainContainer/MarginContainer/Footer" unique_id=549431625]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 theme = ExtResource("1_theme")
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
 theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-theme_override_styles/focus = SubResource("ButtonStyle_Credits")
-theme_override_styles/hover = SubResource("ButtonStyle_Credits_Hover")
-theme_override_styles/pressed = SubResource("ButtonStyle_Credits_Pressed")
 theme_override_styles/normal = SubResource("ButtonStyle_Credits")
+theme_override_styles/pressed = SubResource("ButtonStyle_Credits_Pressed")
+theme_override_styles/hover = SubResource("ButtonStyle_Credits_Hover")
+theme_override_styles/focus = SubResource("ButtonStyle_Credits")
 text = "Back "
 
-[node name="Logo" type="Sprite2D" parent="."]
+[node name="Logo" type="Sprite2D" parent="." unique_id=104575849]
 position = Vector2(1723, 144)
 scale = Vector2(0.276367, 0.22168)
 texture = ExtResource("5_pd27w")

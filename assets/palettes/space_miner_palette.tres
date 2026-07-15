@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SpaceMinerPalette" load_steps=2 format=3 uid="uid://g5xgy6yl5tqy"]
+
+[ext_resource type="Script" path="res://scripts/resources/ColorPalette.gd" id="1_palette_script"]
+
+[resource]
+script = ExtResource("1_palette_script")
+names = PackedStringArray("Void Black", "Deep Space Blue", "Panel Charcoal", "Metal Grey", "Bright White", "CPC Cyan", "Deep Blue", "Miner Yellow", "Hazard Orange", "Alarm Red", "Alien Green", "Toxic Lime", "Power Purple", "Pickup Magenta", "Chroma Magenta")
+colors = PackedColorArray(0, 0, 0, 1, 0.0274510, 0.0666667, 0.1215686, 1, 0.1058824, 0.1058824, 0.1411765, 1, 0.5490196, 0.5490196, 0.5490196, 1, 0.9568627, 0.9568627, 0.9568627, 1, 0, 0.8431373, 1, 1, 0.1137255, 0.3098039, 1, 1, 1, 0.8235294, 0.1019608, 1, 1, 0.5411765, 0, 1, 1, 0.1176471, 0.1764706, 1, 0, 0.8392157, 0.4196078, 1, 0.5490196, 1, 0, 1, 0.3529412, 0.1764706, 1, 1, 1, 0, 0.7843137, 1, 1, 0, 1, 1)

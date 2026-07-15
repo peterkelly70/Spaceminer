@@ -1,27 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://bi0takv8mg1qh"]
+[gd_scene format=3 uid="uid://bi0takv8mg1qh"]
 
 [ext_resource type="Script" uid="uid://co4py3i5c6upu" path="res://scripts/controllers/SettingsController.gd" id="1_cqwxl"]
 [ext_resource type="Texture2D" uid="uid://dei22kos26si2" path="res://assets/images/menu.png" id="2_gl1k8"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvh8rgt" path="res://assets/themes/default_theme.tres" id="2_qh4jj"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gwgb2"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_color = Color(0.8, 0.8, 0.8, 0)
+[ext_resource type="Theme" uid="uid://bfmke1es4ewfx" path="res://assets/themes/retro_theme.tres" id="4_kf5ho"]
+[ext_resource type="FontFile" uid="uid://dn0qt6o7atljn" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="5_75h8d"]
+[ext_resource type="Script" uid="uid://ceagivkld8e2a" path="res://scripts/ui/ControlsTab.gd" id="6_controls_tab"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_panel"]
 content_margin_left = 10.0
 content_margin_top = 10.0
 content_margin_right = 10.0
 content_margin_bottom = 10.0
-bg_color = Color(0.0627451, 0.0627451, 0.180392, 0)
+bg_color = Color(0.02, 0.02, 0.08, 0.95)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_unselected"]
 content_margin_left = 30.0
 content_margin_right = 30.0
-bg_color = Color(0.1, 0.2, 0.3, 0.9)
+bg_color = Color(0.08, 0.12, 0.18, 0.7)
 border_width_top = 2
 border_width_right = 2
-border_color = Color(0.878431, 0.7, 0.3, 1)
+border_color = Color(0.878431, 0.7, 0.3, 0.7)
 corner_radius_top_right = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hovered"]
@@ -33,16 +32,16 @@ border_width_right = 2
 border_color = Color(1, 0.9, 0.4, 1)
 corner_radius_top_right = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_unselected"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
 content_margin_left = 30.0
 content_margin_right = 30.0
-bg_color = Color(0.08, 0.12, 0.18, 0.7)
+bg_color = Color(0.1, 0.2, 0.3, 0.9)
 border_width_top = 2
 border_width_right = 2
-border_color = Color(0.878431, 0.7, 0.3, 0.7)
+border_color = Color(0.878431, 0.7, 0.3, 1)
 corner_radius_top_right = 4
 
-[node name="SettingsView" type="Control"]
+[node name="SettingsView" type="Control" unique_id=569948967]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,181 +50,159 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cqwxl")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=52370354]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -23.0
-offset_right = 8.0
-offset_bottom = -23.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("2_gl1k8")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="MainContainer" type="VBoxContainer" parent="."]
+[node name="MainContainer" type="VBoxContainer" parent="." unique_id=1070380912]
 layout_mode = 1
 anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -300.0
-offset_right = 962.0
-offset_bottom = -30.0
+offset_left = -882.0
+offset_top = 142.0
+offset_right = 887.0
+offset_bottom = -70.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 20
 
-[node name="TopSpacer" type="Control" parent="MainContainer"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-
-[node name="TitlePanel" type="Panel" parent="MainContainer"]
+[node name="TitlePanel" type="Panel" parent="MainContainer" unique_id=1139050521]
 custom_minimum_size = Vector2(200, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("2_qh4jj")
 
-[node name="Label" type="Label" parent="MainContainer/TitlePanel"]
+[node name="Label" type="Label" parent="MainContainer/TitlePanel" unique_id=1286295329]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_qh4jj")
-theme_override_font_sizes/font_size = 36
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 64
 text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="MarginContainer" parent="MainContainer"]
+[node name="CenterContainer" type="MarginContainer" parent="MainContainer" unique_id=2139781553]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 300
 theme_override_constants/margin_right = 300
 theme_override_constants/margin_bottom = 60
 
-[node name="MainPanel" type="Panel" parent="MainContainer/CenterContainer"]
-layout_mode = 2
-theme = ExtResource("2_qh4jj")
-theme_override_styles/panel = SubResource("StyleBoxFlat_gwgb2")
-
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -306.0
-offset_top = 96.0
-offset_right = 247.0
-offset_bottom = 6.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/CenterContainer" unique_id=1418208308]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="TabContainer" type="TabContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="MainContainer/CenterContainer/VBoxContainer" unique_id=1231823638]
 layout_mode = 2
 size_flags_vertical = 3
-theme = ExtResource("2_qh4jj")
-theme_override_constants/outline_size = 2
+theme = ExtResource("4_kf5ho")
 theme_override_constants/side_margin = 20
 theme_override_constants/icon_separation = 10
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 35
 theme_override_styles/panel = SubResource("StyleBoxFlat_tab_panel")
-theme_override_styles/tab_selected = SubResource("StyleBoxFlat_selected")
-theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hovered")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_unselected")
-current_tab = 2
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hovered")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_selected")
+current_tab = 3
 
-[node name="Video" type="ScrollContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer"]
+[node name="Video" type="ScrollContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer" unique_id=892072995]
 visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
 metadata/_tab_index = 0
 
-[node name="VideoSettings" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video"]
+[node name="VideoSettings" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video" unique_id=537140419]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 25
 
-[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings"]
+[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings" unique_id=1080805313]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Video Settings"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings"]
+[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings" unique_id=2001945327]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings"]
+[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings" unique_id=860723381]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 60
 theme_override_constants/margin_right = 60
 
-[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin"]
+[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin" unique_id=273551715]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="FullscreenContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer"]
+[node name="FullscreenContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer" unique_id=1526478537]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/FullscreenContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/FullscreenContainer" unique_id=2080373519]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Fullscreen"
 vertical_alignment = 1
 
-[node name="FullscreenCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/FullscreenContainer"]
+[node name="FullscreenCheck" type="CheckBox" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/FullscreenContainer" unique_id=635469021]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="VsyncContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer"]
+[node name="VsyncContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer" unique_id=633764066]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/VsyncContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/VsyncContainer" unique_id=1493253233]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "VSync"
 vertical_alignment = 1
 
-[node name="VsyncCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/VsyncContainer"]
+[node name="VsyncCheck" type="CheckBox" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/VsyncContainer" unique_id=986338017]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="ResolutionContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer"]
+[node name="ResolutionContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer" unique_id=964925154]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/ResolutionContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/ResolutionContainer" unique_id=1282335431]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Resolution"
 vertical_alignment = 1
 
-[node name="ResolutionOption" type="OptionButton" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/ResolutionContainer"]
-custom_minimum_size = Vector2(180, 0)
+[node name="ResolutionOption" type="OptionButton" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Video/VideoSettings/SettingsMargin/SettingsContainer/ResolutionContainer" unique_id=1887626785]
+custom_minimum_size = Vector2(180, 50)
 layout_mode = 2
 size_flags_vertical = 4
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 alignment = 1
 selected = 2
 item_count = 3
@@ -236,236 +213,290 @@ popup/item_1/id = 1
 popup/item_2/text = "1920x1080"
 popup/item_2/id = 2
 
-[node name="Audio" type="ScrollContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer"]
+[node name="Audio" type="ScrollContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer" unique_id=1951975958]
 visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
 metadata/_tab_index = 1
 
-[node name="AudioSettings" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio"]
+[node name="AudioSettings" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio" unique_id=288781879]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 25
 
-[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings" unique_id=83508049]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Audio Settings"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings" unique_id=1728496808]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings"]
+[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings" unique_id=1283856]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 60
 theme_override_constants/margin_right = 60
 
-[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin"]
+[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin" unique_id=2018331928]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="MusicEnabledContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+[node name="MusicEnabledContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=1697004181]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicEnabledContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicEnabledContainer" unique_id=340341100]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Music Enabled"
 vertical_alignment = 1
 
-[node name="MusicEnabledCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicEnabledContainer"]
+[node name="MusicEnabledCheck" type="CheckBox" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicEnabledContainer" unique_id=343118947]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_vertical = 4
 button_pressed = true
 
-[node name="MusicVolumeContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+[node name="MusicVolumeContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=1784350486]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicVolumeContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicVolumeContainer" unique_id=267453165]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Music Volume"
 vertical_alignment = 1
 
-[node name="MusicVolumeSlider" type="HSlider" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicVolumeContainer"]
+[node name="MusicVolumeSlider" type="HSlider" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicVolumeContainer" unique_id=731598787]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_vertical = 4
 step = 5.0
 value = 80.0
 
-[node name="SfxEnabledContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+[node name="SfxEnabledContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=1259331086]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxEnabledContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxEnabledContainer" unique_id=1993271938]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "SFX Enabled"
 vertical_alignment = 1
 
-[node name="SfxEnabledCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxEnabledContainer"]
+[node name="SfxEnabledCheck" type="CheckBox" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxEnabledContainer" unique_id=1980268262]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_vertical = 4
 button_pressed = true
 
-[node name="SfxVolumeContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+[node name="SfxVolumeContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=1554898787]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxVolumeContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxVolumeContainer" unique_id=51577144]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "SFX Volume"
 vertical_alignment = 1
 
-[node name="SfxVolumeSlider" type="HSlider" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxVolumeContainer"]
+[node name="SfxVolumeSlider" type="HSlider" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SfxVolumeContainer" unique_id=2143982467]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_vertical = 4
 step = 5.0
 value = 80.0
 
-[node name="MusicFolderContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+[node name="MusicFolderContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=108021736]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicFolderContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicFolderContainer" unique_id=1530454185]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Music Folder"
 vertical_alignment = 1
 
-[node name="MusicFolderOption" type="OptionButton" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicFolderContainer"]
-custom_minimum_size = Vector2(220, 0)
+[node name="MusicFolderOption" type="OptionButton" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicFolderContainer" unique_id=1999089580]
+custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
 size_flags_vertical = 4
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 alignment = 1
 
-[node name="MusicTrackContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer"]
+[node name="MusicTrackContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=447636050]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicTrackContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicTrackContainer" unique_id=655289859]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Music Track"
 vertical_alignment = 1
 
-[node name="MusicTrackOption" type="OptionButton" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicTrackContainer"]
-custom_minimum_size = Vector2(220, 0)
+[node name="MusicTrackOption" type="OptionButton" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/MusicTrackContainer" unique_id=127739683]
+custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
 size_flags_vertical = 4
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 alignment = 1
 
-[node name="Gameplay" type="ScrollContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer"]
+[node name="SpeechTestContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer" unique_id=1532610970]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SpeechTitle" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer" unique_id=1009064753]
+layout_mode = 2
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
+text = "Speech Synth Test"
+vertical_alignment = 1
+
+[node name="SpeechRow" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer" unique_id=961744539]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpeechInput" type="LineEdit" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer/SpeechRow" unique_id=1549506227]
+custom_minimum_size = Vector2(360, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Type a phrase to speak"
+
+[node name="SpeechSpeakButton" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer/SpeechRow" unique_id=884815167]
+custom_minimum_size = Vector2(180, 48)
+layout_mode = 2
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
+text = "Speak"
+
+[node name="SpeechOutput" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Audio/AudioSettings/SettingsMargin/SettingsContainer/SpeechTestContainer" unique_id=1978626411]
+layout_mode = 2
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 24
+text = "Dirty SAM-style speech test ready."
+autowrap_mode = 3
+
+[node name="SpeechPlayer" type="AudioStreamPlayer" parent="." unique_id=1188820332]
+
+[node name="Gameplay" type="ScrollContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer" unique_id=471589657]
+visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
 metadata/_tab_index = 2
 
-[node name="GameplaySettings" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay"]
+[node name="GameplaySettings" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay" unique_id=1464209678]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 25
 
-[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings"]
+[node name="SectionLabel" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings" unique_id=1035489658]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Gameplay Settings"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings"]
+[node name="HSeparator" type="HSeparator" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings" unique_id=1207895485]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings"]
+[node name="SettingsMargin" type="MarginContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings" unique_id=465662802]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 60
 theme_override_constants/margin_right = 60
 
-[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin"]
+[node name="SettingsContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin" unique_id=414732213]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="HideCutscenesContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+[node name="HideCutscenesContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer" unique_id=210519464]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/HideCutscenesContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/HideCutscenesContainer" unique_id=1785099441]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Hide Cutscenes"
 vertical_alignment = 1
 
-[node name="HideCutscenesCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/HideCutscenesContainer"]
+[node name="HideCutscenesCheck" type="CheckBox" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/HideCutscenesContainer" unique_id=534986612]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="ShowWelcomeNotifContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+[node name="ShowWelcomeNotifContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer" unique_id=1340044962]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowWelcomeNotifContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowWelcomeNotifContainer" unique_id=97354695]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Show Welcome Notification"
 vertical_alignment = 1
 
-[node name="ShowWelcomeNotifCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowWelcomeNotifContainer"]
+[node name="ShowWelcomeNotifCheck" type="CheckBox" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowWelcomeNotifContainer" unique_id=169819100]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="ShowMusicNotifContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+[node name="ShowMusicNotifContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer" unique_id=1848512623]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowMusicNotifContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowMusicNotifContainer" unique_id=2057925183]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Show Music Notifications"
 vertical_alignment = 1
 
-[node name="ShowMusicNotifCheck" type="CheckBox" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowMusicNotifContainer"]
+[node name="ShowMusicNotifCheck" type="CheckBox" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/ShowMusicNotifContainer" unique_id=1836495564]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="NotificationDurationContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer"]
+[node name="NotificationDurationContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer" unique_id=1741409194]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="LabelContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer"]
+[node name="LabelContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer" unique_id=142735373]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer/LabelContainer"]
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer/LabelContainer" unique_id=686589755]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("4_kf5ho")
+theme_override_font_sizes/font_size = 32
 text = "Notification Duration"
 vertical_alignment = 1
 
-[node name="DurationValueLabel" type="Label" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer/LabelContainer"]
+[node name="DurationValueLabel" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer/LabelContainer" unique_id=1671546906]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "10.0s"
 vertical_alignment = 1
 
-[node name="NotificationDurationSlider" type="HSlider" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer"]
+[node name="NotificationDurationSlider" type="HSlider" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Gameplay/GameplaySettings/SettingsMargin/SettingsContainer/NotificationDurationContainer" unique_id=469241268]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_vertical = 4
@@ -473,19 +504,96 @@ min_value = 5.0
 max_value = 60.0
 value = 30.0
 
-[node name="ButtonMargin" type="MarginContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer"]
+[node name="Controls" type="ScrollContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer" unique_id=1267348188]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+script = ExtResource("6_controls_tab")
+metadata/_tab_index = 3
+
+[node name="ControlsVBox" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls" unique_id=2000000001]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="PresetRow" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox" unique_id=2000000002]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PresetLabel" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox/PresetRow" unique_id=2000000003]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Layout:"
+
+[node name="RightHandedBtn" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox/PresetRow" unique_id=2000000004]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Right-handed (WASD)"
+
+[node name="LeftHandedBtn" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox/PresetRow" unique_id=2000000005]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Left-handed (Arrows)"
+
+[node name="GamepadNote" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox" unique_id=2000000006]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
+autowrap_mode = 3
+text = "Gamepad: Left stick = move  A=Jump  X=Grapple  RB=Laser  LB=Boots  Start=Pause"
+
+[node name="HeaderSep" type="HSeparator" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox" unique_id=2000000007]
+layout_mode = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox" unique_id=2000000008]
+layout_mode = 2
+
+[node name="HeaderAction" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox/HeaderRow" unique_id=2000000009]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+text = "Action"
+
+[node name="HeaderKey" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox/HeaderRow" unique_id=2000000010]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 0)
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+text = "Key"
+
+[node name="HeaderRemap" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox/HeaderRow" unique_id=2000000011]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 0)
+text = ""
+
+[node name="RowSep" type="HSeparator" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox" unique_id=2000000012]
+layout_mode = 2
+
+[node name="ActionRows" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/TabContainer/Controls/ControlsVBox" unique_id=2000000013]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="ButtonMargin" type="MarginContainer" parent="MainContainer/CenterContainer/VBoxContainer" unique_id=1773652803]
 layout_mode = 2
 theme_override_constants/margin_left = 100
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 20
 
-[node name="ButtonContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonMargin"]
+[node name="ButtonContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer/ButtonMargin" unique_id=2124895522]
 layout_mode = 2
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="BackButton" type="Button" parent="MainContainer/CenterContainer/MainPanel/MarginContainer/VBoxContainer/ButtonMargin/ButtonContainer"]
+[node name="BackButton" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/ButtonMargin/ButtonContainer" unique_id=920958224]
 custom_minimum_size = Vector2(140, 40)
 layout_mode = 2
-theme = ExtResource("2_qh4jj")
+theme = ExtResource("4_kf5ho")
+theme_override_colors/font_color = Color(0.83994144, 0.8594967, 0.2619671, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 1, 1)
+theme_override_fonts/font = ExtResource("5_75h8d")
+theme_override_font_sizes/font_size = 42
 text = "Back"

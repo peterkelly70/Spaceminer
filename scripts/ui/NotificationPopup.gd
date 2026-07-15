@@ -31,12 +31,12 @@ var is_closing: bool = false
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		Logger.info(self, "Notification clicked; closing")
+		print("Notification clicked; closing")
 		close()
 
 # Debug: dump subtree for diagnostics
 func _dump_subtree(node: Node, indent: String = "") -> void:
-	Logger.debug(self, "%s- %s [%s]" % [indent, node.name, node.get_class()])
+	print("%s- %s [%s]" % [indent, node.name, node.get_class()])
 	for child in node.get_children():
 		_dump_subtree(child, indent + "  ")
 
@@ -110,7 +110,7 @@ func _ready() -> void:
 
 	# If any still missing, dump subtree and build minimal structure as fallback
 	if header == null or icon == null or message_label == null or close_timer == null:
-		Logger.warn(self, "Expected children not found. Dumping subtree and building minimal fallback UI.")
+		push_warning("Expected children not found. Dumping subtree and building minimal fallback UI.")
 		_dump_subtree(self)
 
 		# Build minimal UI if empty or mismatched

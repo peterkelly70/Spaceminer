@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/ore_fragment.gd" id="1_ore_script"]
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0022.png" id="2_ore_texture"]
+
+[sub_resource type="CircleShape2D" id="1_circle"]
+radius = 7.0
+
+[node name="OreFragment" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_ore_script")
+monitorable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1_circle")
+
+[node name="Gem" type="Sprite2D" parent="."]
+texture_filter = 1
+modulate = Color(1, 0.78, 0.24, 1)
+texture = ExtResource("2_ore_texture")
+scale = Vector2(1.5, 1.5)

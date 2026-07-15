@@ -5,7 +5,7 @@ class_name CreditsController
 
 
 func _ready() -> void:
-	show_in_states = [GameState.GameState.CREDITS]
+	show_in_states = [AppState.State.CREDITS]
 	super._ready()
 	
 	# Connect signals
@@ -13,11 +13,11 @@ func _ready() -> void:
 		back_button.pressed.connect(_on_back_button_pressed)
 		back_button.mouse_entered.connect(_on_button_hover)
 	else:
-		Logger.error(self, "BackButton not found!")
+		push_error("BackButton not found!")
 
 func _on_back_button_pressed() -> void:
-	Logger.info(self, "Back button pressed")
-	request_state(GameState.GameState.MAIN_MENU)
+	print("Back button pressed")
+	request_state(AppState.State.MAIN_MENU)
 
 # Hover sound feedback similar to MenuController
 func _on_button_hover() -> void:

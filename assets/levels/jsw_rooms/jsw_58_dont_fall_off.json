@@ -1,0 +1,313 @@
+{
+	"name": "Don't Fall Off!",
+	"room_name": "Don't Fall Off!",
+	"jsw_room_num": 58,
+	"spawn": [
+		-300,
+		140
+	],
+	"exit": {
+		"position": [
+			300,
+			-120
+		],
+		"size": [
+			40,
+			72
+		],
+		"sprite_frames": "res://assets/sprite/space_miner_teleporter_frames.tres",
+		"animation": "cycle",
+		"scale": [
+			2.0,
+			2.0
+		]
+	},
+	"room_size": [
+		640,
+		320
+	],
+	"tile_layers": [
+		{
+			"name": "PlatformTiles",
+			"modulate": "#8cff00",
+			"z_index": 1,
+			"cells": [
+				{
+					"x": -3,
+					"y": -3,
+					"tile": 178
+				},
+				{
+					"x": 5,
+					"y": -3,
+					"tile": 176
+				},
+				{
+					"x": 13,
+					"y": -3,
+					"tile": 179
+				},
+				{
+					"x": -3,
+					"y": 0,
+					"tile": 178
+				},
+				{
+					"x": 5,
+					"y": 0,
+					"tile": 176
+				},
+				{
+					"x": 13,
+					"y": 0,
+					"tile": 179
+				}
+			]
+		}
+	],
+	"solids": [
+		{
+			"name": "Floor",
+			"position": [
+				0,
+				160
+			],
+			"size": [
+				660,
+				16
+			]
+		},
+		{
+			"name": "WallLeft",
+			"position": [
+				-328,
+				0
+			],
+			"size": [
+				16,
+				320
+			]
+		},
+		{
+			"name": "WallRight",
+			"position": [
+				328,
+				0
+			],
+			"size": [
+				16,
+				320
+			]
+		},
+		{
+			"name": "Ceiling",
+			"position": [
+				0,
+				-168
+			],
+			"size": [
+				660,
+				16
+			]
+		}
+	],
+	"collectibles": [],
+	"hazards": [
+		{
+			"name": "Hazard_7_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-170,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_14_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-30,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_15_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-10,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_22_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				130,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_23_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				150,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_30_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				290,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_31_5",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				310,
+				-50
+			]
+		},
+		{
+			"name": "Hazard_7_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-170,
+				10
+			]
+		},
+		{
+			"name": "Hazard_14_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-30,
+				10
+			]
+		},
+		{
+			"name": "Hazard_15_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-10,
+				10
+			]
+		},
+		{
+			"name": "Hazard_22_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				130,
+				10
+			]
+		},
+		{
+			"name": "Hazard_23_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				150,
+				10
+			]
+		},
+		{
+			"name": "Hazard_30_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				290,
+				10
+			]
+		},
+		{
+			"name": "Hazard_31_8",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				310,
+				10
+			]
+		},
+		{
+			"name": "Hazard_7_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-170,
+				110
+			]
+		},
+		{
+			"name": "Hazard_13_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-50,
+				110
+			]
+		},
+		{
+			"name": "Hazard_14_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-30,
+				110
+			]
+		},
+		{
+			"name": "Hazard_15_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				-10,
+				110
+			]
+		},
+		{
+			"name": "Hazard_21_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				110,
+				110
+			]
+		},
+		{
+			"name": "Hazard_22_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				130,
+				110
+			]
+		},
+		{
+			"name": "Hazard_23_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				150,
+				110
+			]
+		},
+		{
+			"name": "Hazard_29_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				270,
+				110
+			]
+		},
+		{
+			"name": "Hazard_30_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				290,
+				110
+			]
+		},
+		{
+			"name": "Hazard_31_13",
+			"scene": "res://scenes/prototype/HazardZone.tscn",
+			"position": [
+				310,
+				110
+			]
+		}
+	],
+	"enemies": [],
+	"doors": [],
+	"is_resupply": false,
+	"is_junction": false
+}

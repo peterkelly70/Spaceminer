@@ -6,7 +6,7 @@ var log_level: int = 1
 # Run this once to configure the audio system
 
 func _ready():
-	Logger.info(self, "Starting audio bus configuration...")
+	print("Starting audio bus configuration...")
 	setup_audio_buses()
 	
 func setup_audio_buses():
@@ -18,7 +18,7 @@ func setup_audio_buses():
 	var sfx_bus_idx = audio_server.get_bus_index("SFX")
 	
 	if music_bus_idx != -1 and sfx_bus_idx != -1:
-		Logger.info(self, "Audio buses already exist")
+		print("Audio buses already exist")
 		return
 		
 	# Create Music bus if it doesn't exist
@@ -27,7 +27,7 @@ func setup_audio_buses():
 		audio_server.add_bus()
 		audio_server.set_bus_name(music_bus_idx, "Music")
 		audio_server.set_bus_send(music_bus_idx, "Master")
-		Logger.info(self, "Created Music bus")
+		print("Created Music bus")
 	
 	# Create SFX bus if it doesn't exist
 	if sfx_bus_idx == -1:
@@ -35,9 +35,9 @@ func setup_audio_buses():
 		audio_server.add_bus()
 		audio_server.set_bus_name(sfx_bus_idx, "SFX")
 		audio_server.set_bus_send(sfx_bus_idx, "Master")
-		Logger.info(self, "Created SFX bus")
+		print("Created SFX bus")
 	
-	Logger.info(self, "Audio buses configuration complete!")
-	Logger.info(self, "Current bus structure:")
+	print("Audio buses configuration complete!")
+	print("Current bus structure:")
 	for i in range(audio_server.bus_count):
-		Logger.info(self, " - Bus %d: %s" % [i, audio_server.get_bus_name(i)])
+		print(" - Bus %d: %s" % [i, audio_server.get_bus_name(i)])

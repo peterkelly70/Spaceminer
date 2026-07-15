@@ -1,9 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dgr8isonabbs2"]
+[gd_scene format=3 uid="uid://dgr8isonabbs2"]
 
 [ext_resource type="Script" uid="uid://dyf0rca2t1n0a" path="res://scripts/controllers/MenuController.gd" id="2_3favr"]
-[ext_resource type="Texture2D" uid="uid://c7ewlyefpihge" path="res://assets/images/background.png" id="2_3kq5b"]
 [ext_resource type="Texture2D" uid="uid://dei22kos26si2" path="res://assets/images/menu.png" id="2_e837h"]
-[ext_resource type="Theme" uid="uid://dd61672b8vmdd" path="res://assets/themes/groot_theme.tres" id="4_fji5j"]
+[ext_resource type="Theme" uid="uid://bfmke1es4ewfx" path="res://assets/themes/retro_theme.tres" id="3_fji5j"]
+[ext_resource type="Texture2D" uid="uid://csrlx8b6n1xkk" path="res://assets/images/title.png" id="4_chi0x"]
 
 [sub_resource type="StyleBoxFlat" id="ButtonStyle"]
 bg_color = Color(0.0177324, 0.0177324, 0.0177324, 0.8)
@@ -11,19 +11,7 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.8, 0.6, 0.2, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="ButtonStyle_Hover"]
-bg_color = Color(0.259294, 0.259294, 0.259294, 0.9)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.8, 0.3, 1)
+border_color = Color(0.011764706, 0.9764706, 0.9843137, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -41,7 +29,19 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="MenuView" type="Control"]
+[sub_resource type="StyleBoxFlat" id="ButtonStyle_Hover"]
+bg_color = Color(0.259294, 0.259294, 0.259294, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.3, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="MenuView" type="Control" unique_id=1291936490]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,19 +50,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_3favr")
 
-[node name="Background" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("2_3kq5b")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="TitleBackground" type="TextureRect" parent="."]
+[node name="TitleBackground" type="TextureRect" parent="." unique_id=254789617]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -74,7 +62,7 @@ texture = ExtResource("2_e837h")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="MainContainer" type="VBoxContainer" parent="."]
+[node name="MainContainer" type="VBoxContainer" parent="." unique_id=1128389184]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -83,43 +71,20 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 20
 
-[node name="TopSpacer" type="Control" parent="MainContainer"]
+[node name="TopSpacer" type="Control" parent="MainContainer" unique_id=1231583389]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
-[node name="TitlePanel" type="PanelContainer" parent="MainContainer"]
+[node name="TitlePanel" type="PanelContainer" parent="MainContainer" unique_id=914504720]
 custom_minimum_size = Vector2(600, 100)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/TitlePanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/TitlePanel/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Title" type="Label" parent="MainContainer/TitlePanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "GROOT"
-horizontal_alignment = 1
-
-[node name="Subtitle" type="Label" parent="MainContainer/TitlePanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "Godot Root"
-horizontal_alignment = 1
-
-[node name="MiddleSpacer" type="Control" parent="MainContainer"]
+[node name="MiddleSpacer" type="Control" parent="MainContainer" unique_id=124138113]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MainPanelContainer" type="MarginContainer" parent="MainContainer"]
+[node name="MainPanelContainer" type="MarginContainer" parent="MainContainer" unique_id=1077267220]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
@@ -127,7 +92,7 @@ theme_override_constants/margin_left = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 80
 
-[node name="MainPanel" type="PanelContainer" parent="MainContainer/MainPanelContainer"]
+[node name="MainPanel" type="PanelContainer" parent="MainContainer/MainPanelContainer" unique_id=1227549937]
 z_index = 10
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
@@ -135,113 +100,268 @@ size_flags_horizontal = 4
 size_flags_vertical = 3
 mouse_filter = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/MainPanelContainer/MainPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/MainPanelContainer/MainPanel" unique_id=999044089]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer" unique_id=1642787795]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="StartButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer"]
-z_index = 11
-custom_minimum_size = Vector2(0, 50)
+[node name="NewGamePanel" type="PanelContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer" unique_id=1911066022]
+visible = false
+custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
-focus_neighbor_bottom = NodePath("../SettingsButton")
-focus_next = NodePath("../SettingsButton")
-mouse_default_cursor_shape = 2
-theme = ExtResource("4_fji5j")
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
-theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/focus = SubResource("ButtonStyle")
-theme_override_styles/hover = SubResource("ButtonStyle_Hover")
-theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
-theme_override_styles/normal = SubResource("ButtonStyle")
-text = "Start Game"
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme = ExtResource("3_fji5j")
 
-[node name="LoadButton2" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel" unique_id=913258462]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer" unique_id=2105639824]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer" unique_id=580613245]
+layout_mode = 2
+theme = ExtResource("3_fji5j")
+theme_override_font_sizes/font_size = 56
+text = "New Expedition"
+uppercase = true
+
+[node name="SeedRow" type="HBoxContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer" unique_id=1004630844]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SeedLabel" type="Label" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer/SeedRow" unique_id=563140483]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Seed"
+
+[node name="SeedLineEdit" type="LineEdit" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer/SeedRow" unique_id=1729509548]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(460, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Leave blank for random seed"
+theme_override_font_sizes/font_size = 24
+
+[node name="SeedHint" type="Label" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer" unique_id=1411934702]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Share this seed with other players to reproduce the same asteroid layout."
+autowrap_mode = 3
+
+[node name="SeedPreviewLabel" type="Label" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer" unique_id=1199427191]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Current seed: Random"
+uppercase = true
+
+[node name="ButtonRow" type="HBoxContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer" unique_id=1735080329]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="RandomSeedButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer/ButtonRow" unique_id=1939837889]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+text = "Random Seed"
+theme_override_font_sizes/font_size = 28
+
+[node name="StartNewButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer/ButtonRow" unique_id=1408066984]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+text = "Start Run"
+theme_override_font_sizes/font_size = 28
+
+[node name="BackButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/NewGamePanel/MarginContainer/VBoxContainer/ButtonRow" unique_id=134833175]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+text = "Back"
+theme_override_font_sizes/font_size = 28
+
+[node name="LoadGamePanel" type="PanelContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer" unique_id=1278313453]
+visible = false
+custom_minimum_size = Vector2(760, 420)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme = ExtResource("3_fji5j")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel" unique_id=1276328321]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer" unique_id=357815239]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer" unique_id=965773737]
+layout_mode = 2
+theme = ExtResource("3_fji5j")
+theme_override_font_sizes/font_size = 56
+text = "Load Run"
+uppercase = true
+
+[node name="SaveList" type="ItemList" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer" unique_id=1863302840]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(680, 220)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DetailLabel" type="Label" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer" unique_id=1802438285]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Select a save file to see the seed and map details."
+autowrap_mode = 3
+
+[node name="ButtonRow" type="HBoxContainer" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer" unique_id=811468230]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LoadSelectedButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer/ButtonRow" unique_id=1928237372]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+text = "Load Selected"
+theme_override_font_sizes/font_size = 28
+
+[node name="RefreshButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer/ButtonRow" unique_id=2134268189]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+text = "Refresh"
+theme_override_font_sizes/font_size = 28
+
+[node name="DeleteButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer/ButtonRow" unique_id=1317803568]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+text = "Delete"
+theme_override_font_sizes/font_size = 28
+
+[node name="BackButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/LoadGamePanel/MarginContainer/VBoxContainer/ButtonRow" unique_id=1317803567]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+size_flags_horizontal = 3
+text = "Back"
+theme_override_font_sizes/font_size = 28
+
+[node name="StartButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer" unique_id=2123707501]
 z_index = 11
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 focus_neighbor_bottom = NodePath("../SettingsButton")
 focus_next = NodePath("../SettingsButton")
 mouse_default_cursor_shape = 2
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme = ExtResource("3_fji5j")
 theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
 theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/focus = SubResource("ButtonStyle")
-theme_override_styles/hover = SubResource("ButtonStyle_Hover")
-theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 56
 theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_styles/hover = SubResource("ButtonStyle_Hover")
+theme_override_styles/focus = SubResource("ButtonStyle")
+text = "New Game"
+
+[node name="LoadButton2" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer" unique_id=1552574985]
+z_index = 11
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../SettingsButton")
+focus_next = NodePath("../SettingsButton")
+mouse_default_cursor_shape = 2
+theme = ExtResource("3_fji5j")
+theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
+theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 56
+theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_styles/hover = SubResource("ButtonStyle_Hover")
+theme_override_styles/focus = SubResource("ButtonStyle")
 text = "Load Game"
 
-[node name="SettingsButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer" unique_id=2145050600]
 z_index = 11
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 focus_neighbor_top = NodePath("../StartButton")
 focus_neighbor_bottom = NodePath("../CreditsButton")
 focus_next = NodePath("../CreditsButton")
 focus_previous = NodePath("../StartButton")
 mouse_default_cursor_shape = 2
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme = ExtResource("3_fji5j")
 theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
 theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/focus = SubResource("ButtonStyle")
-theme_override_styles/hover = SubResource("ButtonStyle_Hover")
-theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 56
 theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_styles/hover = SubResource("ButtonStyle_Hover")
+theme_override_styles/focus = SubResource("ButtonStyle")
 text = "Settings"
 
-[node name="HSeparator" type="HSeparator" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="CreditsButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer"]
+[node name="CreditsButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer" unique_id=215381089]
 z_index = 11
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 focus_neighbor_top = NodePath("../SettingsButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
 focus_next = NodePath("../QuitButton")
 focus_previous = NodePath("../SettingsButton")
 mouse_default_cursor_shape = 2
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme = ExtResource("3_fji5j")
 theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
 theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/focus = SubResource("ButtonStyle")
-theme_override_styles/hover = SubResource("ButtonStyle_Hover")
-theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 56
 theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_styles/hover = SubResource("ButtonStyle_Hover")
+theme_override_styles/focus = SubResource("ButtonStyle")
 text = "Credits"
 
-[node name="QuitButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="MainContainer/MainPanelContainer/MainPanel/MarginContainer/VBoxContainer" unique_id=625982750]
 z_index = 11
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 focus_neighbor_top = NodePath("../CreditsButton")
 focus_previous = NodePath("../CreditsButton")
 mouse_filter = 1
 mouse_default_cursor_shape = 2
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme = ExtResource("3_fji5j")
 theme_override_colors/font_color = Color(0.95, 0.95, 0.96, 1)
 theme_override_colors/font_pressed_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/focus = SubResource("ButtonStyle")
-theme_override_styles/hover = SubResource("ButtonStyle_Hover")
-theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 56
 theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/pressed = SubResource("ButtonStyle_Pressed")
+theme_override_styles/hover = SubResource("ButtonStyle_Hover")
+theme_override_styles/focus = SubResource("ButtonStyle")
 text = "Quit Game"
 
-[node name="VersionLabel" type="Label" parent="."]
+[node name="VersionLabel" type="Label" parent="." unique_id=2083190991]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -257,3 +377,15 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 14
 text = "Version 0.1.0"
 horizontal_alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1442450099]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 317.0
+offset_top = 8.0
+offset_right = -352.0
+offset_bottom = 541.0
+grow_horizontal = 2
+texture = ExtResource("4_chi0x")
+expand_mode = 1

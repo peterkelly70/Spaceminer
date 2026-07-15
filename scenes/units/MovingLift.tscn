@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://c0v7e7iudjdv0"]
+
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0175.png" id="1_lift_left"]
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0176.png" id="2_lift_mid"]
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0177.png" id="3_lift_mid2"]
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0178.png" id="4_lift_right"]
+[ext_resource type="Texture2D" path="res://assets/tiles/Transparent/tile_0179.png" id="5_lift_top"]
+[ext_resource type="Script" uid="uid://cxhpxgli635ol" path="res://scripts/controllers/rooms/MovingLift.gd" id="5_lift_script"]
+
+[sub_resource type="RectangleShape2D" id="1_shape"]
+size = Vector2(128, 16)
+
+[node name="MovingLift" type="AnimatableBody2D" unique_id=222173630]
+script = ExtResource("5_lift_script")
+top_y = 88.0
+bottom_y = 184.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1581691121]
+position = Vector2(0, -8)
+shape = SubResource("1_shape")
+
+[node name="LeftTile" type="Sprite2D" parent="." unique_id=1932582759]
+position = Vector2(-64, -16)
+scale = Vector2(4, 2)
+texture = ExtResource("1_lift_left")
+centered = false
+
+[node name="MiddleTileA" type="Sprite2D" parent="." unique_id=335568537]
+position = Vector2(-32, -16)
+scale = Vector2(4, 2)
+texture = ExtResource("2_lift_mid")
+centered = false
+
+[node name="MiddleTileB" type="Sprite2D" parent="." unique_id=335568538]
+position = Vector2(0, -16)
+scale = Vector2(4, 2)
+texture = ExtResource("3_lift_mid2")
+centered = false
+
+[node name="RightTile" type="Sprite2D" parent="." unique_id=335568539]
+position = Vector2(32, -16)
+scale = Vector2(4, 2)
+texture = ExtResource("4_lift_right")
+centered = false
+
+[node name="TopTileA" type="Sprite2D" parent="." unique_id=335568536]
+modulate = Color(0.95, 0.71, 0.23, 1)
+position = Vector2(-64, -24)
+scale = Vector2(4, 1)
+texture = ExtResource("5_lift_top")
+centered = false
+
+[node name="TopTileB" type="Sprite2D" parent="." unique_id=335568540]
+modulate = Color(0.95, 0.71, 0.23, 1)
+position = Vector2(-32, -24)
+scale = Vector2(4, 1)
+texture = ExtResource("5_lift_top")
+centered = false
+
+[node name="TopTileC" type="Sprite2D" parent="." unique_id=335568541]
+modulate = Color(0.95, 0.71, 0.23, 1)
+position = Vector2(0, -24)
+scale = Vector2(4, 1)
+texture = ExtResource("5_lift_top")
+centered = false
+
+[node name="TopTileD" type="Sprite2D" parent="." unique_id=335568542]
+modulate = Color(0.95, 0.71, 0.23, 1)
+position = Vector2(32, -24)
+scale = Vector2(4, 1)
+texture = ExtResource("5_lift_top")
+centered = false

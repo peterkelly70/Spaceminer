@@ -1,0 +1,58 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn1.png" id="1_spawn_1"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn2.png" id="2_spawn_2"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn3.png" id="3_spawn_3"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn4.png" id="4_spawn_4"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn5.png" id="5_spawn_5"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn6.png" id="6_spawn_6"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn7.png" id="7_spawn_7"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn8.png" id="8_spawn_8"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn9.png" id="9_spawn_9"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn10.png" id="10_spawn_10"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn11.png" id="11_spawn_11"]
+[ext_resource type="Texture2D" path="res://assets/images/willyinspace/SpaceMiner_Spawn12.png" id="12_spawn_12"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_spawn_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_spawn_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_spawn_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_spawn_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_spawn_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_spawn_6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_spawn_7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_spawn_8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_spawn_9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_spawn_10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_spawn_11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_spawn_12")
+}],
+"loop": true,
+"name": &"cycle",
+"speed": 10.0
+}]

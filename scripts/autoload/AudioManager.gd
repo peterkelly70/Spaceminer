@@ -26,7 +26,7 @@ var sound_effects: Dictionary = {}  # Will load dynamically to avoid missing fil
 
 # Settings
 var music_volume: float = 0.8
-var sfx_volume: float = 1.0
+var sfx_volume: float = 0.4
 var music_muted: bool = false
 var current_track: String = ""
 var persistent_track: String = "persistent"
@@ -53,14 +53,14 @@ func _play_next_voiceover_in_queue():
 	var next_path = voiceover_queue.pop_front()
 	var stream = load(next_path)
 	if not stream:
-		Logger.warn(self, "Could not load voiceover: %s" % next_path)
+		push_warning("Could not load voiceover: %s" % next_path)
 		_play_next_voiceover_in_queue() # skip to next
 		return
 	voiceover_player.stream = stream
 	voiceover_player.finished.connect(_on_voiceover_finished, CONNECT_ONE_SHOT)
 	voiceover_player.volume_db = linear_to_db(sfx_volume)
 	voiceover_player.play()
-	Logger.info(self, "Playing voiceover: %s" % next_path)
+	print("Playing voiceover: %s" % next_path)
 
 func _on_voiceover_finished():
 	_play_next_voiceover_in_queue()
@@ -100,19 +100,19 @@ func _save_settings() -> void:
 	cfg.set_value("audio", "sfx_volume", sfx_volume)
 	cfg.set_value("audio", "music_muted", music_muted)
 	cfg.save("user://audio_settings.cfg")
-	Logger.info(self, "Saved audio settings")
+	print("Saved audio settings")
 
 func _load_settings() -> Dictionary:
 	var cfg = ConfigFile.new()
-	var settings = {"music_volume": 0.8, "sfx_volume": 1.0, "music_muted": false}
+	var settings = {"music_volume": 0.8, "sfx_volume": 0.4, "music_muted": false}
 	
 	if cfg.load("user://audio_settings.cfg") == OK:
 		settings["music_volume"] = cfg.get_value("audio", "music_volume", settings["music_volume"])
 		settings["sfx_volume"] = cfg.get_value("audio", "sfx_volume", settings["sfx_volume"])
 		settings["music_muted"] = cfg.get_value("audio", "music_muted", settings["music_muted"])
-		Logger.info(self, "Loaded audio settings")
+		print("Loaded audio settings")
 	else:
-		Logger.info(self, "No saved audio settings found, using defaults")
+		print("No saved audio settings found, using defaults")
 	
 	return settings
 
@@ -129,7 +129,7 @@ func _apply_settings() -> void:
 	
 	# Save back
 	_save_settings()
-	Logger.info(self, "Applied audio settings")
+	print("Applied audio settings")
 
 # Button connection
 func _setup_buttons() -> void:
@@ -140,7 +140,7 @@ func _setup_buttons() -> void:
 	for btn in buttons:
 		register_button(btn)
 	
-	Logger.info(self, "Connected to %d buttons from Button group" % buttons.size())
+	print("Connected to %d buttons from Button group" % buttons.size())
 
 # Register a button to play sounds when pressed, released, hovered, and focused
 func register_button(button: BaseButton, press_sound: String = "click", release_sound: String = "button_release", hover_sound: String = "button_hover", focus_sound: String = "button_focus") -> void:
@@ -161,7 +161,7 @@ func register_button(button: BaseButton, press_sound: String = "click", release_
 		button.set_meta("focus_sound", focus_sound)
 		button.focus_entered.connect(_on_button_focus.bind(button))
 		
-		Logger.info(self, "Registered button with sounds: press=%s, release=%s, hover=%s, focus=%s" % [press_sound, release_sound, hover_sound, focus_sound])
+		print("Registered button with sounds: press=%s, release=%s, hover=%s, focus=%s" % [press_sound, release_sound, hover_sound, focus_sound])
 
 # Register all buttons in a container recursively
 func register_buttons_in_container(container: Node, press_sound: String = "click", release_sound: String = "button_release", hover_sound: String = "button_hover") -> void:
@@ -173,7 +173,7 @@ func register_buttons_in_container(container: Node, press_sound: String = "click
 		if child.get_child_count() > 0:
 			register_buttons_in_container(child, press_sound, release_sound, hover_sound)
 	
-	Logger.info(self, "Registered all buttons in container: %s" % container.name)
+	print("Registered all buttons in container: %s" % container.name)
 
 # Handle button press (button down) events
 func _on_button_down(button: BaseButton = null) -> void:
@@ -220,7 +220,7 @@ func _on_button_focus(button: BaseButton = null) -> void:
 	play_sfx(sound, 0.7)
 
 func _ready() -> void:
-	Logger.info(self, "Initializing...")
+	print("Initializing...")
 	
 	# Create audio buses first
 	_ensure_audio_buses_exist()
@@ -249,10 +249,16 @@ func _ready() -> void:
 	var sfx_paths = {
 		"click": "res://assets/audio/sfx/ui/button.mp3",
 		# Remapped to existing asset to ensure immediate availability
-		"button_hover": "res://assets/audio/sfx/ui/button.mp3",
+		"button_hover": "res://assets/audio/sfx/retro/retro_button_hover.wav",
 		"button_release": "res://assets/audio/sfx/ui/stone_btn_out.mp3",
 		# Remapped broken path to an existing asset
 		"button_focus": "res://assets/audio/sfx/ui/notification.mp3",
+		"jump": "res://assets/audio/sfx/ui/jump.wav",
+		"jump_short": "res://assets/audio/sfx/retro/retro_jump_short.wav",
+		"fall": "res://assets/audio/sfx/ui/fall.wav",
+		"collect": "res://assets/audio/sfx/retro/retro_coin.wav",
+		"door_open": "res://assets/audio/sfx/retro/retro_door_open.wav",
+		"door_close": "res://assets/audio/sfx/retro/retro_door_close.wav",
 		"build": "res://assets/audio/sfx/ui/build.mp3",
 		"error": "res://assets/audio/sfx/ui/error.mp3",
 		"success": "res://assets/audio/sfx/ui/success.mp3",
@@ -267,12 +273,12 @@ func _ready() -> void:
 			file.close()
 			loaded_sfx_count += 1
 		else:
-			Logger.warn(self, "SFX file not found: %s" % sfx_paths[sfx_name])
+			push_warning("SFX file not found: %s" % sfx_paths[sfx_name])
 	
 	if loaded_sfx_count == 0:
-		Logger.warn(self, "No UI sound effects found - buttons will be silent")
+		push_warning("No UI sound effects found - buttons will be silent")
 	else:
-		Logger.info(self, "Loaded %d UI sound effects" % loaded_sfx_count)
+		print("Loaded %d UI sound effects" % loaded_sfx_count)
 	
 	# Load settings
 	_apply_settings()
@@ -280,18 +286,18 @@ func _ready() -> void:
 	# Music will be started by MusicManager or other systems
 	# AudioManager is now ready for music playback requests
 
-	Logger.info(self, "Initialized")
+	print("Initialized")
 
 	# After the first frame, register all buttons in the scene tree for SFX
 	await get_tree().process_frame
 	register_buttons_in_container(get_tree().root)
 
 func _ensure_audio_buses_exist() -> void:
-	Logger.info(self, "Setting up audio buses...")
+	print("Setting up audio buses...")
 	
 	# Master bus always exists at index 0
 	if AudioServer.get_bus_index("Master") < 0:
-		Logger.error(self, "Master bus missing - this should never happen!")
+		push_error("Master bus missing - this should never happen!")
 		return
 	
 	# Add Music bus if it doesn't exist
@@ -300,22 +306,42 @@ func _ensure_audio_buses_exist() -> void:
 		AudioServer.add_bus()
 		AudioServer.set_bus_name(idx, "Music")
 		AudioServer.set_bus_send(idx, "Master")
-		Logger.info(self, "Created Music bus")
+		print("Created Music bus")
 	
+	_ensure_music_compressor()
+
 	# Add SFX bus if it doesn't exist
 	if AudioServer.get_bus_index("SFX") < 0:
 		var idx2 = AudioServer.bus_count
 		AudioServer.add_bus()
 		AudioServer.set_bus_name(idx2, "SFX")
 		AudioServer.set_bus_send(idx2, "Master")
-		Logger.info(self, "Created SFX bus")
+		print("Created SFX bus")
+
+# Tame the dynamic range of the chiptune tracks: gentle compression pulls the
+# loud passages down and lifts quiet ones via makeup gain, without audible
+# pumping or distortion.
+func _ensure_music_compressor() -> void:
+	var idx := AudioServer.get_bus_index("Music")
+	if idx < 0:
+		return
+	for i in AudioServer.get_bus_effect_count(idx):
+		if AudioServer.get_bus_effect(idx, i) is AudioEffectCompressor:
+			return
+	var comp := AudioEffectCompressor.new()
+	comp.threshold = -18.0
+	comp.ratio = 3.0
+	comp.attack_us = 40000.0   # 40 ms — lets note transients through
+	comp.release_ms = 250.0
+	comp.gain = 5.0            # makeup gain lifts the quiet passages
+	AudioServer.add_bus_effect(idx, comp)
 
 func play_music(track_name: String) -> void:
 	if not music_tracks.has(track_name):
-		Logger.warn(self, "Cannot play music track '%s' - not loaded" % track_name)
+		push_warning("Cannot play music track '%s' - not loaded" % track_name)
 		return
 	
-	Logger.info(self, "Attempting to play music track: %s" % track_name)
+	print("Attempting to play music track: %s" % track_name)
 	
 	# Show notification for the new track if it's different from the current one
 	if track_name != current_track:
@@ -328,10 +354,10 @@ func play_music(track_name: String) -> void:
 				# Fallback to using the name as a path-like value; NotificationManager will degrade gracefully
 				track_path = track_name
 			notification_manager.show_music_notification(track_path)
-	Logger.debug(self, "Current mute state: %s" % music_muted)
+	print("Current mute state: %s" % music_muted)
 	
 	if current_track == track_name and music_player.playing:
-		Logger.debug(self, "Already playing this track")
+		print("Already playing this track")
 		return
 	
 	using_scene_music = track_name != persistent_track
@@ -347,27 +373,27 @@ func play_music(track_name: String) -> void:
 	# Set volume based on mute state
 	if is_muted():
 		music_player.volume_db = linear_to_db(0)
-		Logger.debug(self, "Setting volume to 0 (muted)")
+		print("Setting volume to 0 (muted)")
 	else:
 		music_player.volume_db = linear_to_db(music_volume)
-		Logger.debug(self, "Setting volume to %s" % music_volume)
+		print("Setting volume to %s" % music_volume)
 	
 	# Play the track
 	music_player.play()
-	Logger.info(self, "Started playing music track: %s - player.playing=%s" % [track_name, music_player.playing])
+	print("Started playing music track: %s - player.playing=%s" % [track_name, music_player.playing])
 
 func play_scene_music(scene_name: String) -> void:
 	if music_tracks.has(scene_name):
 		play_music(scene_name)
 	else:
-		Logger.info(self, "Scene music '%s' not found, playing persistent track instead" % scene_name)
+		print("Scene music '%s' not found, playing persistent track instead" % scene_name)
 		play_persistent_music()
 
 func stop_music() -> void:
 	if music_player:
 		music_player.stop()
 		current_track = ""
-		Logger.info(self, "Stopped music playback")
+		print("Stopped music playback")
 
 # Helper function to get an available SFX player
 func _get_available_sfx_player() -> AudioStreamPlayer:
@@ -386,7 +412,7 @@ func _get_available_sfx_player() -> AudioStreamPlayer:
 
 func play_sfx(sfx_name: String, volume_scale: float = 1.0) -> void:
 	if not sound_effects.has(sfx_name):
-		Logger.warn(self, "Cannot play SFX '%s' - not loaded" % sfx_name)
+		push_warning("Cannot play SFX '%s' - not loaded" % sfx_name)
 		return
 	
 	# Find an available player
@@ -399,9 +425,9 @@ func play_sfx(sfx_name: String, volume_scale: float = 1.0) -> void:
 		player.volume_db = linear_to_db(final_volume)
 		
 		player.play()
-		Logger.info(self, "Playing SFX: %s with volume scale: %s" % [sfx_name, volume_scale])
+		print("Playing SFX: %s with volume scale: %s" % [sfx_name, volume_scale])
 	else:
-		Logger.warn(self, "No available SFX players to play: %s" % sfx_name)
+		push_warning("No available SFX players to play: %s" % sfx_name)
 
 func set_music_volume(vol: float) -> void:
 	music_volume = clamp(vol, 0.0, 1.0)
@@ -412,12 +438,12 @@ func set_music_volume(vol: float) -> void:
 		# Only apply volume if not muted
 		var effective_volume = 0.0 if music_muted else music_volume
 		AudioServer.set_bus_volume_db(music_bus_idx, linear_to_db(effective_volume))
-		Logger.debug(self, "Set music bus volume to: %s" % effective_volume)
+		print("Set music bus volume to: %s" % effective_volume)
 	
 	# Also apply volume directly to the music player for immediate effect
 	if music_player and !music_muted:
 		music_player.volume_db = linear_to_db(music_volume)
-		Logger.debug(self, "Set music player volume to: %s" % music_volume)
+		print("Set music player volume to: %s" % music_volume)
 	
 	# Save settings to ensure persistence
 	_save_settings()
@@ -429,42 +455,37 @@ func set_sfx_volume(vol: float) -> void:
 	var sfx_bus_idx = AudioServer.get_bus_index("SFX")
 	if sfx_bus_idx >= 0:
 		AudioServer.set_bus_volume_db(sfx_bus_idx, linear_to_db(sfx_volume))
-		Logger.debug(self, "Set SFX volume to: %s" % sfx_volume)
+		print("Set SFX volume to: %s" % sfx_volume)
 	
 	# Save settings to ensure persistence
 	_save_settings()
 
 func set_mute(on: bool) -> void:
-	Logger.info(self, "set_mute called with on=%s" % on)
+	print("set_mute called with on=%s" % on)
 	
 	# Only proceed if the state is actually changing
 	if music_muted == on:
-		Logger.debug(self, "Mute state already matches requested state: %s" % on)
+		print("Mute state already matches requested state: %s" % on)
 		return
 		
 	music_muted = on
-	Logger.info(self, "Mute state changed to: %s" % on)
+	print("Mute state changed to: %s" % on)
 	
 	# Calculate volumes based on mute state
 	var music_bus_idx = AudioServer.get_bus_index("Music")
-	var sfx_bus_idx = AudioServer.get_bus_index("SFX")
 	
 	# Set the volume on the audio bus
 	if music_bus_idx >= 0:
 		var mv = 0.0 if on else music_volume
 		AudioServer.set_bus_volume_db(music_bus_idx, linear_to_db(mv))
-		Logger.debug(self, "Set music bus volume to: %s" % mv)
-	
-	if sfx_bus_idx >= 0:
-		var sv = 0.0 if on else sfx_volume
-		AudioServer.set_bus_volume_db(sfx_bus_idx, linear_to_db(sv))
-		Logger.debug(self, "Set SFX bus volume to: %s" % sv)
+		print("Set music bus volume to: %s" % mv)
 	
 	# Also set the volume directly on the music player for immediate effect
 	if music_player:
 		var volume = 0.0 if on else music_volume
 		music_player.volume_db = linear_to_db(volume)
-		Logger.debug(self, "Set music player volume to: %s" % volume)
+		print("Set music player volume to: %s" % volume)
+		music_player.stream_paused = on
 		
 		# Ensure the music is playing if we're unmuting
 		if !on and !music_player.playing:
@@ -476,6 +497,20 @@ func set_mute(on: bool) -> void:
 		
 	# Save settings to ensure persistence
 	_save_settings()
+
+func play_stream(stream: AudioStream, volume: float = 1.0) -> void:
+	if not stream:
+		push_warning("Cannot play audio stream - stream is null")
+		return
+	if not voiceover_player:
+		push_warning("Cannot play audio stream - voiceover player missing")
+		return
+	if voiceover_player.playing:
+		voiceover_player.stop()
+	voiceover_player.stream = stream
+	voiceover_player.volume_db = linear_to_db(clamp(volume, 0.0, 1.0) * sfx_volume)
+	voiceover_player.play()
+	print("Playing direct audio stream on voiceover player with volume: %s" % volume)
 
 func toggle_mute() -> bool:
 	set_mute(not music_muted)
@@ -490,14 +525,14 @@ func is_persistent_music_playing() -> bool:
 
 ## Restore the persistent music track after it was stopped (e.g., by a cutscene)
 func restore_persistent_music() -> void:
-	Logger.info(self, "Restoring persistent music track: %s" % persistent_track)
+	print("Restoring persistent music track: %s" % persistent_track)
 	
 	if persistent_track.is_empty():
-		Logger.warn(self, "No persistent track set to restore")
+		push_warning("No persistent track set to restore")
 		return
 		
 	if not music_tracks.has(persistent_track):
-		Logger.warn(self, "Persistent track not found in registered tracks: %s" % persistent_track)
+		push_warning("Persistent track not found in registered tracks: %s" % persistent_track)
 		return
 		
 	# Only play if we're not already playing the persistent track
@@ -511,15 +546,15 @@ func restore_persistent_music() -> void:
 ## Play music directly from a file path without registering it
 func play_music_file(file_path: String, volume: float = 1.0) -> void:
 	if not file_path or file_path.is_empty():
-		Logger.warn(self, "Cannot play music - empty file path")
+		push_warning("Cannot play music - empty file path")
 		return
 	
-	Logger.info(self, "Playing music file: %s with volume: %s" % [file_path, volume])
+	print("Playing music file: %s with volume: %s" % [file_path, volume])
 	
 	# Load the music file
 	var stream = load(file_path)
 	if not stream:
-		Logger.warn(self, "Could not load music file: %s" % file_path)
+		push_warning("Could not load music file: %s" % file_path)
 		return
 	
 	# Set up the music player
@@ -527,7 +562,7 @@ func play_music_file(file_path: String, volume: float = 1.0) -> void:
 	music_player.volume_db = linear_to_db(volume * music_volume)
 	music_player.play()
 	current_track = file_path
-	Logger.info(self, "Started music playback with volume: %s" % volume)
+	print("Started music playback with volume: %s" % volume)
 
 ## Play a sequence of voiceover files with a specific volume
 func play_voiceover_sequence_with_volume(paths: Array, volume: float = 1.0, finished_callback: Callable = Callable()) -> void:
@@ -551,7 +586,7 @@ func _play_next_voiceover_in_queue_with_volume():
 	var next_path = voiceover_queue.pop_front()
 	var stream = load(next_path)
 	if not stream:
-		Logger.warn(self, "Could not load voiceover: %s" % next_path)
+		push_warning("Could not load voiceover: %s" % next_path)
 		_play_next_voiceover_in_queue_with_volume() # skip to next
 		return
 	
@@ -564,7 +599,7 @@ func _play_next_voiceover_in_queue_with_volume():
 	voiceover_player.finished.connect(_on_voiceover_finished_with_volume, CONNECT_ONE_SHOT)
 	voiceover_player.volume_db = linear_to_db(custom_volume * sfx_volume)
 	voiceover_player.play()
-	Logger.info(self, "Playing voiceover: %s with volume: %s" % [next_path, custom_volume])
+	print("Playing voiceover: %s with volume: %s" % [next_path, custom_volume])
 
 func _on_voiceover_finished_with_volume():
 	_play_next_voiceover_in_queue_with_volume()
@@ -574,19 +609,19 @@ func _on_voiceover_finished_with_volume():
 ## loop: Whether the music should loop
 ## persistent: Whether this is a persistent track that should be remembered
 func register_music(path: String, state: String = "", loop: bool = true, persistent: bool = false) -> void:
-	Logger.info(self, "Registering music: %s, state: %s, loop: %s, persistent: %s" % [path, state, loop, persistent])
+	print("Registering music: %s, state: %s, loop: %s, persistent: %s" % [path, state, loop, persistent])
 	
 	# Check if file exists
 	var file = FileAccess.open(path, FileAccess.READ)
 	if not file:
-		Logger.warn(self, "Could not register music - file not found: %s" % path)
+		push_warning("Could not register music - file not found: %s" % path)
 		return
 	file.close()
 	
 	# Load the audio stream
 	var stream = load(path)
 	if not stream:
-		Logger.warn(self, "Could not load music from path: %s" % path)
+		push_warning("Could not load music from path: %s" % path)
 		return
 	
 	# Use the state as the track name, or the filename if no state provided
@@ -610,23 +645,23 @@ func register_music(path: String, state: String = "", loop: bool = true, persist
 	if persistent and persistent_track.is_empty():
 		persistent_track = track_name
 	
-	Logger.info(self, "Registered music track: %s from %s" % [track_name, path])
+	print("Registered music track: %s from %s" % [track_name, path])
 
 ## Register a sound effect with a specific name
 func register_sfx(path: String, sfx_name: String = "") -> void:
-	Logger.info(self, "Registering SFX: %s, name: %s" % [path, sfx_name])
+	print("Registering SFX: %s, name: %s" % [path, sfx_name])
 	
 	# Check if file exists
 	var file = FileAccess.open(path, FileAccess.READ)
 	if not file:
-		Logger.warn(self, "Could not register SFX - file not found: %s" % path)
+		push_warning("Could not register SFX - file not found: %s" % path)
 		return
 	file.close()
 	
 	# Load the audio stream
 	var stream = load(path)
 	if not stream:
-		Logger.warn(self, "Could not load SFX from path: %s" % path)
+		push_warning("Could not load SFX from path: %s" % path)
 		return
 	
 	# Use the provided name or the filename if no name provided
@@ -637,17 +672,17 @@ func register_sfx(path: String, sfx_name: String = "") -> void:
 	# Store the sound effect in our dictionary
 	sound_effects[effect_name] = stream
 	
-	Logger.info(self, "Registered SFX: %s from %s" % [effect_name, path])
+	print("Registered SFX: %s from %s" % [effect_name, path])
 
 ## Suspend the persistent music (for cutscenes, etc.)
 func suspend_persistent_music() -> void:
-	Logger.info(self, "Suspending persistent music")
+	print("Suspending persistent music")
 	# Stop any current music
 	stop_music()
 
 ## Resume the persistent music after it was suspended
 func resume_persistent_music() -> void:
-	Logger.info(self, "Resuming persistent music")
+	print("Resuming persistent music")
 	play_persistent_music()
 
 ## Check if any SFX is currently playing
@@ -662,7 +697,7 @@ func get_sfx_duration(file_path: String) -> float:
 	# Try to load the audio stream
 	var stream = load(file_path)
 	if not stream:
-		Logger.warn(self, "Could not load audio file to get duration: %s" % file_path)
+		push_warning("Could not load audio file to get duration: %s" % file_path)
 		return 0.0
 		
 	# Check if it's a valid audio stream
@@ -711,21 +746,21 @@ func get_remaining_sfx_time() -> float:
 
 ## Stop all currently playing sound effects
 func stop_sfx() -> void:
-	Logger.info(self, "Stopping all SFX")
+	print("Stopping all SFX")
 	for player in sfx_players:
 		if player.playing:
 			player.stop()
 
 ## Play the persistent background track
 func play_persistent_music() -> void:
-	Logger.info(self, "Attempting to play persistent track: %s" % persistent_track)
+	print("Attempting to play persistent track: %s" % persistent_track)
 	
 	if persistent_track.is_empty():
-		Logger.warn(self, "No persistent track set")
+		push_warning("No persistent track set")
 		return
 		
 	if not music_tracks.has(persistent_track):
-		Logger.warn(self, "Persistent track not found in registered tracks: %s" % persistent_track)
+		push_warning("Persistent track not found in registered tracks: %s" % persistent_track)
 		return
 		
 	play_music(persistent_track)
@@ -738,10 +773,10 @@ func play_persistent_music() -> void:
 
 ## Play a registered persistent track by name and set it as the current persistent track
 func play_and_set_persistent_music(track_name: String) -> bool:
-	Logger.info(self, "Attempting to play and set persistent track: %s" % track_name)
+	print("Attempting to play and set persistent track: %s" % track_name)
 	
 	if not music_tracks.has(track_name):
-		Logger.warn(self, "Cannot play persistent track - track not registered: %s" % track_name)
+		push_warning("Cannot play persistent track - track not registered: %s" % track_name)
 		return false
 	
 	# Set this as the persistent track
@@ -754,15 +789,15 @@ func play_and_set_persistent_music(track_name: String) -> bool:
 	# Mark that we're using the persistent track
 	using_scene_music = false
 	
-	Logger.info(self, "Now playing persistent track: %s" % track_name)
+	print("Now playing persistent track: %s" % track_name)
 	return true
 
 ## Setter for persistent_track
 func set_persistent_track(track_name: String) -> bool:
-	Logger.info(self, "Setting persistent track to: %s" % track_name)
+	print("Setting persistent track to: %s" % track_name)
 	
 	if not music_tracks.has(track_name):
-		Logger.warn(self, "Cannot set persistent track - track not registered: %s" % track_name)
+		push_warning("Cannot set persistent track - track not registered: %s" % track_name)
 		return false
 	
 	persistent_track = track_name
@@ -770,7 +805,7 @@ func set_persistent_track(track_name: String) -> bool:
 	# Update the music configuration to mark this as persistent
 	music_config[track_name] = true
 	
-	Logger.info(self, "Set persistent track to: %s" % track_name)
+	print("Set persistent track to: %s" % track_name)
 	return true
 
 ## Dynamically load a music track at runtime
@@ -779,9 +814,9 @@ func load_music(track_name: String, path: String) -> void:
 	if stream:
 		music_tracks[track_name] = stream
 		music_track_paths[track_name] = path
-		Logger.info(self, "Loaded music track: %s from %s" % [track_name, path])
+		print("Loaded music track: %s from %s" % [track_name, path])
 	else:
-		Logger.warn(self, "Could not load music from path: %s" % path)
+		push_warning("Could not load music from path: %s" % path)
 
 ## Load a sound effect at runtime
 func load_sfx(sfx_name: String, path: String) -> void:
@@ -789,14 +824,14 @@ func load_sfx(sfx_name: String, path: String) -> void:
 	var stream = load(path)
 	if stream and stream is AudioStream:
 		sound_effects[sfx_name] = stream
-		Logger.info(self, "Loaded SFX: %s from %s" % [sfx_name, path])
+		print("Loaded SFX: %s from %s" % [sfx_name, path])
 	else:
 		# Try alternative loading method for imported files
 		if FileAccess.file_exists(path):
-			Logger.warn(self, "File exists but failed to load as AudioStream: %s" % path)
-			Logger.warn(self, "This may be due to import settings - file will be skipped")
+			push_warning("File exists but failed to load as AudioStream: %s" % path)
+			push_warning("This may be due to import settings - file will be skipped")
 		else:
-			Logger.warn(self, "SFX file not found: %s" % path)
+			push_warning("SFX file not found: %s" % path)
 		
 		# Don't increment the loaded count for failed loads
 		return

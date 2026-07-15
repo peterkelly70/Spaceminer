@@ -16,7 +16,7 @@ const POPUP_DIRECTORY = "res://scenes/ui/popups/"
 const DEFAULT_TRANSITION_TIME = 0.3
 
 func _ready() -> void:
-	Logger.info(self, "Initializing...")
+	print("Initializing...")
 	
 	# Create a canvas layer for popups if not already present
 	if not _popup_canvas_layer:
@@ -34,11 +34,11 @@ func _ready() -> void:
 		_popup_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_popup_canvas_layer.add_child(_popup_container)
 	
-	Logger.info(self, "Initialized successfully")
+	print("Initialized successfully")
 
 # Show a popup by name
 func show_popup(popup_name: String, params: Dictionary = {}) -> void:
-	Logger.info(self, "Showing popup: %s" % popup_name)
+	print("Showing popup: %s" % popup_name)
 	
 	# If there's already a popup showing, hide it first
 	if _current_popup:
@@ -47,7 +47,7 @@ func show_popup(popup_name: String, params: Dictionary = {}) -> void:
 	# Load the popup scene if not already loaded
 	var popup_instance = _get_popup_instance(popup_name)
 	if not popup_instance:
-		Logger.error(self, "Failed to load popup: %s" % popup_name)
+		push_error("Failed to load popup: %s" % popup_name)
 		return
 	
 	# While a popup is presented, block background interaction
@@ -113,7 +113,7 @@ func _get_popup_instance(popup_name: String) -> Control:
 		_popup_scenes[popup_name] = popup_scene
 		return popup_scene.instantiate()
 	
-	Logger.error(self, "Popup scene not found: %s" % popup_path)
+	push_error("Popup scene not found: %s" % popup_path)
 	return null
 
 # Cleanup popup and process queue

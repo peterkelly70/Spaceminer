@@ -1,67 +1,241 @@
-[gd_scene load_steps=3 format=3 uid="uid://pausepopup01"]
+[gd_scene load_steps=14 format=3 uid="uid://pausepopup01"]
 
-[ext_resource type="PackedScene" path="res://scenes/ui/popups/BasePopup.tscn" id="1_base"]
-[ext_resource type="Script" path="res://scripts/ui/popups/PausePopup.gd" id="2_script"]
+[ext_resource type="Script" path="res://scripts/ui/popups/PausePopup.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://bfmke1es4ewfx" path="res://assets/themes/retro_theme.tres" id="2_theme"]
 
-[node name="PausePopup" instance=ExtResource("1_base")]
-script = ExtResource("2_script")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 48.0
+content_margin_top = 36.0
+content_margin_right = 48.0
+content_margin_bottom = 36.0
+bg_color = Color(0, 0, 0, 0.97)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 1, 1, 1)
 
-[node name="TitleLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="0"]
-text = "PAUSED"
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_bg"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.05, 0.05, 0.05, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.6, 0.6, 1)
 
-[node name="ContentLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="0"]
-visible = false
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grabber_area"]
+bg_color = Color(0, 0.8, 0.8, 1)
 
-[node name="VolumeContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" index="3"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sep"]
+bg_color = Color(0, 1, 1, 0.4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_resume"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_resume_hover"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0.12, 0.12, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_quit_hover"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(0.12, 0.12, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 0, 1)
+
+[node name="PausePopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_script")
+
+[node name="BackgroundDimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(560, 0)
 layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="MusicRow" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
+theme_override_constants/separation = 22
 
-[node name="MusicLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
-text = "Music"
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBox"]
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_font_sizes/font_size = 52
+text = "- PAUSED -"
+horizontal_alignment = 1
+uppercase = true
 
-[node name="MuteButton" type="CheckButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
+[node name="Sep1" type="HSeparator" parent="CenterContainer/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_sep")
+
+[node name="MusicRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MusicLabel" type="Label" parent="CenterContainer/PanelContainer/VBox/MusicRow"]
+custom_minimum_size = Vector2(108, 0)
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "MUSIC"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/VBox/MusicRow"]
 unique_name_in_owner = true
-text = "Mute"
-
-[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 30)
+custom_minimum_size = Vector2(280, 28)
+layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("2_theme")
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider_bg")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_grabber_area")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_grabber_area")
 min_value = 0.0
 max_value = 100.0
 value = 80.0
 
-[node name="TrackSelect" type="OptionButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/MusicRow"]
+[node name="MusicValueLabel" type="Label" parent="CenterContainer/PanelContainer/VBox/MusicRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 30)
-size_flags_horizontal = 3
-
-[node name="SfxRow" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer"]
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "80%"
+horizontal_alignment = 2
 
-[node name="SfxLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/SfxRow"]
+[node name="SfxRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SfxLabel" type="Label" parent="CenterContainer/PanelContainer/VBox/SfxRow"]
+custom_minimum_size = Vector2(108, 0)
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 28
 text = "SFX"
 
-[node name="SfxSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/VolumeContainer/SfxRow"]
+[node name="SfxSlider" type="HSlider" parent="CenterContainer/PanelContainer/VBox/SfxRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 30)
+custom_minimum_size = Vector2(280, 28)
+layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("2_theme")
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider_bg")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_grabber_area")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_grabber_area")
 min_value = 0.0
 max_value = 100.0
 value = 100.0
 
-[node name="CancelButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="0"]
-visible = false
-
-[node name="ConfirmButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="1"]
-visible = false
-
-[node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="2"]
+[node name="SfxValueLabel" type="Label" parent="CenterContainer/PanelContainer/VBox/SfxRow"]
 unique_name_in_owner = true
-text = "Resume"
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "100%"
+horizontal_alignment = 2
 
-[node name="ExitButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="3"]
+[node name="Sep2" type="HSeparator" parent="CenterContainer/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_sep")
+
+[node name="ButtonContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/VBox/ButtonContainer"]
 unique_name_in_owner = true
-text = "Exit to Main Menu"
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(0.3, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_resume")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_resume_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_resume")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_resume")
+text = "> RESUME <"
+
+[node name="ExitButton" type="Button" parent="CenterContainer/PanelContainer/VBox/ButtonContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 0.4, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_quit")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_quit_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_quit")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_quit")
+text = "QUIT (SAVE GAME)"

@@ -13,7 +13,7 @@ var tooltip_theme = null
 
 # Initialize the tooltip manager
 func _ready() -> void:
-	Logger.info(self, "Initializing...")
+	print("Initializing...")
 	
 	# Create a canvas layer for tooltips to ensure they appear on top
 	var tooltip_layer = CanvasLayer.new()
@@ -29,12 +29,12 @@ func _ready() -> void:
 	tooltip_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tooltip_layer.add_child(tooltip_container)
 	
-	Logger.info(self, "Initialized")
+	print("Initialized")
 
 # Register a control to show a tooltip
 func register_tooltip(control: Control, tooltip_text: String) -> void:
 	if not control:
-		Logger.error(self, "Cannot register tooltip: control is null")
+		push_error("Cannot register tooltip: control is null")
 		return
 	
 	# Connect mouse entered/exited signals
@@ -47,13 +47,13 @@ func register_tooltip(control: Control, tooltip_text: String) -> void:
 	# Store tooltip text in control metadata
 	control.set_meta("tooltip_text", tooltip_text)
 	
-	Logger.info(self, "Registered tooltip for: %s" % control.name)
+	print("Registered tooltip for: %s" % control.name)
 
 # Set the tooltip theme
 func set_tooltip_theme(theme: Theme) -> void:
 	tooltip_theme = theme
 	
-	Logger.info(self, "Set tooltip theme")
+	print("Set tooltip theme")
 
 # Show a tooltip at the current mouse position
 func show_tooltip(tooltip_text: String) -> void:

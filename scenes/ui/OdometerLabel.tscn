@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c3h5q4ykxgbg7"]
 
 [ext_resource type="Script" path="res://scenes/ui/OdometerLabel.gd" id="1_5k4jm"]
-[ext_resource type="FontFile" uid="uid://b2ynxrq6vu5nh" path="res://assets/fonts/visitor1.ttf" id="2_vk1r4"]
+[ext_resource type="FontFile" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_vk1r4"]
 
 [node name="OdometerLabel" type="Control"]
 custom_minimum_size = Vector2(80, 30)

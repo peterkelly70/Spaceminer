@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://mappopup01"]
+
+[ext_resource type="PackedScene" uid="uid://c4vq8jfvxrpvw" path="res://scenes/ui/popups/BasePopup.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://m0gxp70oreqr" path="res://scripts/ui/popups/MapPopup.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://cbbq21dmdv6d4" path="res://assets/images/ui/border_02.png" id="3_285gc"]
+[ext_resource type="Script" uid="uid://bv0tbi3h7bcuc" path="res://scripts/ui/popups/MapGraph.gd" id="3_mapgraph"]
+[ext_resource type="Theme" uid="uid://bfmke1es4ewfx" path="res://assets/themes/retro_theme.tres" id="4_0u7r6"]
+
+[node name="MapPopup" unique_id=236441115 instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+
+[node name="border" type="TextureRect" parent="." index="1" unique_id=1761342647]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 141.0
+offset_right = 1481.0
+offset_bottom = 928.0
+texture = ExtResource("3_285gc")
+expand_mode = 1
+
+[node name="CenterContainer" parent="." index="2"]
+anchors_preset = -1
+anchor_left = 0.080000006
+anchor_top = 0.044000003
+offset_left = -153.6
+offset_top = -47.520004
+
+[node name="PanelContainer" parent="CenterContainer" index="0"]
+custom_minimum_size = Vector2(860, 620)
+
+[node name="TitleLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer" index="0"]
+theme = ExtResource("4_0u7r6")
+theme_override_font_sizes/font_size = 51
+text = "ASTEROID MAP"
+
+[node name="ContentLabel" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="0"]
+visible = false
+
+[node name="MapGraph" type="Control" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="1" unique_id=2058571059]
+custom_minimum_size = Vector2(760, 420)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3_mapgraph")
+
+[node name="MapInfoLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ContentContainer" index="2" unique_id=1663271156]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_0u7r6")
+theme_override_font_sizes/font_size = 28
+text = "Seed: Random | Current room: room_000 | M closes map | Esc opens pause"
+
+[node name="CancelButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="0"]
+visible = false
+
+[node name="ConfirmButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" index="1"]
+custom_minimum_size = Vector2(70, 0)
+size_flags_horizontal = 6
+theme = ExtResource("4_0u7r6")
+theme_override_font_sizes/font_size = 30
+text = "CLOSE"

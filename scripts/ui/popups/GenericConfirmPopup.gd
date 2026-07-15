@@ -17,32 +17,32 @@ var confirmed_result: bool = false
 #   popup.setup("Info", "Something happened", true)
 func setup(dialog_title: String, message: String, confirm_only: bool = false) -> void:
 	$"CenterContainer/PanelContainer/MarginContainer/VBoxContainer/TitleContainer/TitleLabel".text = dialog_title
-	Logger.info(self, "Setting title to: %s" % dialog_title)
+	print("Setting title to: %s" % dialog_title)
 	
-	Logger.info(self, "Setting message to: %s" % message)
-	Logger.info(self, "Message label found: %s" % is_instance_valid(message_label))
+	print("Setting message to: %s" % message)
+	print("Message label found: %s" % is_instance_valid(message_label))
 	if message_label:
 		# Force direct text assignment to override any inherited default text
 		TextUtils.assign(message_label,message,false)
-		Logger.info(self, "Message set directly to override defaults")
+		print("Message set directly to override defaults")
 	else:
-		Logger.error(self, "Message label not found!")
+		push_error("Message label not found!")
 	
-	Logger.info(self, "Setting up popup with confirm_only = %s" % confirm_only)
+	print("Setting up popup with confirm_only = %s" % confirm_only)
 	
 	if confirm_only:
 		# For informational popups, hide cancel button and change confirm text
 		cancel_button.visible = false
 		cancel_button.disabled = true
 		confirm_button.text = "OK"
-		Logger.info(self, "Setting up as informational popup (OK only)")
+		print("Setting up as informational popup (OK only)")
 	else:
 		# For confirmation popups, show both buttons
 		cancel_button.visible = true
 		cancel_button.disabled = false
 		cancel_button.text = "NO"
 		confirm_button.text = "YES"
-		Logger.info(self, "Setting up as confirmation popup (YES/NO)")
+		print("Setting up as confirmation popup (YES/NO)")
 
 func _ready():
 	var default_theme = load("res://assets/themes/default_theme.tres")
@@ -55,7 +55,7 @@ func _ready():
 	# Make sure the buttons are properly initialized
 	cancel_button.visible = true
 	cancel_button.disabled = false
-	Logger.info(self, "_ready() called, theme applied")
+	print("_ready() called, theme applied")
 
 func _on_cancel_pressed():
 	confirmed_result = false

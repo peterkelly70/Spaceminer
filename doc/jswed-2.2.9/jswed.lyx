@@ -1,0 +1,7358 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language english
+\inputencoding latin1
+\fontscheme times
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+JSWED v2.2.9
+\layout Author
+
+John Elliott
+\layout Abstract
+
+JSWED is an editor for games based on the 
+\emph on 
+Jet Set Willy
+\emph toggle 
+ and 
+\emph on 
+Manic Miner
+\emph toggle 
+ engines.
+ This document describes how to use it.
+\layout Standard
+\pagebreak_top \pagebreak_bottom 
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Changes since previous versions
+\layout Subsection
+
+Since 2.2.8, the last stable version
+\layout Enumerate
+
+A memory-corruption bug has been fixed, which could cause a crash if the
+ game being edited had a start room with a higher number than 64.
+\layout Enumerate
+
+Memory accesses have also been checked using the valgrind tool, resulting
+ in a number of corrections which should improve stability.
+\layout Enumerate
+
+JSW64 games are upgraded to Hacklevel 12, which allows 
+\begin_inset Quotes eld
+\end_inset 
+
+Trap
+\begin_inset Quotes erd
+\end_inset 
+
+ cells.
+ 
+\layout Enumerate
+
+If you put Maria and the bathroom toilet in the same room, the game engine
+ will be automatically patched to support this.
+\layout Enumerate
+
+The cyan highlight is correctly drawn on the JSW64 
+\begin_inset Quotes eld
+\end_inset 
+
+portals
+\begin_inset Quotes erd
+\end_inset 
+
+ screen.
+\layout Subsection
+
+Since previous 2.2.
+\emph on 
+x
+\emph default 
+ versions
+\layout Enumerate
+
+Bug fix: Items were not shown in games based on the JSW64 engine.
+\layout Enumerate
+
+Bug fix: Guardians whose sprites were local to a room were not displayed.
+\layout Enumerate
+
+Guardians and items are now drawn with transparent backgrounds, rather than
+ having a little block of colour follow them about.
+\layout Enumerate
+
+A tune import/export facility has been added.
+ See section 
+\begin_inset LatexCommand \ref{sub:musicedit}
+
+\end_inset 
+
+.
+\layout Enumerate
+
+More room navigation keys: CTRL+P takes you to the previous room; CTRL+J
+ allows you to jump to an arbitrary room number; CTRL+L refreshes the current
+ room.
+\layout Enumerate
+
+Multiple items can be placed in a single position by holding down SHIFT
+ while placing the items.
+\layout Enumerate
+
+An autosave facility has been added.
+\layout Enumerate
+
+Bug fix: If a portal is using sprites local to the room, then when the sprite
+ is changed the portal in the room display will immediately be updated to
+ match it.
+\layout Enumerate
+
+The Manic Miner and JSW64 cell graphic editors now preview in colour.
+ 
+\layout Enumerate
+
+Bugfix: Preview bitmaps no longer have their last row endlessly repeated.
+ 
+\layout Enumerate
+
+Bugfix: Drawing in the font editor now immediately updates the list view.
+ 
+\layout Enumerate
+
+Bugfix: The sprite chooser for guardians now displays all 8 frames of the
+ sprites.
+ 
+\layout Enumerate
+
+Bugfix: A race condition in the guardian editor could cause a crash.
+ 
+\layout Enumerate
+
+Bugfix: Various values for multicolour vertical guardians can now be edited.
+ 
+\layout Enumerate
+
+Bugfix: When switching between two views of the same room, out-of-date data
+ (eg.
+ guardian paths) were being cached.
+ 
+\layout Enumerate
+
+A hex editor utility has been added, allowing arbitrary changes to be made
+ to the internal structure of a game.
+\layout Enumerate
+
+The HOME and END keys now have functions.
+ HOME takes you to the start of a line of text; END to the end.
+ SHIFT+HOME takes you to the top of a scrolling list; SHIFT+END to the end.
+\layout Enumerate
+
+The file selector now remembers what its current directory is.
+\layout Enumerate
+
+A simple screenshot utility has been added.
+ To use it, switch to the 'Rooms' screen and press F8.
+ Each room in the game will be saved as a numbered .PNG file in the current
+ directory.
+\layout Enumerate
+
+Bug fix: Rope positioning now works in JSW64 rooms
+\layout Enumerate
+
+Bugfix in the JSW128 to JSW64 conversion, where the target JSW64 game has
+ 64 rooms.
+\layout Enumerate
+
+Sprites can be imported and exported from the sprite editor.JSW128 games
+ can be converted to JSW64 format, at the cost of some of their rooms.
+\layout Enumerate
+
+Arrows converted from JSW48/128 to JSW64 don't end up as four dots.
+\layout Enumerate
+
+WRITETYPER mode works correctly in the V/W variants of JSW64.
+ 
+\layout Enumerate
+
+The title screen editor can export images (in Spectrum SCREEN$ or PNG format)
+ and import them (in SCREEN$, PNG, BMP and JPG formats).
+\layout Section
+
+Legal Bits
+\layout Standard
+
+This version of JSWED is released under the GNU General Public License(sic).
+ If you are just using JSWED, this won't affect you; but if you intend to
+ distribute copies, then you must distribute all the source code as well
+ as the programs.
+ See the file COPYING (in the Windows version, COPYING.TXT) for details.
+\layout Standard
+
+The Z80 patches (room_*.hex, rtime*bin) which are loaded as part of a JSW64
+ game are not covered by the GPL (since this would make it impossible to
+ link them with the JSW engine).
+ They are released under the zlib/libpng licence.
+\layout Section
+
+Installing JSWED 
+\layout Subsection
+
+Installing under Windows
+\layout Standard
+
+This release of JSWED requires Windows 95, 98, ME, NT, 2000 or XP (and it'll
+ probably work on future versions like Vista as well).
+ The .ZIP file contains the setup programs; unzip it and run SETUP.EXE.
+ 
+\layout Standard
+
+If you are troubled by frequent crashes, this is probably caused by bugs
+ in JSWED.
+ However, it may also be an idea to stop JSWED using DirectX, to see if
+ this improves stability.
+ To disable DirectX under Windows 9x/ME, add the following line to your
+ AUTOEXEC.BAT file:
+\layout Quote
+
+
+\family typewriter 
+SET SDL_VIDEODRIVER=windib
+\layout Standard
+
+and reboot.
+ Under Windows NT/2000/XP, you need to add an environment variable, which
+ is done using the System control panel.
+ Set the new variable's name to 
+\family typewriter 
+SDL_VIDEODRIVER
+\family default 
+ and its value to 
+\family typewriter 
+windib
+\family default 
+.
+\layout Subsection
+
+Installing under 
+\noun on 
+Unix
+\layout Standard
+
+Provided you have the SDL and SDL_image libraries on your system, you should
+ just be able to get away with
+\layout Standard
+
+
+\family typewriter 
+./configure
+\layout Standard
+
+
+\family typewriter 
+make
+\layout Standard
+
+
+\family typewriter 
+su root
+\layout Standard
+
+
+\family typewriter 
+make install
+\layout Subsection
+
+Installing under BeOS
+\layout Standard
+
+This should behave the same way as 
+\noun on 
+Unix
+\noun default 
+, though you may have to use --prefix= options in the './configure' line.
+\layout Section
+
+Running JSWED
+\layout Standard
+
+In Windows, double-click JSWED.EXE, start it from the Start menu or change
+ to the directory where JSWED is installed and type 
+\family typewriter 
+jswed 
+\emph on 
+{filename}
+\family default 
+\emph default 
+ .
+ In 
+\noun on 
+Unix
+\noun default 
+, type 
+\family typewriter 
+jswed 
+\emph on 
+{filename}
+\family default 
+\emph default 
+ at a command prompt, or set up a shortcut to it in your preferred desktop
+ environment.
+ If 
+\emph on 
+{filename}
+\emph default 
+ is present, it should be the name of a file to load.
+\layout Standard
+
+When JSWED is started, the main window will appear.
+ There will be six menu options:
+\layout Subsection
+
+Load file
+\layout Standard
+
+Brings up a file selector from which you can choose the file to load.
+ JSWED supports +3DOS, TAP, SNA and Z80 formats.
+ Note that 128k .SNA files can be saved and loaded by JSWED, but may not
+ be compatible with emulators.
+ If you intend to use +3DOS files you should read the notes below (section
+ 
+\begin_inset LatexCommand \ref{sec: p3dos}
+
+\end_inset 
+
+).
+\layout Standard
+
+To change to a different drive (Windows only), tab to the filename field
+ at the bottom of the screen, clear out what's in there (Press CTRL+Y) and
+ type its drive name, followed by a colon.
+ Then press RETURN.
+\layout Standard
+
+Once a file is successfully loaded the top line of the screen shows the
+ loaded file and its type (48k, 128k, Softricks, Henry's Hoard, etc.).
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: p3dos}
+
+\end_inset 
+
++3DOS file support
+\layout Standard
+
+As far as 48k games go, this is quite easy.
+ The file format JSWED uses is a single file, CODE 32768,32768.
+ The fun comes with 128k games, because they are stored in multiple +3DOS
+ files.
+\layout Standard
+
+When loading or saving, JSWED must be given the filename of the BASIC loader
+ (
+\family typewriter 
+JetSet.128
+\family default 
+).
+ The other files that make up JSW128 are assumed to be in the same directory
+ as the loader, and have the standard +3DOS filenames for JSW files (
+\family typewriter 
+rtime.js2
+\family default 
+, 
+\family typewriter 
+rooms.js6
+\family default 
+ etc.) Be especially careful when saving, because files with these names
+ will be overwritten without asking.
+\layout Standard
+
+The loader program (
+\family typewriter 
+JetSet.128
+\family default 
+) saved in +3DOS mode is a 'universal' loader that ought to work on cassette
+ or disc.
+\layout Subsection
+
+Save file
+\layout Standard
+
+Brings up the same sort of file selector, so you can save the game.
+ The type of file used will be the same as the one used in loading, unless
+ you changed it while editing.
+\layout Subsection
+
+Edit game
+\layout Standard
+
+This is the heart of JSWED and is described fully in section 
+\begin_inset LatexCommand \ref{sec: editing}
+
+\end_inset 
+
+.
+\layout Subsection
+
+Configure
+\layout Standard
+
+This is used to set up the Spectrum emulator used for testing, and the Autosave
+ feature.
+ There are three fields to enter:
+\layout Enumerate
+
+The Spectrum emulator filename; you should enter the full path to the emulator.
+ The emulator in question must be able to load .Z80 files.
+\layout Enumerate
+
+The Autosave filename.
+ This should be the name of a .Z80 snapshot, which will be saved at the specified
+ interval.
+\layout Enumerate
+
+The Autosave interval, in seconds.
+ Enter 0 to disable Autosave completely.
+ 
+\layout Subsection
+
+About JSWED
+\layout Standard
+
+Displays the current version, and supported game types.
+\layout Subsection
+
+Leave program
+\layout Standard
+
+Will leave JSWED instantly.
+ Unsaved work will be lost.
+ Closing the JSWED window also has this effect.
+\layout Section
+
+The user interface
+\layout Standard
+
+The JSWED user interface is based on the Spectrum 128 editor, plus features
+ from more recent GUIs.
+ On most screens, the current control will be highlighted by a blue dotted
+ border, and you can use TAB to move from one to the next.
+ Text controls contain a blue/white flashing cursor, which can be moved
+ by the cursor keys (the control will scroll if there's more text than can
+ be seen).
+\layout Standard
+
+In the menus, use the cursor keys and ENTER to choose an option; PageUp/PageDown
+ allow scrolling menus to move a page at a time.
+ Press ESCAPE to cancel the menu.
+\layout Part
+
+Jet Set Willy (JSW48 and JSW128)
+\layout Section
+
+
+\begin_inset LatexCommand \label{sec: editing}
+
+\end_inset 
+
+Editing games
+\layout Standard
+
+The game editor is composed of a series of pages, with a list in the top
+ left-hand corner.
+ To choose a page, click on its title or use ALT+UP / ALT+DOWN to choose
+ between them.
+\layout Standard
+
+Each page has a context menu, which can be accessed by right-clicking the
+ screen or pressing the 
+\begin_inset Quotes eld
+\end_inset 
+
+menu
+\begin_inset Quotes erd
+\end_inset 
+
+ key (next to the bottom right-hand CTRL key).
+\layout Standard
+
+At any time while editing a game, you can press F2 to save your file, or
+ F5 to run it in a Spectrum emulator.
+\layout Standard
+
+The screens are:
+\layout Subsection
+
+Game
+\layout Standard
+
+This page allows you to change the file format used for saving (note that
+ 128k games saved in SNA format can be reloaded in JSWED, but the 128k SNA
+ format may not be compatible with emulators).
+ The page also contains a list of patches which can be applied to the game
+ engine.
+ Each patch is accompanied by a tickbox which is either ticked (the patch
+ is applied), empty (the patch can be applied) or shaded (the patch cannot
+ be applied).
+ 
+\layout Subsubsection
+
+Upgrading to 128k / Converting to JSW64
+\layout Standard
+
+At the bottom of the Game screen is a button.
+ In 48k games it is marked 
+\begin_inset Quotes eld
+\end_inset 
+
+Upgrade to 128k
+\begin_inset Quotes erd
+\end_inset 
+
+; in 128k games, it reads 
+\begin_inset Quotes eld
+\end_inset 
+
+Convert to JSW64
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ If you click it, it will offer a choice of formats to convert your game
+ to:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="8" columns="5">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Upgrade to
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rooms
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Guardians / room
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Cell types / room
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Free space / room
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW128
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW64 V
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+128
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64 bytes
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW64 W
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+128
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13*
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW64 X
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13**
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+576 bytes
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW64 Y
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8**
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13*
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+512 bytes
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW64 Z
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8**
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13***
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256 bytes
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW64 [
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4**
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+16
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+512 bytes
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Description
+
+* There are 13 cell types defined per room, and three 'global' ones which
+ are the same in all rooms.
+\layout Description
+
+** The guardian table can be moved into the free space, giving you up to
+ 32 guardians per room.
+\layout Description
+
+*** JSW64 Z allows any attribute to be used in a room; so there are actually
+ 256 cell types, of which 240 behave like 'water' blocks.
+\layout Standard
+
+If you click the button and then confirm your request, you will see all
+ the upgrades being applied and then be returned to the main menu.
+ Geoff Mode games and Henry's Hoard games cannot be upgraded to 128k.
+ Games patched in other ways (for example, with Andrew Broad's custom sprite
+ code) may upgrade cleanly to JSW128, but will not upgrade to JSW64.
+ 
+\layout Standard
+
+
+\emph on 
+Warning: If you convert a JSW128 game to JSW64, only the first 128 (or 64)
+ rooms will be converted; the others will be lost.
+\layout Standard
+
+The patches that can be applied are:
+\layout Subsubsection
+
+Adjacent ropes
+\layout Standard
+
+Normally, if you want multiple ropes in a room, you have to put blank guardians
+ between them.
+ If you turn this patch on, it becomes possible to have all eight guardian
+ slots occupied by ropes.
+ Note that there are (old) and (new) versions of this patch; The (old) one
+ was supplied in previous JSWED versions; the (new) one is the one you should
+ use in new games.
+\layout Subsubsection
+
+Black Willy
+\layout Standard
+
+Make Willy black.
+ You will need to set backgrounds to light colours.
+ 
+\layout Subsubsection
+
+Fall any height
+\layout Standard
+
+Stop Willy dying if he falls too far.
+\layout Subsubsection
+
+No auto pause
+\layout Standard
+
+Normally JSW pauses if left by itself for too long.
+ To disable it, apply this patch.
+\layout Subsubsection
+
+Monochrome
+\layout Standard
+
+The entire game area will be drawn in white on black, like the Dragon 32
+ version of JSW.
+ 
+\layout Subsubsection
+
+Jet Set Wibble
+\layout Standard
+
+Break the player's brain by turning the entire game engine upside-down.
+\layout Subsubsection
+
+Items wobble
+\layout Standard
+
+Collectable items wobble from side to side.
+ Designed for use in conjunction with the 'Monochrome' patch, since items
+ no longer colour-cycle if the screen is monochrome.
+\layout Subsubsection
+
+Items jiggle
+\layout Standard
+
+The same sort of thing as the previous patch, except that the items move
+ up and down rather than right and left.
+\layout Subsubsection
+
+Fix bug in 'fast JSW'
+\layout Standard
+
+This should be used in conjunction with Mark Woodmass's 
+\begin_inset Quotes eld
+\end_inset 
+
+marginally faster
+\begin_inset Quotes erd
+\end_inset 
+
+ Jet Set Willy engine.
+ It moves the rope coordinates table from 8300h to 9F00h, so that the ropes
+ are no longer all over the place.
+ If you use it on a normal JSW engine, it will do no harm but you lose the
+ use of the sprite page at 9F00h.
+\layout Subsubsection
+
+Softricks death
+\layout Standard
+
+For some reason games written with the Softricks editor show the title screen
+ briefly when Willy dies, and the 
+\begin_inset Quotes eld
+\end_inset 
+
+death
+\begin_inset Quotes erd
+\end_inset 
+
+ sound effect is different.
+ This patch switches the effect on and off.
+\layout Subsubsection
+
+Attract mode
+\layout Standard
+
+After the title screen music has played, all the screens in the game will
+ be displayed in turn.
+\layout Subsubsection
+
+No infinite death (48k games only)
+\layout Standard
+
+Switches to Ian Collier's 
+\begin_inset Quotes eld
+\end_inset 
+
+No infinite death
+\begin_inset Quotes erd
+\end_inset 
+
+ mode, in which every room definition contains a safe start position.
+ If Willy dies, he will reappear in this position.
+\layout Standard
+
+Note that if you turn this effect on, on a game which previously didn't
+ have it, it is 
+\emph on 
+essential 
+\emph default 
+to set up a valid restart position in every room, and to set the initial
+ room again.
+ Otherwise the game will crash on startup or when Willy loses a life.
+\layout Subsubsection
+
+Fix victory bug (Henry's Hoard only)
+\layout Standard
+
+The earlier (1985) version of Henry's Hoard doesn't show the victory screen
+ when you win the game.
+ Put a tick in this box to fix the bug.
+\layout Subsection
+
+Message
+\layout Standard
+
+This page contains messages printed by the game - the title screen message,
+ the 
+\begin_inset Quotes eld
+\end_inset 
+
+Game Over
+\begin_inset Quotes erd
+\end_inset 
+
+ message, and the 
+\begin_inset Quotes eld
+\end_inset 
+
+objects collected
+\begin_inset Quotes erd
+\end_inset 
+
+ message.
+ You can edit them as you like; the program will not allow you to enter
+ more text than will fit.
+\layout Standard
+
+If you are editing Henry's Hoard, then the messages will all be in capitals.
+ The game engine can only print in capitals, so don't try entering lower-case
+ messages.
+\layout Subsection
+
+Memory
+\layout Standard
+
+This page is only present on JSW128 and JSW64 versions.
+ It shows the memory being used for various game aspects such as sprites
+ and guardian tables.
+ Click on a cell (or tab to it and press SPACE) to change its meaning; note
+ that to allocate a guardian table you will need four consecutive memory
+ pages (eight for upgraded Softricks games).
+\layout Subsection
+
+Sprites
+\layout Standard
+
+The sprite editor screen is divided into two parts.
+ The bottom half contains a list of sprites; select these using the left
+ and right cursor keys (use PageUp/PageDown to move faster) and click or
+ press ENTER on the chosen sprite.
+ You can also scroll the list with the mouse, by clicking on the arrows
+ in the bottom corners.
+\layout Standard
+
+Once you have chosen a sprite, switch to the editor using TAB and use the
+ four cursor keys to move the cursor, SPACE to toggle the cell colour (or
+ use the mouse).
+ 
+\layout Standard
+
+Press CTRL+Z or CTRL+U to undo changes to the current sprite.
+ Press it again to undo the undo.
+\layout Subsubsection
+
+Importing / Exporting
+\layout Standard
+
+Right-click on the bitmap editor and you will be given the option to perform
+ bitmap operations (reflect, rotate, invert and so on), or to export or
+ import.
+\layout Standard
+
+When exporting, you are asked to specify the first and last sprite to be
+ exported, and the file format to use (+3DOS or PNG).
+ The +3DOS format saves as a chunk of Spectrum memory; PNG as an image with
+ all the sprites side by side.
+ 
+\layout Standard
+
+When importing, JSWED will detect the file format in use (+3DOS, PNG, BMP
+ or JPG).
+ It will then ask which is the first sprite to be replaced; the last sprite
+ to replace is then calculated automatically.
+ If you click 'Preview' at this point, you will be able to see the sprites
+ in the file being imported.
+\layout Standard
+
+Imported images should be 16 pixels high, with the sprites side by side
+ in black on white.
+\layout Subsection
+
+The Room Editor
+\layout Standard
+
+The room editor is controlled a bit differently from the other screens.
+ Instead of using TAB to move between controls and SPACE to select, the
+ cursor keys are used to move the blue/white cursor in the room display.
+ The keyboard is used to choose what to do under that cursor.
+ The full list of keys is:
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="21" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0pt">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Key
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Meaning
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Cursor keys
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Move room cursor
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+CTRL+Cursor keys
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Go to another room, following the JSW exits
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+< >
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Go to room numbered 1 higher or 1 lower
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+J
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Go to a room chosen from a menu
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+X
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Set up the room's exits (
+\begin_inset LatexCommand \ref{sec: exits}
+
+\end_inset 
+
+)
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+B
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Clipboard .(
+\begin_inset LatexCommand \ref{sec: clipboard}
+
+\end_inset 
+
+)
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+O
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Room options (
+\begin_inset LatexCommand \ref{sec: roomopts}
+
+\end_inset 
+
+)
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+G
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Guardians.
+ (
+\begin_inset LatexCommand \ref{sec: guards}
+
+\end_inset 
+
+) 
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+ALT+C
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Conveyor options (
+\begin_inset LatexCommand \ref{sec: conveyopts}
+
+\end_inset 
+
+)
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1-8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Choose guardian to position using the cursor
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+ALT+1-8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Change guardian start frame (
+\begin_inset LatexCommand \ref{sec: guardopts}
+
+\end_inset 
+
+)
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+A/W/E/F
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Draw Air/Water/Earth/Fire cell under the cursor when SPACE is pressed
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+R
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Ramp editor
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+C
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Conveyor editor
+\end_inset 
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+I
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Toggle item under the cursor when SPACE is pressed
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(Use SHIFT+SPACE to place multiple items in the same place)
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+CTRL+P
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Go to the previous room you were looking at (if any).
+ 
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+CTRL+J
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Go to another room by entering its number.
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+CTRL+L
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Refresh this room, as if you had gone to another and come back.
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+CTRL+Z or CTRL+U
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Undo changes to current room.
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: moving}
+
+\end_inset 
+
+Moving between rooms
+\layout Standard
+
+The panel in the bottom left-hand corner contains controls used to move
+ between rooms.
+ When you go to another room the current room is saved.
+\layout Standard
+
+The four arrows (corresponding to CTRL+cursor keys) move you to neighbouring
+ rooms in the JSW map.
+ The < > signs use the room number sequence, and 
+\begin_inset Quotes eld
+\end_inset 
+
+Enter no.
+\begin_inset Quotes erd
+\end_inset 
+
+ (press J) lets you choose the new room from a menu.
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: exits}
+
+\end_inset 
+
+Editing exits
+\layout Standard
+
+When you ask to edit exits, a menu appears showing the current exit assignments.
+ Press ESC to leave them as they are, or choose the exit to set.
+ If you chose an exit, a list of rooms then appears for you to choose the
+ new destination.
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: clipboard}
+
+\end_inset 
+
+Clipboard
+\layout Standard
+
+The clipboard allows you the usual copy/cut/paste options, plus the ability
+ to clear the room to any of the four cell types and to mirror the structure
+ of the room horizontally or vertically.
+ Note that mirroring does not alter ramps, conveyors or exit assignments.
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: roomopts}
+
+\end_inset 
+
+Room options
+\layout Standard
+
+The room options menu gives you three options: 
+\layout Itemize
+
+General: Allows you to set the border colour, room title and (in 128k games)
+ Willy's sprite.
+\layout Itemize
+
+Shapes: Shows the bitmaps for the seven cell types, and allows you to edit
+ them.
+ Right-click a bitmap for reflect/rotate/move options, as in the sprite
+ editor.
+\layout Itemize
+
+Colours: Allows you to edit the colours of the cells.
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: guards}
+
+\end_inset 
+
+Guardians
+\layout Standard
+
+If you don't have a guardian currently selected, you are given the option
+ of adding another one (assuming, that is, that you don't have eight in
+ the room already).
+ If you do have a guardian selected, you are also able to delete it from
+ the room or to edit it (section 
+\begin_inset LatexCommand \ref{sec: gedit}
+
+\end_inset 
+
+).
+ 
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: conveyopts}
+
+\end_inset 
+
+Conveyor options
+\layout Standard
+
+Use the conveyor options menu to set four special conveyor types:
+\layout Itemize
+
+Ramp left / Ramp right: Turn the ramp into a conveyor ramp (escalator),
+ with no separate conveyor.
+\layout Itemize
+
+Sticky / off: The conveyor is stationary.
+ 
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sec: guardopts}
+
+\end_inset 
+
+Guardian / guardian start frame
+\layout Standard
+
+To choose a guardian to work with, click its number in the second menu from
+ the right.
+ The guardian's eight frames will appear at the bottom of the screen, and
+ an outline of its path will be visible at the top.
+ To position a guardian, use the cursor or mouse.
+ 
+\layout Standard
+
+To change the guardian's start frame, press ALT+numbers, or click on the
+ animations within the guardian list.
+\layout Subsubsection
+
+Cell editors
+\layout Standard
+
+Rooms in JSW are composed of the four elements known to Greek philosophy
+ - Air, Earth, Water and Fire.
+ They can also have at most one ramp and one conveyor.
+\layout Standard
+
+Edit the layout of the room by pressing A,E,W,F,R or C, moving the cursor
+ to where you want, and pressing SPACE or clicking the mouse.
+ You can drag the mouse to draw shapes.
+\layout Standard
+
+The ramp and conveyor editors need two presses of SPACE (or two clicks),
+ one at each end.
+ For a ramp, start at the bottom; as you press left/right, the ramp will
+ grow.
+ For a conveyor, start at the 
+\begin_inset Quotes eld
+\end_inset 
+
+from
+\begin_inset Quotes erd
+\end_inset 
+
+ end and move the cursor towards the 
+\begin_inset Quotes eld
+\end_inset 
+
+to
+\begin_inset Quotes erd
+\end_inset 
+
+ end.
+ If you press SPACE twice without moving in between, the ramp/conveyor will
+ be deleted; to create a ramp/conveyor one character long, grow it to two
+ characters and then shrink it.
+\layout Standard
+
+Items are superimposed on the other cell types.
+ Select the item type by pressing 
+\begin_inset Quotes eld
+\end_inset 
+
+I
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ To add an item, click where one is not; to remove it, click where one is.
+\layout Subsection
+
+Teleport editor
+\layout Standard
+
+The teleport overlay is supported for JSW48, JSW128 and JSW64 games.
+ By default teleportation is not supported; to get teleporter support you
+ must load the overlay.
+ In JSW48 you then have to sacrifice a room to the teleporter code; in JSW128/JS
+W64 it is allocated from the memory map.
+\layout Standard
+
+Once the teleporter overlay is loaded, you can click on the room to create
+ a teleporter (which will appear as an orange 
+\begin_inset Quotes eld
+\end_inset 
+
+T
+\begin_inset Quotes erd
+\end_inset 
+
+).
+ You will then be asked to choose its destination.
+\layout Standard
+
+If you click on an existing teleporter, you can delete it or change its
+ destination.
+\layout Subsection
+
+Start position editor
+\layout Standard
+
+This editor allows you to position three special sprites - Willy's initial
+ position, Maria and the toilet.
+ Click the sprites (or press W / M / T) and then position them in the room
+ you want.
+ Note that in Henry's Hoard you can only position Willy/Henry.
+ In a Geoff Mode game you can't have Maria and the toilet in the same room;
+ in a normal game, you can.
+ 
+\layout Standard
+
+If you have the 
+\begin_inset Quotes eld
+\end_inset 
+
+No infinite death
+\begin_inset Quotes erd
+\end_inset 
+
+ patch turned on, there will be a fourth special sprite - the safe restart
+ position (a green version of Willy).
+ This must be set to a valid value for each room in the game; if Willy dies
+ in a room where this position has not been set, the game will crash!
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{sec: fontedit}
+
+\end_inset 
+
+Font editor
+\layout Standard
+
+The font editor works exactly like the sprite editor - click on a letter,
+ and edit its bitmap.
+\layout Subsection
+
+Screen editor
+\layout Standard
+
+The screen editor works like the room editor - use cursor keys or the mouse
+ to move the cursor within the image, and press SPACE or click the mouse
+ to draw.
+ Depending on which screen you are editing, you may be able to edit just
+ the pixels, just the attributes, or both.
+ Press the 
+\begin_inset Quotes eld
+\end_inset 
+
+M
+\begin_inset Quotes erd
+\end_inset 
+
+ key or click the 
+\begin_inset Quotes eld
+\end_inset 
+
+Mode
+\begin_inset Quotes erd
+\end_inset 
+
+ icon to switch between pixel and attribute modes.
+\layout Subsubsection
+
+The Zoom window
+\layout Standard
+
+To the left of the main screen window is a zoom window.
+ This shows a scaled-up version of the character cell the cursor is currently
+ in.
+ Clicks in this window have no effect; it's for viewing only.
+\layout Subsubsection
+
+Editing pixels
+\layout Standard
+
+Click on a pixel to toggle it between ink and paper; you can drag the mouse
+ to set several pixels to the same colour.
+ The keyboard control may be more useful here because moving the mouse by
+ one pixel at a time is quite fiddly.
+\layout Subsubsection
+
+Editing attributes
+\layout Standard
+
+The current attribute that will be used is set using I(nk), P(aper), B(right),
+ F(lash).
+ Once you have chosen the attribute combination you want, click on a character
+ square to set its colours.
+\layout Subsubsection
+
+Grids
+\layout Standard
+
+Press 
+\begin_inset Quotes eld
+\end_inset 
+
+G
+\begin_inset Quotes erd
+\end_inset 
+
+ or click on the 
+\begin_inset Quotes eld
+\end_inset 
+
+Grid
+\begin_inset Quotes erd
+\end_inset 
+
+ icon to switch between the two available grids.
+ They are the Pixel grid (attributes show as normal, but a pattern of squares
+ appears instead of the pixels) and the Attribute grid (pixels show as normal,
+ but the attributes are a fixed pattern).
+ 
+\layout Subsubsection
+
+Next / Previous
+\layout Standard
+
+Press 
+\begin_inset Quotes eld
+\end_inset 
+
+<
+\begin_inset Quotes erd
+\end_inset 
+
+ / 
+\begin_inset Quotes eld
+\end_inset 
+
+>
+\begin_inset Quotes erd
+\end_inset 
+
+ or click the same symbols onscreen to move from one picture to the next.
+ The following pictures exist in the different games:
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="19" columns="4">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0pt">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Game
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Screen no.
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Screen name
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Comments
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW 48k
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bottom third
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x128, attributes only
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW 128k
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bottom third
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x128, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen animation
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen animation
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+attributes only
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Henry's Hoard
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen 2 of 3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Only present in 1985 version
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Victory screen
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, bitmap only
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW64 games
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bottom third
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Air-remaining bar
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x8, attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+256x128, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+Title screen animation
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+5
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen animation
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+6
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+'Final Barrier' screen 1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+7
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+'Final Barrier' screen 2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Manic Miner
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bottom third
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen, top third
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen, middle third
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Undo
+\layout Standard
+
+Press Control-Z or Control-U to undo everything you have done to a picture
+ since the last 
+\begin_inset Quotes eld
+\end_inset 
+
+<
+\begin_inset Quotes erd
+\end_inset 
+
+ or 
+\begin_inset Quotes eld
+\end_inset 
+
+>
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ Press Control-Z again to undo the undo.
+\layout Subsubsection
+
+Import / Export
+\layout Standard
+
+Right-click on the screen being edited and you are given the option to import
+ or export the current image.
+ Images can be exported as PNG or Spectrum SCREEN$; they can be imported
+ as SCREEN$, PNG, BMP or JPG.
+ 
+\layout Standard
+
+Trying to import an image for a screen where you can only edit the attributes
+ (for example, the 
+\begin_inset Quotes eld
+\end_inset 
+
+bottom third
+\begin_inset Quotes erd
+\end_inset 
+
+ graphic) will generate an imported screen, and then load only that screen's
+ attributes.
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{sub:musicedit}
+
+\end_inset 
+
+The Music editor
+\layout Standard
+
+The music editor is present only in 128k games (JSW128 and JSW64).
+ It allows the three tunes to be played, exported or imported.
+ Under the description of each tune are three buttons:
+\layout Description
+
+Test runs the game in an emulator, just as pressing F5 does; except that
+ the title screen tune is changed to be the tune you want to test.
+\layout Description
+
+Export saves the selected tune.
+ Two formats are supported: +3DOS (this just saves the tune as a block of
+ memory) and Assembly (a text format, described more fully below).
+\layout Description
+
+Import loads a new tune over the currently selected one.
+ Both formats are supported.
+ If the new tune won't fit in the space available, the import will fail.
+ JSWED will automatically fix-up the file as it loads, so you can load a
+ tune into a slot other than the one it was saved from.
+\layout Subsubsection
+
+The Assembly file format
+\layout Standard
+
+The Assembly file format is the most suitable format for editing a tune
+ file or creating a new one (though that's not saying much).
+ It's in the form of an assembly language listing, compatible with Udo Munk's
+ Z80ASM assembler.
+ The only directives used (and the only ones that will be recognised on
+ import) are:
+\layout LyX-Code
+
+org  defw  defb  end
+\layout Standard
+
+A tune specified in Assembly format should be laid out as follows:
+\layout LyX-Code
+
+\layout LyX-Code
+
+        org     0f700h
+\layout Standard
+
+The org (origin) directive should be the first one in the file.
+ The value following it should be greater than 4000h but is otherwise comparativ
+ely unimportant.
+ In the case of tunes saved by JSWED, it gives the address where the tune
+ was saved from.
+\layout Standard
+
+The next three directives must be the addresses of the three channels:
+\layout LyX-Code
+
+        defw    Gf706
+\layout LyX-Code
+
+        defw    Gf751
+\layout LyX-Code
+
+        defw    Gf752 
+\layout Standard
+
+Usually these are stored as label names, but you could use numerical addresses
+ if you wanted.
+ JSWED outputs labels of the form Gxxxx, but you might want to use more
+ memorable names - eg:
+\layout LyX-Code
+
+        defw    channel1
+\layout LyX-Code
+
+        defw    channel2
+\layout LyX-Code
+
+        defw    channel3
+\layout Standard
+
+Following the channel addresses, the remainder of the file describes the
+ tune data.
+ For example:
+\layout LyX-Code
+
+GF706:  defb    0FEh    ;Call subroutine
+\layout LyX-Code
+
+        defw    Gf732
+\layout LyX-Code
+
+        defb    0FEh    ;Call subroutine
+\layout LyX-Code
+
+        defw    Gf742
+\layout LyX-Code
+
+        defb    03eh,00ah
+\layout LyX-Code
+
+        defb    03bh,00ah
+\layout LyX-Code
+
+        defb    03eh,014h
+\layout LyX-Code
+
+        defb    03dh,028h 
+\layout Standard
+
+The first line in the listing has a label.
+ You can put a label on any line of the file, but it only makes sense to
+ put them at the start of channels and at the start of subroutines.
+\layout Standard
+
+Each channel is formed of a series of instructions, constructed using defb
+ and defw directives.
+ The first byte is a command byte, which may then be followed by parameter
+ bytes.
+ These can be on the same line or on different lines; JSWED doesn't care.
+\layout Standard
+
+Any text on a line after a ; is ignored.
+\layout LyX-Code
+
+        end
+\layout Standard
+
+JSWED's output files end with the 'end' directive, but this is optional.
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="16" columns="3">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Command byte
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Number of parameter bytes
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Meaning
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+000h
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rest.
+ The parameter byte is the duration in jiffies.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+001h-0F8h
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Play a note.
+ The parameter byte is the duration in jiffies.
+\end_inset 
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+The command byte is the pitch in semitones; 48 is middle C.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0F9h
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Set waveform effect (like 'W' in a PLAY command)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0FAh
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Set waveform period (like 'X' in a PLAY command)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0FBh
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Set the volume (like 'V' in a PLAY command)
+\end_inset 
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+If you want to use waveforms, set the volume to 16 first.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0FCh
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Loop - used to repeat a preceding section.
+\end_inset 
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+The first and second parameter bytes should both be set
+\end_inset 
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+to the loop count.
+ The third is the relative address of the
+\end_inset 
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+start of the section to repeat.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0FDh
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Return from a sub-tune.
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0FEh
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Call a sub-tune, which must end with a 0FDh byte.
+\end_inset 
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+The 2 parameter bytes are the address of the sub-tune.
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0FFh
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+End of channel.
+ All channels must end with this.
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Note that on the import side, JSWED is very restricted compared to a real
+ assembler.
+ You can't use EQU directives, conditional assembly or arithmetic.
+ If you need any of these, use a proper assembler.
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{sub:hexedit}
+
+\end_inset 
+
+The Hex editor
+\layout Standard
+
+The Hex editor is pretty much the same in all games, though the keys to
+ access the 128k memory banks only apply in 128k games.
+ 
+\layout Standard
+
+
+\emph on 
+Be warned that it's very easy to damage your game beyond repair using the
+ Hex editor.
+ Only use it if you are sure you know what you are doing!
+\layout Standard
+
+When using the Hex editor, remember the following:
+\layout Enumerate
+
+Any outstanding changes you make are shown in magenta.
+ Until you click 
+\begin_inset Quotes eld
+\end_inset 
+
+Write
+\begin_inset Quotes erd
+\end_inset 
+
+ (or press Control-W), they will not be applied to the game.
+\layout Enumerate
+
+You can click 
+\begin_inset Quotes eld
+\end_inset 
+
+Undo
+\begin_inset Quotes erd
+\end_inset 
+
+ (or press Control-Z) to remove all outstanding changes.
+\layout Enumerate
+
+Switching to another screen and back also removes all outstanding changes.
+\layout Standard
+
+The Hex editor displays three columns of data.
+ The left column gives addresses; the middle column gives the hex values
+ of the bytes at those addresses; and the right column gives ASCII equivalents
+ (if any).
+ Values that can't be edited (such as bytes which would not be saved in
+ a snapshot) are shown in blue.
+ The bottom bar shows the address that the cursor is currently on.
+\layout Standard
+
+The following keys can be used:
+\layout Description
+
+Cursors: Move left/right/up/down.
+\layout Description
+
+Page\SpecialChar ~
+Up\SpecialChar ~
+/\SpecialChar ~
+Page\SpecialChar ~
+Down: Move up/down a page (27 lines) at a time.
+\layout Description
+
+Home\SpecialChar ~
+/\SpecialChar ~
+End: Move to the start/end of the current line.
+\layout Description
+
+Shift+Home\SpecialChar ~
+/\SpecialChar ~
+Shift+End: Move to addresses 0 and 0FFFFh respectively.
+\layout Description
+
+Tab: Switches between the 'hex' and 'text' columns.
+ 
+\layout Description
+
+Control-A: Enter address.
+ This moves the cursor to the specified address.
+\layout Description
+
+Control-F: Find bytes.
+ Enter a sequence of Hex bytes to find.
+ The search will start at the byte after the current one.
+\layout Description
+
+Control-G: Find again.
+ Repeats the last search, starting at the byte after the current one.
+ You can also use F3 to get the same effect.
+\layout Description
+
+Control-W: Write data.
+ All outstanding changes (shown in magenta) are applied to the game.
+\layout Description
+
+Control-Z: Undo.
+ All outstanding changes are reversed.
+\layout Description
+
+Control-0\SpecialChar ~
+to\SpecialChar ~
+Control-7: Select memory bank at 0C000h.
+ For 128k games only.
+ Note that banks 5 and 2 are always present at 4000h and 8000h respectively.
+\layout Description
+
+Other\SpecialChar ~
+keys: If the cursor is in the 'hex' column, 0-9 and A-F allow the Hex
+ values to be modified.
+ If it's in the 'text' column, then any key producing an ASCII value will
+ insert that value at the current location.
+ This includes ALT+P for Copyright.
+\layout Section
+
+
+\begin_inset LatexCommand \label{sec: gedit}
+
+\end_inset 
+
+The Guardian editor
+\layout Subsection
+
+On Guardian Classes
+\layout Standard
+
+In Jet Set Willy games (other than JSW64), guardians in a room are drawn
+ from a table of guardian classes, with up to 127 entries (Softricks games
+ have 255 entries in their guardian table; 128k games can have more than
+ one guardian table).
+ 
+\layout Standard
+
+The guardian editor operates on the entries in this table.
+ So if you change a guardian that's present in more than one room, you'll
+ find that it changes in all the rooms that have the guardian.
+ For example, in the original JSW, changing the flag in 
+\begin_inset Quotes eld
+\end_inset 
+
+On top of the house
+\begin_inset Quotes erd
+\end_inset 
+
+ will also affect the moon-faced guardian in 
+\begin_inset Quotes eld
+\end_inset 
+
+Under the Drive
+\begin_inset Quotes erd
+\end_inset 
+
+.
+\layout Subsection
+
+Editor overview
+\layout Standard
+
+When a guardian is being edited, the top half of the screen shows a preview
+ of the result, while the bottom half contains controls.
+ The controls shown vary for different guardian types, but include:
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="22" columns="3">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0pt">
+<column alignment="center" valignment="top" rightline="true" width="0pt">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Control
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Types
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Description
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Type
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Change guardian type
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Sprite
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All except arrow & rope
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Change sprite page
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Y
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Horizontal, diagonal
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical position
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Y
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial vertical position
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+right of Y
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical, diagonal
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical step
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+L/R?
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All except vertical
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial direction - left or right
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Colour & bright
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All except arrow & rope
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Guardian colour
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Animation
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All except arrow & rope
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Animation type
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bounds
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All except arrow & rope
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Left/right or up/down limits of travel
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Fast
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Uses fast animation
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Fast
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Horizontal, diagonal (JSW128)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Moves at double speed
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Slow
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Horizontal, diagonal (JSW128) 
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Moves at half speed
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Stopped
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rope (JSW128)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+If ticked, the rope does not move.
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rope pos
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rope
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial position of rope.
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rope len.
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rope
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Length of the rope
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rope swing
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rope
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+How far the rope swings out
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bitmap
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Arrow
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Top / bottom of the arrow.
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Start pos
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Arrow
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial position of the arrow.
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+!
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Edit the guardian as hex (section 
+\begin_inset LatexCommand \ref{sec: hexedit}
+
+\end_inset 
+
+)
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Wrap
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Geoff Mode
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Is the guardian one-way?
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+H/D?
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Geoff Mode
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Horizontal or diagonal?
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Subsection
+
+Guardian types
+\layout Standard
+
+In JSW48, there are four guardian types - horizontal, vertical, arrow and
+ rope.
+ In JSW128 there are ten; the four mentioned earlier, two diagonal types,
+ and flashing versions of all except the arrow and the rope.
+ In general JSWED tries to preserve guardian data when changing from one
+ type to another, but this is not always possible; so changing from a vertical
+ guardian to a rope and back won't give you the guardian you had before.
+\layout Standard
+
+In Geoff Mode, there are four guardian types (horizontal/diagonal, vertical,
+ arrow and rope).
+ Use the 
+\begin_inset Quotes eld
+\end_inset 
+
+H/D
+\begin_inset Quotes erd
+\end_inset 
+
+ setting to switch between horizontal and diagonal.
+\layout Subsection
+
+Editing conventional guardians
+\layout Standard
+
+There are no real pitfalls with editing conventional guardians.
+ If for some reason the preview of the guardian's bounding rectangle gets
+ out of step with the values you are entering, it is possible to force a
+ recalculation.
+ To do this, click [!] for the hex editor, and then click [OK] to dismiss
+ it - don't change any of the fields!
+\layout Subsection
+
+Rope editing
+\layout Standard
+
+The initial position of the rope is positive if the rope starts in the right-han
+d half of the screen, negative if the rope starts in the left-hand half,
+ and zero if the rope starts dead centre.
+ It should be less than the rope 
+\begin_inset Quotes eld
+\end_inset 
+
+swing
+\begin_inset Quotes erd
+\end_inset 
+
+ value.
+\layout Standard
+
+The rope length can be 1-32; 32 is the usual value.
+\layout Standard
+
+Unless you are using the (new) 
+\begin_inset Quotes eld
+\end_inset 
+
+adjacent ropes
+\begin_inset Quotes erd
+\end_inset 
+
+ patch, ropes must be stored last in a room, 
+\emph on 
+or
+\emph toggle 
+ be followed by an arrow, or by an instance of a blank guardian such as
+ Guardian 0.
+ This is because a bug (or feature?) in the game engine causes a rope to
+ write bytes into the following guardian's data.
+\layout Subsection
+
+Arrow editing
+\layout Standard
+
+Arrows have 256 possible positions.
+ Numbers 0-31 are onscreen; the others are offscreen.
+ This is set up by the 
+\begin_inset Quotes eld
+\end_inset 
+
+start pos
+\begin_inset Quotes erd
+\end_inset 
+
+ field.
+ The small bitmap editor above it is used to set the pattern used on the
+ top and bottom of the arrow.
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{sec: hexedit}
+
+\end_inset 
+
+Hex editing
+\layout Standard
+
+Press the [!] button to edit a guardian as hexadecimal bytes.
+ It is possible to create guardians that crash JSW by doing this, so take
+ care.
+\layout Subsection
+
+Geoff Mode bounds
+\layout Standard
+
+In Geoff Mode, the guardian bounds are, respectively, an 
+\begin_inset Quotes eld
+\end_inset 
+
+initial frame count
+\begin_inset Quotes erd
+\end_inset 
+
+ and a 
+\begin_inset Quotes eld
+\end_inset 
+
+maximum frame count
+\begin_inset Quotes erd
+\end_inset 
+
+, rather than 
+\begin_inset Quotes eld
+\end_inset 
+
+left limit
+\begin_inset Quotes erd
+\end_inset 
+
+ and 
+\begin_inset Quotes eld
+\end_inset 
+
+right limit
+\begin_inset Quotes erd
+\end_inset 
+
+.
+\layout Section
+
+Good Advice 
+\layout Standard
+
+The following notes are based on the documentation of Paul Rhodes's JSW
+ editor, with additional suggestions by Andrew Broad.
+ Note that if you have the 'Black Willy' patch applied, any reference to
+ 'white' below should be read as 'black'.
+\layout Enumerate
+
+Don't put anything (except items) in the path of a guardian.
+ Guardian collisions are pixel based; you have to be sure that none of the
+ guardian's pixels touches any pixels already on the screen.
+\layout Enumerate
+
+Don't have arrows passing through anything with white INK.
+ 
+\layout Enumerate
+
+If you have white background INK, any items in the room on background cells
+ will be automatically collected on entry to the room (see swimming pool).
+ 
+\layout Enumerate
+
+Be careful if you have two cell types with the same attributes.
+ In particular, don't make other cells the same colour as Fire, and don't
+ make Fire the same as Air but with white ink.
+\layout Enumerate
+
+Having the same attributes for ramp and conveyor creates an escalator (see
+ Chapel).
+ Other combinations that may be useful are giving Water or Earth the same
+ attributes as the ramp or conveyor.
+\layout Enumerate
+
+Avoid having Fire cells at the top of the screen above a gap at the bottom
+ (see right-hand half of Under the Roof).
+ 
+\layout Enumerate
+
+Do not put anything in the path of a rope (try it and see!), and do not
+ allow an arrow to pass through a rope (especially not a white rope).
+ Note that putting the arrow 
+\emph on 
+after
+\emph default 
+ the rope in the room's guardian instance list is OK - but putting it 
+\emph on 
+before
+\emph default 
+ the rope results in a collision.
+\layout Enumerate
+
+Never allow guardians to collide.
+ Their paths can overlap if you make sure that only one guardian enters
+ the overlapping space at any one time.
+ 
+\layout Enumerate
+
+Objects on top of other cell types (floors, walls, etc.) cannot be collected
+ by Willy.
+ They can be collected by being touched with white arrows or white guardians.
+\layout Enumerate
+
+It is possible for a JSW game to contain infinite-death scenarios, where
+ Willy loses all his lives and you can do nothing about it.
+ For example, jumping off the end of the upper platform in The Front Door
+ does this.
+ Try to stop these occurring unless the player deliberately does something
+ suicidal (as in the above example).
+ 
+\layout Enumerate
+
+Quirky features are a pathway to many abilities some consider to be unnatural.
+ Learn to recognise them, and you'll be able to spot any unintended loopholes
+ in games.
+ Learn to use them, and you will achieve a power far greater than any Jedi.
+\layout Enumerate
+
+Playtest every room thoroughly, especially all possible exits from the room.
+ If you make even a trivial change to a room, never forget to playtest it
+ again.
+\layout Enumerate
+
+Do a complete playtest to make sure the final revision of the game is fully
+ completable (to the point where Willy sticks his head down the toilet)
+ before you release it.
+\layout Enumerate
+
+Save your work regularly by pressing F2.
+\layout Enumerate
+
+Hard-drives fail, floppy disks get corrupted, CDs become unreadable, buildings
+ burn down and files uploaded to the Internet get removed, but if you regularly
+ save your files in three completely different places, then the probability
+ of losing your game is very slim.
+\layout Part
+
+
+\begin_inset LatexCommand \label{sec: mmediting}
+
+\end_inset 
+
+Manic Miner
+\layout Section
+
+Editing Games
+\layout Standard
+
+The game editor behaves in the same way as the Jet Set Willy one, but with
+ fewer pages.
+ 
+\layout Subsection
+
+Game
+\layout Standard
+
+This page acts like the JSW 'Game' page, but there is only one patch - 
+\begin_inset Quotes eld
+\end_inset 
+
+Specials by room
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ This allows each room to control whether it has vertical guardians, skylabs,
+ solar power, Kong or Eugene (instead of these options being hard-coded).
+\layout Subsection
+
+Message
+\layout Standard
+
+This page contains messages printed by the game - the title screen message,
+ the 
+\begin_inset Quotes eld
+\end_inset 
+
+Game Over
+\begin_inset Quotes erd
+\end_inset 
+
+ message, and the 
+\begin_inset Quotes eld
+\end_inset 
+
+score
+\begin_inset Quotes erd
+\end_inset 
+
+ message.
+ You can edit them as you like; the program will not allow you to enter
+ more text than will fit.
+\layout Subsection
+
+Sprites
+\layout Standard
+
+The sprite editor screen is divided into two parts.
+ The bottom half contains a list of sprites; select these using the left
+ and right cursor keys (use PageUp/PageDown to move faster) and click or
+ press ENTER on the chosen sprite.
+ You can also scroll the list with the mouse, by clicking on the arrows
+ in the bottom corners.
+\layout Standard
+
+Once you have chosen a sprite, switch to the editor using TAB and use the
+ four cursor keys to move the cursor, SPACE to toggle the cell colour (or
+ use the mouse).
+ The context menu for this screen allows you to reflect, rotate, move, invert
+ and clear the bitmap.
+\layout Standard
+
+Press CTRL+Z or CTRL+U to undo changes to the current sprite.
+ Press it again to undo the undo.
+\layout Standard
+
+Note that this only covers Willy and guardian sprites, not portals, Eugene
+ or other special graphics.
+\layout Subsection
+
+The Room Editor
+\layout Standard
+\added_space_bottom 0.3cm 
+The room editor is similar to the JSW version, but the following functions
+ are different:
+\layout Subsubsection
+
+Moving between rooms
+\layout Standard
+
+Since Manic Miner has no exits at the edges of rooms, there are no arrows
+ to move between rooms.
+ Likewise, there is no option to set up the exits.
+\layout Subsubsection
+
+Guardians
+\layout Standard
+
+The guardians are set up on a separate screen - see section 
+\begin_inset LatexCommand \ref{mmguard}
+
+\end_inset 
+
+.
+\layout Subsubsection
+
+Editing cells
+\layout Standard
+
+In the JSW room editor, there are two options on the 
+\begin_inset Quotes eld
+\end_inset 
+
+Options
+\begin_inset Quotes erd
+\end_inset 
+
+ menu - 
+\begin_inset Quotes eld
+\end_inset 
+
+Shapes
+\begin_inset Quotes erd
+\end_inset 
+
+ and 
+\begin_inset Quotes eld
+\end_inset 
+
+Colours
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ In the Manic Miner editor, these are combined as 
+\begin_inset Quotes eld
+\end_inset 
+
+Shapes
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ The Manic Miner shape editor only shows one of the cell types at a time;
+ use the 
+\begin_inset Quotes eld
+\end_inset 
+
+<
+\begin_inset Quotes erd
+\end_inset 
+
+ and 
+\begin_inset Quotes eld
+\end_inset 
+
+>
+\begin_inset Quotes erd
+\end_inset 
+
+ buttons to see the others.
+\layout Standard
+
+Manic Miner supports more cell types than Jet Set Willy's 4-element system.
+ It allows:
+\layout Itemize
+
+Air
+\layout Itemize
+
+Water
+\layout Itemize
+
+Water 2: If the room has a Kong beast, this is used for switches.
+ Otherwise it's another type of Water cell.
+\layout Itemize
+
+Crumbly - disintegrates when Willy walks on it.
+\layout Itemize
+
+Earth
+\layout Itemize
+
+Convey - animated conveyor.
+ You can only have one animaetd conveyor in a room.
+\layout Itemize
+
+Conv 2 - non-animated conveyor.
+ You can have as many cells of this type as you like.
+\layout Itemize
+
+Fire
+\layout Itemize
+
+Fire 2
+\layout Itemize
+
+? - user-defined attribute.
+ Not normally useful.
+\layout Subsubsection
+
+Room options
+\layout Standard
+
+Selecting 
+\begin_inset Quotes eld
+\end_inset 
+
+Room options
+\begin_inset Quotes erd
+\end_inset 
+
+ takes you straight to the room property screen.
+ You can set the border colour and the amount of air remaining.
+\layout Itemize
+
+General: Allows you to set the border colour, room title and air remaining.
+\layout Itemize
+
+Shapes: Shows the bitmaps and colours for the eight cell types, and allows
+ you to edit them.
+ Right-click a bitmap for reflect/rotate/move options, as in the sprite
+ editor.
+\layout Subsubsection
+
+Conveyor options
+\layout Standard
+
+Use the conveyor options menu to set the conveyor to be Off or Sticky.
+ It also allows you to move the conveyor animation up and down.
+\layout Subsubsection
+
+Item options
+\layout Standard
+
+Use this screen to design the item graphic, and to set the colours of the
+ up to five items in the room.
+ The item graphic will be the same for all of them.
+\layout Subsection
+
+
+\begin_inset LatexCommand \label{mmguard}
+
+\end_inset 
+
+Guardians page
+\layout Standard
+
+The guardians page is used to position guardians within a room.
+ Select the guardian you want from the list at the bottom of the screen,
+ and then you can set its start position using the mouse (or cursor keys
+ plus space).
+\layout Standard
+
+Right-click to add a new guardian, or to edit or delete the currently selected
+ one.
+ 
+\layout Subsection
+
+Portal editor
+\layout Standard
+
+This editor allows you to edit Willy's start position in each room, and
+ the portal which takes you to the next room.
+ If the 
+\begin_inset Quotes eld
+\end_inset 
+
+specials by room
+\begin_inset Quotes erd
+\end_inset 
+
+ patch has been applied, then you can also control whether the room has
+ the various special features.
+\layout Standard
+
+Keypresses you can use here are:
+\layout Description
+
+B Set whether portal is bright.
+\layout Description
+
+D Set Willy's starting direction (facing left / facing right).
+\layout Description
+
+E Toggle whether Eugene operates in this room.
+\layout Description
+
+F Set whether portal flashes.
+ If the portal is flashing Willy can go to the next level whether or not
+ he has collected all the keys.
+\layout Description
+
+G Edit the portal graphic and the special graphic (if one's applicable to
+ the room - such as the swordfish, plinth, boot or Eugene).
+\layout Description
+
+I Set the ink colour for the portal.
+\layout Description
+
+K Toggle whether there is a Kong Beast in this room.
+\layout Description
+
+N Set Willy's start frame.
+\layout Description
+
+P Set the paper colour for the portal.
+\layout Description
+
+S Toggle whether there is solar power in this room.
+\layout Description
+
+V Toggle whether there are vertical guardians in this room.
+\layout Description
+
+W Set Willy's start position.
+\layout Description
+
+X Set the position of the portal.
+\layout Description
+
+Y Toggle whether there are skylabs in this room (skylabs aren't quite the
+ same as vertical guardians).
+\layout Subsection
+
+Screen editor
+\layout Standard
+
+The screen editor has three screens to edit.
+ The first one only allows attributes to be changed; the other two can have
+ both bitmaps and attributes changed.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="4" columns="4">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0pt">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Game
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Screen no.
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Screen name
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Comments
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Manic Miner
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+1
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bottom third
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, attributes only
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen, top
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Title screen, middle
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256x64, bitmap and attributes
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Section
+
+The Guardian editor
+\layout Subsection
+
+No Guardian Classes
+\layout Standard
+
+In Manic Miner, guardians are set up by room; changing a guardian in one
+ room will not affect that guardian in any other room.
+\layout Standard
+
+Note that the guardian editor does not allow you to set a guardian's start
+ position - you do that through the guardian page from which the editor
+ was launched.
+\layout Subsection
+
+Editor overview
+\layout Standard
+
+When a guardian is being edited, the top half of the screen shows a preview
+ of the result, while the bottom half contains controls.
+ The controls shown vary for different guardian types, but include:
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="3">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0pt">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0pt">
+<column alignment="center" valignment="top" rightline="true" width="0pt">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Control
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Types
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Description
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Start frame
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial frame
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Speed
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical, Skylab
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial speed and direction
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+L/R?
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Horizontal
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial direction - left or right
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+U/D?
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical, Skylab
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Initial direction - up or down
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Flash
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Vertical, Skylab
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Does guardian flash?
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Slow
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Horizontal
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Does guardian move at half speed?
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Colours & bright
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Guardian colour
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Bounds
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Left/right or up/down limits of travel
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+!
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+All
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Edit the guardian as hex (section 
+\begin_inset LatexCommand \ref{sec: hexedit}
+
+\end_inset 
+
+)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Subsection
+
+Guardian types
+\layout Standard
+
+Manic Miner allows up to four horizontal guardians, and up to four vertical
+ guardians/skylabs.
+ You can't change this ratio and have (eg) five horizontal and three vertical.
+ It's not a good idea to put vertical guardians (or skylabs) in rooms 0,
+ 1 or 2, because they overwrite the 
+\begin_inset Quotes eld
+\end_inset 
+
+Swordfish
+\begin_inset Quotes erd
+\end_inset 
+
+, 
+\begin_inset Quotes eld
+\end_inset 
+
+Barrel
+\begin_inset Quotes erd
+\end_inset 
+
+ and 
+\begin_inset Quotes eld
+\end_inset 
+
+Foot
+\begin_inset Quotes erd
+\end_inset 
+
+ sprites.
+\layout Part
+
+
+\begin_inset LatexCommand \label{par:JSW64-games}
+
+\end_inset 
+
+JSW64 games
+\layout Section
+
+JSW64 Overview
+\layout Standard
+
+JSW64 is a redesign of the Jet Set Willy engine intended to remove a lot
+ of the limits on what you can have in rooms.
+ For example, in standard JSW games, a room can have at most one ramp and
+ one conveyor.
+ JSW64 makes 
+\begin_inset Quotes eld
+\end_inset 
+
+ramp
+\begin_inset Quotes erd
+\end_inset 
+
+ and 
+\begin_inset Quotes eld
+\end_inset 
+
+conveyor
+\begin_inset Quotes erd
+\end_inset 
+
+ into standard cell types, so you can have as many of either as you like
+ (though, as in Manic Miner, only one conveyor will be animated).
+ To accommodate the extra data, the JSW64 room definition is larger than
+ the original JSW one, and there are fewer rooms (128 or 64, compared to
+ the 256 in JSW128).
+\layout Standard
+
+Another difference is that there isn't just one JSW64 engine - there are
+ six.
+ They all have similar feature sets, but make different tradeoffs in the
+ way the rooms are stored.
+ One variant can't be changed to another after the fact, so you have to
+ get it right at the time you first upgrade a 48k game to JSW64.
+\layout Standard
+
+Most of the pages in the JSW64 editor are the same as their JSW48 / JSW128
+ counterparts.
+ This part of the documentation describes the ones that are different.
+\layout Subsection
+
+Game
+\layout Standard
+
+One patch not present in the JSW48 games is 'Diagonal guards bug'.
+ If this bug is introduced, diagonal guardians affect the behaviour of subsequen
+t guardians in the room, making them stop and start as the diagonal guardian
+ moves one way and the other.
+ It has been left as an option in case anyone wants to make a game that
+ takes advantage of this.
+\layout Subsection
+
+Variants
+\layout Standard
+
+The six variants of JSW64 are:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="7" columns="7">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<column alignment="center" valignment="top" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Variant
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Rooms
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Guardians
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Cell types per room
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Global cell types
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Cell types set
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Free
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+V
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+128
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+by room
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+W
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+128
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+globally
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+X
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+by room
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+576
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Y
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+13
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+globally
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+512
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Z
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+8
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256**
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+globally
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+256
+\end_inset 
+</cell>
+</row>
+<row bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+[
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+64
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+16
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+globally
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+512
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+The 
+\begin_inset Quotes eld
+\end_inset 
+
+free
+\begin_inset Quotes erd
+\end_inset 
+
+ figure is the amount of unused space in the room definition.
+ It is possible to put guardian definitions, patch vector code or sprites
+ in this space.
+\layout Standard
+
+** Although there are 256 cell types, only 13 of them are 'real'; the others
+ behave like differently-coloured water cells.
+ 
+\layout Section
+
+Memory Map
+\layout Standard
+
+JSW64 does not have guardian tables.
+ Otherwise this screen is identical to the JSW128 one.
+\layout Section
+
+Rooms
+\layout Standard
+
+As with the Manic Miner editor, the guardians have been moved to a page
+ of their own.
+ Other differences are:
+\layout Subsection
+
+Cells
+\layout Standard
+
+In Manic Miner, JSW48 and JSW128, the meaning of cells is fixed - the first
+ cell is air, the second is water, and so on.
+ In JSW64, this is controlled by the game itself.
+ In the V and X variants, the cell types are set up by room; so one room
+ could have three types of 'fire' cell and no conveyors, while another could
+ have one fire, and two conveyors (one going each way).
+ In the other four variants, the cell type is set up globally; your choice
+ of cell behaviour affects all rooms.
+\layout Standard
+
+Because of this definable behaviour, the room editor doesn't use shortcuts
+ like A=Air, W=Water, E=Earth and so on.
+ It uses 0,1,2,3 and so on to choose the first,second,third...
+ pattern.
+ Ramps and conveyors are just normal cell types.
+\layout Standard
+
+As with Manic Miner, the 
+\begin_inset Quotes eld
+\end_inset 
+
+shapes
+\begin_inset Quotes erd
+\end_inset 
+
+ and 
+\begin_inset Quotes eld
+\end_inset 
+
+colours
+\begin_inset Quotes erd
+\end_inset 
+
+ screen have been combined - this time into a screen called 
+\begin_inset Quotes eld
+\end_inset 
+
+Cells
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ This handles both shapes and colours.
+ It also has a 
+\begin_inset Quotes eld
+\end_inset 
+
+Type
+\begin_inset Quotes erd
+\end_inset 
+
+ control which can be used to set the behaviour of each cell.
+ Remember that in variants other than V and X, changing a cell type affects
+ every room in the game.
+\layout Subsubsection
+
+Extra cell types
+\layout Standard
+
+JSW64 has the following cell types:
+\layout Description
+
+Air/Water/Earth/Fire behave like their JSW48 / JSW128 counterparts.
+\layout Description
+
+Ramps\SpecialChar ~
+and\SpecialChar ~
+conveyors are now normal cells rather than one-offs.
+ You can therefore have as many of either as you want in a room.
+\layout Description
+
+Crumbling\SpecialChar ~
+blocks behave as in Manic Miner.
+\layout Description
+
+Trampolines are an addition from the Dragon 32 version of JSW.
+ When Willy stands on one, he is forced to jump.
+\layout Description
+
+Traps are based on Andrew Broad's 
+\begin_inset Quotes eld
+\end_inset 
+
+harmless fire
+\begin_inset Quotes erd
+\end_inset 
+
+ patch.
+ If any part of Willy is above a trap, he falls.
+ Traps should be used with caution; letting Willy jump up onto a trap from
+ below can have unexpected consequences.
+\layout Standard
+
+The editor also lets you position three other 
+\begin_inset Quotes eld
+\end_inset 
+
+cell
+\begin_inset Quotes erd
+\end_inset 
+
+ types:
+\layout Description
+
+Item lets you position items, exactly as in JSW48 / JSW128.
+\layout Description
+
+Solar is used to set the start point of the Solar Power beam (if the room
+ has solar power).
+ The start position of the beam is indicated by an orange sun.
+ Note that the editor will only let you put the sun in the top half of the
+ room.
+ You must also set colours for the solar beam in the room properties screen
+ before positioning the sun; to remove it, set its colours to black on black.
+\layout Description
+
+Custom (Variant Z only): Place any combination of foreground and background
+ attributes.
+ These will be drawn with the pattern of cell 1 (cell 0 is usually used
+ for air and therefore is unlikely to have a pattern).
+ In the game, custom cells will behave as Water.
+\layout Subsection
+
+Room properties
+\layout Standard
+
+The 
+\begin_inset Quotes eld
+\end_inset 
+
+Room properties
+\begin_inset Quotes erd
+\end_inset 
+
+ screen has a few more options than the JSW48 / JSW128 one.
+ These are:
+\layout Description
+
+Willy Set Willy's colour.
+\layout Description
+
+Solar Set the colours for the Solar Power beam.
+ If you don't want a room to have solar power, set these to black on black,
+ with Bright and Flash unticked.
+\layout Description
+
+Air The amount of air in the room.
+ 162 (the maximum value) means 
+\begin_inset Quotes eld
+\end_inset 
+
+air is not limited
+\begin_inset Quotes erd
+\end_inset 
+
+.
+\layout Description
+
+Rigor\SpecialChar ~
+Mortis If this is ticked, guardians in the room will not move until
+ all the items in the room are collected.
+\layout Description
+
+No\SpecialChar ~
+Kamikaze If this is ticked, when Willy dies he loses any items he collected
+ since entering the room.
+ This is intended for compatibility with Manic Miner-style rooms, but a
+ sadistic game designer may decide to use it in other circumstances.
+\layout Description
+
+Bonus\SpecialChar ~
+Room If this is ticked, each item collected gives Willy an extra life.
+  
+\layout Description
+
+Escalator Tick this to make all ramps in the room into escalators.
+ There is a second tickbox to control whether you want them to be 'up' or
+ 'down' escalators.
+ 
+\layout Description
+
+Land\SpecialChar ~
+softly (aka 
+\begin_inset Quotes eld
+\end_inset 
+
+Fall any height
+\begin_inset Quotes erd
+\end_inset 
+
+).
+ If this is ticked, Willy cannot die through falling (in this room).
+\layout Subsection
+
+Room-specific graphics
+\layout Standard
+
+JSW64 variants allow some space in the room definition to be used for 16x16
+ graphics (eg, for a portal).
+ Variants X,Y,Z and [ can store a complete set of frames (eg, for a custom
+ sprite for Willy).
+\layout Standard
+
+To edit these sprites, choose 
+\begin_inset Quotes eld
+\end_inset 
+
+Sprites
+\begin_inset Quotes erd
+\end_inset 
+
+ from the room options menu.
+ You can then edit the sprites in the room, in the same way that you can
+ edit the systemwide sprites.
+\layout Subsection
+
+Conveyor animation
+\layout Standard
+
+As in Manic Miner, the conveyor animation in JSW64 games is independent
+ of the actual conveyor.
+ Unlike when you are editing a Manic Miner game, drawing conveyor cells
+ does not update the animation (or vice versa).
+ You have to do the animation separately; press V and then draw the animation
+ over the blocks.
+ With this system it's quite possible to have a conveyor that goes in one
+ direction and animates in the other!
+\layout Subsection
+
+Final Barrier
+\layout Standard
+
+JSW64 contains two graphical buffers that can be used to draw particular
+ levels (as the title screen is used in Manic Miner to draw the Final Barrier).
+ To set a room to use one or other of these buffers (or with the top/bottom
+ half of the title screen), select 
+\begin_inset Quotes eld
+\end_inset 
+
+Final Barrier
+\begin_inset Quotes erd
+\end_inset 
+
+ from the room options menu.
+ A screen will then appear showing the room, with two lists.
+ One selects the buffer to use for the top half of the room; the other selects
+ the bottom.
+\layout Section
+
+Guardians
+\layout Standard
+
+In JSW64, as in Manic Miner, guardians are set up individually in each room.
+ The number of guardian slots available varies depending on the JSW variant
+ you are using, and can be further customised by room.
+\layout Standard
+
+The guardian choice screen shows a list of guardian slots; each one is shown
+ as 
+\begin_inset Quotes eld
+\end_inset 
+
+Grd
+\begin_inset Quotes erd
+\end_inset 
+
+ if there is a guardian in it, or 
+\begin_inset Quotes eld
+\end_inset 
+
+--
+\begin_inset Quotes erd
+\end_inset 
+
+ if it is empty.
+ Click on the screen to set the start position of the guardian; right-click
+ to get the 
+\begin_inset Quotes eld
+\end_inset 
+
+Guardians
+\begin_inset Quotes erd
+\end_inset 
+
+ menu.
+ The start frame is set in the guardian editor rather than using ALT+1 -
+ ALT+8.
+\layout Standard
+
+Unlike in JSW48 / JSW128, guardians in JSW64 are not shared between rooms.
+ 
+\layout Subsection
+
+Guardian editor
+\layout Standard
+
+The guardian editor behaves just like the JSW128 one, with these exceptions:
+\layout Itemize
+
+There are two 
+\begin_inset Quotes eld
+\end_inset 
+
+Animation
+\begin_inset Quotes erd
+\end_inset 
+
+ fields.
+ The left-hand one is the start frame of the guardian.
+\layout Itemize
+
+The arrow editor allows you to set the arrow colour, and the bitmap pattern
+ used by the middle of the arrow.
+\layout Itemize
+
+Extra guardian types are supported: Skylabs, Angry Eugenes, Triggers, Switches
+ and Vanishing Walls.
+\layout Subsubsection
+
+
+\begin_inset LatexCommand \label{sub:skylab64}
+
+\end_inset 
+
+Skylabs
+\layout Standard
+
+A Skylab behaves like a vertical guardian, except that it does not animate
+ until it reaches the end of its travel.
+ At this point, it starts again at the beginning, 8 columns to the right.
+\layout Standard
+
+The Skylabs are based on those in Manic Miner.
+ However, these Skylabs can also go up.
+ If so, the first bound is the bottom bound and the second bound is the
+ top (the other way round from all other vertical guardians).
+\layout Subsubsection
+
+Angry Eugenes
+\layout Standard
+
+Angry Eugene behaves like a vertical guardian until his Y-coordinate equals
+ either of its bounds (it is therefore usual to set both bounds to the same
+ value).
+ Once Eugene has reached his destination, he stops.
+\layout Standard
+
+Be warned: If the bound value cannot be reached exactly (eg: Y-coordinate
+ is 4, bounds are both 50, speed is 4) then Eugene will just keep going,
+ probably colliding with something undesirable.
+\layout Standard
+
+There are three Eugene types - normal, multicolour, and multicolour 2.
+ The second multicolour option exactly duplicates the way Manic Miner does
+ a multicoloured Eugene; it will only work in a room with a limited air
+ supply.
+\layout Subsubsection
+
+Triggers
+\layout Standard
+
+A trigger is used to modify the behaviour of the subsequent guardian in
+ the table.
+ When you edit a trigger, you will see two buttons:
+\layout Description
+
+Source is the event that causes the trigger to activate.
+ It can be one of:
+\begin_deeper 
+\layout Itemize
+
+Willy collecting the last item in the room.
+\layout Itemize
+
+An angry Eugene stopping.
+\layout Itemize
+
+A switch being turned on.
+\layout Itemize
+
+A wall vanishing.
+\end_deeper 
+\layout Description
+
+Effect brings up another guardian editor, in which you can decide exactly
+ what will happen when the trigger takes effect.
+ The trigger can only change bytes 0 and 4-7 of a guardian; so you can't
+ change position, colour or animation settings.
+ 
+\layout Standard
+
+If the trigger is last in the guardian list, then a bright red warning will
+ be displayed on the guardian editor.
+ If you save a game with a trigger at the end of the list, then the game
+ will probably crash when the trigger is activated.
+\layout Subsubsection
+
+Switches
+\layout Standard
+
+A switch is a guardian, but it's harmless for Willy to touch it.
+ At any time, it is turned off or on; if Willy touches it, he may change
+ its state.
+\layout Standard
+
+By itself, a switch just sits there.
+ But other guardians can monitor the state of a switch and take action based
+ on its setting.
+\layout Standard
+
+The options when editing a switch are:
+\layout Description
+
+Sprite The switch graphic.
+ Unlike the other guardians, the switch is only 8 pixels high (it is still
+ 16 pixels wide).
+ The top half of its sprite graphic is the 
+\begin_inset Quotes eld
+\end_inset 
+
+off
+\begin_inset Quotes erd
+\end_inset 
+
+ image; the bottom half is the 
+\begin_inset Quotes eld
+\end_inset 
+
+on
+\begin_inset Quotes erd
+\end_inset 
+
+ image.
+\layout Description
+
+Colour/Bright as normal.
+\layout Description
+
+Animation chooses which sprite in the page will draw the switch.
+\layout Description
+
+On/Off sets the initial state of the switch
+\layout Description
+
+Stays\SpecialChar ~
+off If this is ticked, then once the switch is turned off it can't
+ be turned on.
+\layout Description
+
+Stays\SpecialChar ~
+on If this is ticked, then once the switch is turned on it can't be
+ turned off.
+\layout Standard
+
+If you leave both the 
+\begin_inset Quotes eld
+\end_inset 
+
+Stays
+\begin_inset Quotes erd
+\end_inset 
+
+ options unticked, then while Willy is touching the switch it will rapidly
+ alternate between states.
+ If both are ticked the switch becomes a useless ornament.
+\layout Subsubsection
+
+Vanishing Walls
+\layout Standard
+
+A vanishing wall section, when activated, removes a section of the room
+ - one character wide, and an arbitrary height.
+ Like the trigger, it only activates after another event has taken place,
+ and the same 
+\begin_inset Quotes eld
+\end_inset 
+
+Source
+\begin_inset Quotes erd
+\end_inset 
+
+ button is used to select this.
+ The other control on the screen - height - selects how many wall pixels
+ will be removed.
+ 
+\layout Standard
+
+It is possible to use a vanishing wall as a delay system, by putting it
+ on top of air cells.
+ It then has no visible effect, but still completes a fixed time after it
+ was started.
+ 
+\layout Subsubsection
+
+Stoppers
+\layout Standard
+
+Guardians which appear in the list after a stopper do not appear in the
+ game.
+ The intention is to have a trigger followed by a stopper; when the trigger
+ is activated, the stopper is changed to a blank guardian - at which point
+ the guardians after the stopper are drawn.
+\layout Standard
+
+There are two types of stopper.
+ The first one inhibits movement and drawing, so that the extra guards aren't
+ visible.
+ The second one only inhibits movement - so you can have a 'rigor mortis'-like
+ effect on only some guardians in a room.
+\layout Subsection
+
+Guardian table
+\layout Standard
+
+In JSW64, a room's guardian list can have a variable number of slots.
+ To amend this (either to increase the number of guardians in the room,
+ or to decrease it and use the memory for something else), right-click in
+ the guardian choice screen and select 
+\begin_inset Quotes eld
+\end_inset 
+
+Table
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ You will then see a memory map of the room, coloured as follows:
+\layout Description
+
+Red Guardian table
+\layout Description
+
+Green Free space
+\layout Description
+
+Blue Used for other purposes
+\layout Description
+
+Cyan Used for sprites
+\layout Standard
+
+There is also a +/- control which adjusts the number of slots in the guardian
+ table.
+ As you alter this, the memory map will be updated to match.
+\layout Standard
+
+If you change the size or position of a room's guardian table, cross-references
+ in triggers and opening walls will become incorrect and must be set up
+ again.
+ 
+\layout Section
+
+Teleport editor
+\layout Standard
+
+This works exactly like the JSW48 / JSW128 teleport editor, with one extension.
+ From the right-click menu, you can choose to have a visual effect when
+ Willy enters a teleporter:
+\layout Description
+
+No\SpecialChar ~
+special\SpecialChar ~
+effect behaves like JSW48 and JSW128; teleporters act as a jump-cut.
+ This is the proper setting to use if you are using teleporters to simulate
+ switches.
+\layout Description
+
+Screen\SpecialChar ~
+flashes makes the screen fade to dark blue (as it does when you enter
+ a portal in Manic Miner).
+\layout Description
+
+Air\SpecialChar ~
+runs\SpecialChar ~
+down makes the air remaining decrease to zero.
+ This has no effect if the room doesn't have a limited air supply.
+\layout Description
+
+Both\SpecialChar ~
+the\SpecialChar ~
+above does both, one after the other - like a true portal.
+\layout Section
+
+Start position / Portal editor
+\layout Standard
+
+This editor is similar to the JSW48 / JSW128 one, but it also allows you
+ to add a portal to each room.
+ Portals work the same way as in Manic Miner; they're inactive until Willy
+ has collected all the items in the room, and then he can step into one
+ and arrive anywhere else in the game.
+ Here's a feature comparison:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+JSW48/128 teleporters
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Portals
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+As many as you like per room
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+0 or 1 per room
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Invisible
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Visible
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Always active
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Active once items collected, or when flashing
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Optional extension
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Part of game engine
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Keypresses you can use here are:
+\layout Description
+
+B Set whether portal is bright.
+\layout Description
+
+D Set the portal destination.
+ You will first be asked for the room; then you can place Willy's arrival
+ position within it.
+ 
+\layout Description
+
+F Set whether portal flashes.
+ If the portal is flashing Willy can go to the next level whether or not
+ he has collected all the items in this room.
+\layout Description
+
+G Choose the sprite to use for the portal.
+\layout Description
+
+I Set the ink colour for the portal.
+\layout Description
+
+M Set the position of Maria.
+\layout Description
+
+P Set the paper colour for the portal.
+\layout Description
+
+T Set the position of the toilet.
+ Note that you can't have Maria and the toilet in the same room.
+\layout Description
+
+W Set Willy's start position.
+\layout Description
+
+X Set the position of the portal.
+\layout Standard
+
+To remove a portal from a room, press G and select 
+\begin_inset Quotes eld
+\end_inset 
+
+No portal
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ If you're adding a portal, it's advisable to set the colour before choosing
+ the sprite.
+\layout Subsection
+
+Portal special effect
+\layout Standard
+
+As with teleporters, it's possible to set the special effect that occurs
+ when you enter a portal.
+ To choose the effect, right-click and select 
+\begin_inset Quotes eld
+\end_inset 
+
+Portal effect
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ It can be one of:
+\layout Description
+
+No\SpecialChar ~
+effect Willy is instantly transported to the portal destination.
+\layout Description
+
+Screen\SpecialChar ~
+flashes The screen fades to blue but the air (if limited) does not
+ run down.
+\layout Description
+
+Screen\SpecialChar ~
+flash\SpecialChar ~
++\SpecialChar ~
+air The screen fades and the air runs down.
+\layout Standard
+
+The portal effect is set by room, rather than systemwide.
+\layout Section
+
+JSW64 Good advice
+\layout Itemize
+
+If Willy stands on a trampoline in a room with Superjump turned on, he will
+ shoot straight up until he either:
+\begin_deeper 
+\layout Enumerate
+
+Arrives in the room above;
+\layout Enumerate
+
+Loses a life;
+\layout Enumerate
+
+Hits something solid.
+ 
+\end_deeper 
+\layout Itemize
+
+Make sure the Solar Power beam doesn't go off the screen, or the game engine
+ will crash.
+ Block it with Earth if necessary.
+\layout Itemize
+
+Unlike in JSW48 and JSW128, you can't combine the behaviour of different
+ cells by setting them to the same attribute.
+\layout Section
+
+JSW64 for machine-code programmers
+\layout Standard
+
+The internal data format and mechanisms of JSW48 are very well known (which
+ is one reason why there are many more JSW editors than, for example, Mutant
+ Monty editors).
+ This section is an attempt to document JSW64 to a similar level of detail.
+ 
+\layout Subsection
+
+JSW64 Room Formats
+\layout Standard
+
+Notes:
+\layout Enumerate
+
+In the format description below, fields marked 'reserved' may be used by
+ future versions of the JSW64 engine.
+ Fields marked 'unused' will not; they are intended for your own data.
+\layout Enumerate
+
+For more information on the Manic Miner 'Air' and 'Portal' features, see
+ Andrew Broad's Manic Miner room format at <http://www.geocities.com/andrewbroad/s
+pectrum/willy/mm_format.html>
+\layout Standard
+
+Formats W, Y and [ use a 4-bit room map, so they can all specify 16 block
+ types.
+ But rooms in W and Y only have space for 13 block types, so the other three
+ are defined globally (in bank 7).
+\layout Subsubsection
+
+Bytes 00-B5 for formats V and X
+\layout Description
+
+00-68 Up to 13 guardian instances for the room, terminated with 0FFh.
+\layout Description
+
+69-6D Meanings of the following 8 cell types.
+ 
+\begin_deeper 
+\layout Standard
+
+First byte low nybble = type of first cell
+\layout Standard
+
+First byte high nybble = type of second cell
+\layout Standard
+
+2nd byte low nybble = type of third cell
+\layout Standard
+
+etc.
+\end_deeper 
+\layout Description
+
+6E-B5 Attributes and bitmap for the 8 cell types
+\begin_deeper 
+\layout Standard
+
+Cell types are:
+\layout Description
+
+0 Air
+\layout Description
+
+1 Water
+\layout Description
+
+2 Earth
+\layout Description
+
+3 Fire
+\layout Description
+
+4 Ramp 
+\backslash 
+
+\layout Description
+
+5 Ramp /
+\layout Description
+
+6 Conveyor <<
+\layout Description
+
+7 Conveyor >>
+\layout Description
+
+8 Crumbling floor
+\layout Description
+
+9 Trampoline
+\layout Description
+
+10-15 reserved.
+ 
+\end_deeper 
+\layout Subsubsection
+
+Bytes 00-B5 for formats W, Y and Z
+\layout Description
+
+00-40 Up to 8 guardian instances for the room, terminated with 0FFh.
+\layout Description
+
+41-B5 Attributes and bitmap for 13 cell types
+\layout Subsubsection
+
+Bytes 00-B5 for format [
+\layout Description
+
+00-20 Up to 4 guardian instances for the room, terminated with 0FFh.
+\layout Description
+
+21-25 Reserved.
+\layout Description
+
+26-B5 Attributes and bitmap for 16 cell types
+\layout Subsubsection
+
+Bytes B5-FF (all formats)
+\layout Description
+
+B6-D5 The room name, ASCII.
+\layout Description
+
+D6 Conveyor animation, and the Final Barrier flags.
+\begin_deeper 
+\layout Description
+
+Bits\SpecialChar ~
+5,6,7: Source of bottom half
+\layout Description
+
+Bits\SpecialChar ~
+2,3,4: Source of top half
+\begin_deeper 
+\layout Standard
+
+Sources are:
+\layout Description
+
+0: Normal
+\layout Description
+
+1: Title screen, top half
+\layout Description
+
+2: Title screen, bottom half
+\layout Description
+
+3: Screen buffer 1
+\layout Description
+
+4: Screen buffer 2
+\layout Description
+
+5,6,7: Reserved.
+\end_deeper 
+\layout Description
+
+Bit\SpecialChar ~
+1,0: Conveyor settings
+\begin_deeper 
+\layout Description
+
+0: Animate left
+\layout Description
+
+1: Animate right
+\layout Description
+
+2: All conveyors in room deactivated
+\layout Description
+
+3: All conveyors in room are sticky 
+\end_deeper 
+\end_deeper 
+\layout Description
+
+D7-D8 Conveyor animation position
+\layout Description
+
+D9 Conveyor animation length
+\layout Description
+
+DA-DB Address of the guardian instance table used by this room.
+ Normally 8000h, but if a larger guardian instance table is needed it will
+ be the address of that table, either in the room record or elsewhere in
+ memory.
+ The original guardian table will then be available for your own purposes.
+\layout Description
+
+DC Solar Power beam entry point.
+ Low 5 bits are X-coordinate; high 3 bits are Y-coordinate (solar power
+ must start in the top 8 lines).
+ 
+\layout Description
+
+DD Attribute of the solar beam.
+ If this is zero, the room has no solar power.
+ Note that unlike in Manic Miner, the solar beam does not require a green
+ background.
+ If you want a harmless solar beam, you'll have to set the room not to limit
+ air supply.
+\layout Description
+
+DE Border and flags
+\begin_deeper 
+\layout Description
+
+Bits\SpecialChar ~
+0-2: Border
+\layout Description
+
+Bits\SpecialChar ~
+3-5: Willy's colour
+\layout Description
+
+Bit\SpecialChar ~
+6: Rigor Mortis.
+ If set, guardians are stationary until all objects in the room have been
+ collected.
+\layout Description
+
+Bit\SpecialChar ~
+7: Superjump.
+\end_deeper 
+\layout Description
+
+DF Air supply, major value.
+ See Andrew Broad's Manic Miner room format for full details of this field.
+\layout Description
+
+E0 Air supply, minor value.
+ Must be a multiple of 4, or 0xFF if the room does not have a limited air
+ supply.
+\layout Description
+
+E1 Item bitmap
+\layout Description
+
+E9-EC Exits
+\layout Description
+
+ED Willy's sprite page.
+ If less than 80h, uses the standard Willy.
+\layout Description
+
+EE-EF The address of the 16x16 graphic to use for the portal.
+ Set to 0 if this room does not have a portal.
+\layout Description
+
+F0-F1 Position of portal attribute (based at 5C00h).
+\layout Description
+
+F2-F3 Position of portal bitmap (based at 6000h).
+ 
+\layout Description
+
+F4 Portal attribute.
+ If it is flashing the portal can be entered even if there are still items
+ to be collected.
+\layout Description
+
+F5 Portal destination room number.
+\layout Description
+
+F6-F7 Portal destination: Position of Willy attributes (based at 5C00h).
+ 
+\layout Description
+
+F8 Portal destination: Willy's new Y-coordinate (based at 6000h).
+\layout Description
+
+F9-FA 'Portal' patch vector
+\layout Description
+
+FB-FC 'Room setup' patch vector
+\layout Description
+
+FD-FE 'Main loop' patch vector 
+\layout Description
+
+FF More flags:
+\begin_deeper 
+\layout Description
+
+Bit\SpecialChar ~
+0 set if Willy loses the items he's collected in the current room when
+ he loses a life.
+\layout Description
+
+Bit\SpecialChar ~
+1 set if escalators are down, 0 if up.
+\layout Description
+
+Bit\SpecialChar ~
+2 set if ramps are escalators.
+\layout Description
+
+Bit\SpecialChar ~
+3 set if Willy can fall any height in this room.
+\layout Description
+
+Bits\SpecialChar ~
+4,5,6 reserved.
+\layout Description
+
+Bit\SpecialChar ~
+7 set if this is a bonus room (each item gives Willy an extra life)
+\end_deeper 
+\layout Subsubsection
+
+Bytes 100h onwards: Format V
+\layout Description
+
+100-13F Unused.
+ Available to designer for portal graphic or patch vector(s).
+\layout Description
+
+140-1FF Room layout, 3 bits per cell.
+\layout Subsubsection
+
+Bytes 100h onwards: Format W
+\layout Description
+
+100-1FF Room layout, 4 bits per cell.
+\layout Subsubsection
+
+Bytes 100h onwards: Format X
+\layout Description
+
+100-33F Unused.
+ Available to designer for portal graphic, patch vector(s), sprites, guardians,
+ or all of the above.
+\layout Description
+
+340-3FF Room layout, 3 bits per cell.
+\layout Subsubsection
+
+Bytes 100h onwards: Format Y
+\layout Description
+
+100-2FF Unused.
+ Available to designer for portal graphic, patch vector(s), sprites, guardians,
+ or all of the above.
+\layout Description
+
+300-3FF Room layout, 4 bits per cell.
+\layout Subsubsection
+
+Bytes 100h onwards: Format Z
+\layout Description
+
+100-1FF Unused.
+ Available to designer for portal graphic, patch vector(s), sprites or guardians.
+\layout Description
+
+200-3FF Room layout, 8 bits per cell.
+ Unknown attributes take the 'water' graphic.
+\layout Subsubsection
+
+Bytes 100h onwards: Format [
+\layout Description
+
+100-2FF Unused.
+ Available to designer for portal graphic, patch vector(s), sprites, guardians
+ or all of the above.
+\layout Description
+
+300-3FF Room layout, 4 bits per cell.
+\layout Subsection
+
+Cell Types Table (formats W, Y, Z)
+\layout Standard
+
+In these formats, the meaning of each cell is determined globally rather
+ than by room.
+ There is a 16-byte table at F4FFh in bank 7.
+ Each byte defines the meaning of a cell (so byte 0 refers to the first
+ cell in the room definition, byte 1 to the second, and so on).
+\layout Standard
+
+Cell types are:
+\layout Description
+
+0 Air
+\layout Description
+
+1 Water
+\layout Description
+
+2 Earth
+\layout Description
+
+3 Fire
+\layout Description
+
+4 Ramp 
+\backslash 
+
+\layout Description
+
+5 Ramp /
+\layout Description
+
+6 Conveyor <<
+\layout Description
+
+7 Conveyor >>
+\layout Description
+
+8 Crumbling floor
+\layout Description
+
+9 Trampoline
+\layout Description
+
+10 Trap
+\layout Description
+
+11-15 reserved.
+ 
+\layout Standard
+
+After these 16 bytes are the attributes and bitmaps for the three "global"
+ cells -- the ones which are the same in every room.
+\layout Subsection
+
+Cell Types Table (format [)
+\layout Standard
+
+The cell type table is at F519h and is 16 bytes long.
+ There are no global cell definitions.
+\layout Subsection
+
+JSW64 Guardians
+\layout Standard
+
+The guardians in JSW64 are based on the JSW128 guardians, but with a few
+ added features.
+ A guardian definition is 8 bytes long; I refer to them as GB0-GB7.
+ 
+\layout Standard
+
+The low 4 bits of GB0 give the guardian type.
+ This is one of:
+\layout Description
+
+0 Blank
+\layout Description
+
+1 Horizontal
+\layout Description
+
+2 Vertical
+\layout Description
+
+3 Rope
+\layout Description
+
+4 Arrow
+\layout Description
+
+5 Diagonal 1
+\layout Description
+
+6 Diagonal 2
+\layout Description
+
+7 Vertical, colour-cycling 
+\layout Description
+
+8 Extended guardian.
+ Top 4 bits give subtype:
+\begin_deeper 
+\layout Description
+
+08: Skylab.
+ Behaves like a vertical guardian, except that at the end of its travel
+ it 'crashes' and then reappears 8 columns to the right (wrapping, of course).
+ Other bytes as vertical guardian, except that byte 7 is 'crash' position
+ and byte 6 is 'restart' position.
+ So for an upward skylab, byte 7 must be less than byte 6.
+\layout Description
+
+18: Angry Eugene.
+ Other bytes as vertical guardian, except that byte 1 is colour; high bits
+ must be zero.
+ An Angry Eugene goes to the end of his travel and stops dead.
+\layout Description
+
+28: Angry Eugene (colour-cycling based on air supply)
+\layout Description
+
+38: Angry Eugene (colour-cycling using JSW64 method).
+\layout Description
+
+88: Trigger.
+\begin_deeper 
+\layout Description
+
+Byte\SpecialChar ~
+0: 88h
+\layout Description
+
+Bytes\SpecialChar ~
+1-2: Address of a flag.
+ When this flag becomes zero, bytes 3-7 are applied to the next guardian
+ in the table; and byte 0 of this guardian is cleared so it doesn't happen
+ again.
+\layout Description
+
+Byte\SpecialChar ~
+3: New byte 0 of next guardian.
+\layout Description
+
+Bytes\SpecialChar ~
+4-7: New bytes 4-7 of next guardian.
+ 
+\end_deeper 
+\layout Description
+
+98: Switch.
+\begin_deeper 
+\layout Description
+
+Byte\SpecialChar ~
+0: 98h.
+\layout Description
+
+Byte\SpecialChar ~
+1: Ink.
+\layout Description
+
+Byte\SpecialChar ~
+2: X-coordinate and frame.
+ The top half of the guardian sprite will be the 'off' switch and the bottom
+ half will be the 'on' switch.
+\layout Description
+
+Byte\SpecialChar ~
+3: Y-coordinate.
+\layout Description
+
+Byte\SpecialChar ~
+4: State.
+ 1=Off 0=On.
+\layout Description
+
+Byte\SpecialChar ~
+5: Sprite page.
+ 
+\layout Description
+
+Byte\SpecialChar ~
+6: If it's off and Willy hits it, change state to this.
+\layout Description
+
+Byte\SpecialChar ~
+7: If it's on and Willy hits it, change state to this.
+\end_deeper 
+\layout Description
+
+A8: Opening wall.
+\begin_deeper 
+\layout Description
+
+Byte\SpecialChar ~
+0: A8h.
+\layout Description
+
+Bytes\SpecialChar ~
+1-2: Address of flag (same as for the Trigger).
+\layout Description
+
+Byte\SpecialChar ~
+3: Number of vertical lines this will remove.
+\layout Description
+
+Byte\SpecialChar ~
+4: State.
+ Initialised by JSWED to 1.
+ It will become 0 when all lines are removed.
+\layout Description
+
+Byte\SpecialChar ~
+5: Number of lines removed so far.
+ Initialised by JSWED to 0.
+\layout Description
+
+Byte\SpecialChar ~
+6: X-coordinate of wall to open.
+\layout Description
+
+Byte\SpecialChar ~
+7: Y-coordinate of wall to open.
+\end_deeper 
+\end_deeper 
+\layout Description
+
+9 - Horizontal, colour-cycling
+\layout Description
+
+A - Vertical
+\layout Description
+
+B - Reserved
+\layout Description
+
+C - Reserved
+\layout Description
+
+D - Diagonal 1, colour-cycling
+\layout Description
+
+E - Diagonal 2, colour-cycling
+\layout Description
+
+F - Vertical, colour-cycling
+\layout Subsubsection
+
+Horizontal and Diagonal Guardians
+\layout Standard
+
+These guardian types behave like the standard JSW48 horizontal guardian.
+ 
+\layout Standard
+
+Diagonal ones use GB4 as their vertical speed.
+\layout Standard
+
+The top 3 bits of GB7 have these meanings:
+\layout Description
+
+Bit\SpecialChar ~
+5: Half speed.
+ Guardian will only move every other frame.
+\layout Description
+
+Bit\SpecialChar ~
+6: Half-speed ticker (used when the game is running).
+ 
+\layout Description
+
+Bit\SpecialChar ~
+7: Double speed.
+ Guardian will be animated twice per frame.
+ This means you only get two animation images instead of four, but the guardian
+ now goes twice as fast as Willy!
+\layout Subsubsection
+
+Ropes
+\layout Standard
+
+Set bit 6 of GB0 to have a stationary rope.
+ JSW64 has been patched so that a rope definition fits in 8 bytes; a rope
+ can be followed by other guardians than arrows and it won't corrupt them.
+\layout Subsubsection
+
+Arrows
+\layout Standard
+
+GB1 is the ink colour to use for the arrow.
+ Bits 3-7 of this byte will also be ORed to the screen, so it's best to
+ leave them as 0.
+\layout Standard
+
+GB3 is the bitmap for the middle line of the arrow.
+\layout Subsection
+
+Patch Vectors
+\layout Standard
+
+There are three patch vectors in the room data.
+ In order, these are:
+\layout Itemize
+
+Portal vector.
+ This is called when Willy enters a portal.
+ The Patch Vector Jumpblock (below) provides two possible implementations
+ of this; or you could write your own.
+\layout Itemize
+
+Note that when you return from the Portal vector, the game will assume you
+ have moved to a new room and set things up accordingly.
+ If you want Willy to stay in the same room, return with
+\layout LyX-Code
+
+POP BC
+\layout LyX-Code
+
+RET
+\layout Itemize
+
+Room Setup vector.
+ This is called when Willy enters a new room, after the room attributes
+ and bitmap patterns have been generated.
+ This can be used to put custom graphics in a room (like the Final Barrier
+ does in Manic Miner).
+ The default implementation is just to return.
+\layout Itemize
+
+Main Loop vector.
+ This is called in the main game loop, just after the screen has been drawn
+ and just before Willy moves.
+ It corresponds to the patch vector in 'Geoff Mode' JSW.
+\layout Subsubsection
+
+Patch Vector Jumpblock
+\layout Standard
+
+The following entry points are provided as helper functions for patches
+ that you write.
+ More may be added later.
+ 
+\layout Standard
+
+The jumpblock is at a fixed location, and this will stay fixed in future
+ JSW64 versions.
+\layout LyX-Code
+
+869F RET 
+\layout Standard
+
+For rooms without patches, the Room Setup and Main Loop patch vectors should
+ be set to this address.
+\layout LyX-Code
+
+86A0 JP portal_with_fx_and_air
+\layout Standard
+
+This is the default portal patch vector.
+ It takes Willy to the location specified in the room's portal settings.
+ The portal special effect occurs (as in Manic Miner); and if the room has
+ a limited air supply, it will be run down to zero with a whining noise
+ (again, as in Manic Miner).
+\layout LyX-Code
+
+86A3 JP portal_with_fx 
+\layout Standard
+
+As above, but does not do the 'air-running-down' thing.
+\layout LyX-Code
+
+86A6 JP portal_without_fx
+\layout Standard
+
+As above, but with no special effects at all (like the JSW128 teleporter).
+\layout LyX-Code
+
+86A9 JP ptl_fx
+\layout Standard
+
+This performs the portal special effect only.
+\layout LyX-Code
+
+86AC JP airend
+\layout Standard
+
+This performs the air-running-down-to-zero effect.
+\layout LyX-Code
+
+86AF JP ptl_both
+\layout Standard
+
+This performs the above two effects, one after the other.
+\layout LyX-Code
+
+86B2 RST 0
+\layout Standard
+
+The last entry in the jump block is always RST 0.
+ If more entries are added, they will go at 86B2h and the RST 0 will move
+ to the new end of the jump block.
+\layout Subsubsection
+
+Music Jumpblock
+\layout Standard
+
+The following entry points are provided as helper functions for patches
+ that might want to amend the game music system.
+\layout Standard
+
+The jumpblock is at a fixed location, and this will stay fixed in future
+ JSW64 versions.
+ It is also present in JSW128 (HL9 and later).
+\layout LyX-Code
+
+FEC0 JP tuneoff 
+\layout Standard
+
+This will stop the in-game tune playing.
+ Returns NZ if the tune was not playing, Z if it was.
+\layout LyX-Code
+
+FEC3 JP tuneon
+\layout Standard
+
+This will set the tune going.
+ Note that the tune pointers at 0FE8Eh must have been set to point to the
+ start of the selected tune.
+\layout LyX-Code
+
+FEC6 JP newtune
+\layout Standard
+
+Change the in-game tune.
+ Enter with HL pointing to the 6-byte header of the new in-game tune.
+ If no tune is playing, nothing obvious happens; if a tune is playing, it
+ is stopped and the new tune starts.
+\layout LyX-Code
+
+FEC9 DEFS 6
+\layout Standard
+
+A copy of the 6-byte header of the last tune selected with NEWTUNE (FEC6).
+ This is the tune that will be played when the current in-game tune comes
+ to an end (used to make the tune into a continous loop)
+\layout Subsection
+
+Guardian Patch Vectors
+\layout Standard
+
+It is possible to define new guardian types, or change the behaviour of
+ existing guardian types (JSW64:Manic Miner does, for example).
+ The JSW64 engine supports up to 30 guardian types, the behaviour of which
+ is defined in four tables:
+\layout Description
+
+84D2-84F1: Table of 16 movement routines, for guardian types 0-15 (types
+ 0 and 8 should not be altered).
+ The movement routine updates the guardian's position and colour, but does
+ not usually test for collisions.
+ At the end of a movement routine, jump to the movement handler for type
+ 0; if you RETurn instead, guardians after your custom guardian will not
+ move.
+\layout Description
+
+EC66-EC85: Table of 16 drawing routines, for guardian types 0-15 (types
+ 0 and 8 should not be altered).
+ As with movement, you should jump to the type 0 drawing routine rather
+ than RETurn.
+ If Willy should lose a life, jump to MANDEAD1, 90B7h.
+\layout Description
+
+EC98-ECB7: Table of 16 movement routines for guardian types 08h, 18h, 28h...
+ 
+\layout Description
+
+ECB8-ECD7: Table of 16 drawing routines for guardian types 08h, 18h, 28h...
+\layout Standard
+
+A standard JSW64 game leaves guardian types 0Bh, 0Ch, 48h, 58h, 68h, 78h,
+ D8h, E8h and F8h undefined.
+ JSW64:Manic Miner defines 58h, 68h and D8h as custom guardian types, though
+ only D8h is used in the game itself.
+ 
+\layout Subsection
+
+Memory Map
+\layout Standard
+
+This section lists memory areas or addresses that might be useful to a machine-c
+ode programmer writing JSW64 patch vectors or other custom code.
+ The list does not attempt to cover every change between JSW48 and JSW64.
+\layout Standard
+
+In normal use, memory bank 0 is present at 0C000h.
+ The other banks are mainly used to store data, though some room-initialisation
+ code is present in bank 7.
+\layout Description
+
+8200-82FF: In formats V and W, this memory is free for the game designer
+ to put sprites or other data in (JSWED does not support this yet).
+ In formats X, Y, Z and [ it contains the third page of the currently loaded
+ room definition.
+ Note that in formats X, Y and [, this is part of the 'free space' in the
+ room, and may contain patch vectors, guardians or sprites.
+\layout Description
+
+8300-83FF: In formats V and W, this memory is free for the game designer
+ to put sprites or other data in.
+ In formats X, Y, Z and [ it contains the fourth page of the current room
+ definition.
+ In format X (but not Y, Z or [) the first 64 bytes of this page are part
+ of the 'free space' in the room.
+\layout Description
+
+8553: Number of objects in the current room that haven't yet been collected.
+ 
+\layout Description
+
+85C9: Engine variant, 'V' to '['.
+ Not used by the game, but essential for JSWED.
+\layout Description
+
+85CA: Number of items in the game (in JSW48 and JSW128 this is at A3FF).
+\layout Description
+
+8640-869E: Memory map, as in JSW128, but starts 12 bytes sooner.
+\layout Description
+
+87B2: Call a function in memory bank 7.
+ Enter with HL=address of function.
+ DE, IX and IY will be passed unchanged to the function; AF and BC are used
+ by this routine.
+\layout Description
+
+8D33-8D52: Runtime cell type table - expanded from the table in the room
+ definition (variants V,X) or the global table (other variants).
+ Two bytes per cell type; the first is the attribute, and the second is
+ the behaviour (0=Air, 1=Water etc.).
+ This could be changed by patch vector code at run time.
+ Note that in variants V and X, only the first 8 entries in the table are
+ used.
+\layout Description
+
+97E0-97FF: The attributes used to draw the 'air remaining' bar.
+\layout Description
+
+C000-C0FF: In formats V and W, contains object locations.
+ In variants X, Y, Z and [ this is unused.
+ It's possible to extend the font into this area if you want characters
+ 0-31 to be printable.
+\layout Description
+
+C100-C3FF: The font.
+\layout Subsubsection
+
+Banks 1,3,4,6
+\layout Standard
+
+These memory banks hold the room definitions.
+ Bank 1 holds the first 32 rooms (V and W); or the first 16 rooms (other
+ variants).
+ Then Bank 3 holds the next 32/16 rooms, and so on.
+\layout Subsubsection
+
+Bank 7 memory map
+\layout Description
+
+C000-D5FF: Title screen
+\layout Description
+
+D600-DAFF: Scrolly message
+\layout Description
+
+DB00-DB05: Bank 7 jumpblock (JSW64 internal, unlikely to be useful in patch
+ vectors).
+\layout Description
+
+DB06-DD93: Room decompression code (size varies, depending which variant
+ we're talking about)
+\layout Description
+
+DD94-E2FE: Reserved
+\layout Description
+
+E2FF-F4FE: The two 'top third' screens.
+ Each is formed of 2k bitmap and 256 bytes attributes.
+\layout Description
+
+F4FF-F529: Cell map and global cell definitions
+\layout Description
+
+F52A-FFFF: Title screen music
+\the_end

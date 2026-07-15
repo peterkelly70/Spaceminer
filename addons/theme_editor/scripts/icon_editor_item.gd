@@ -15,7 +15,7 @@ var _original_color: Color
 var _highlight_color: Color = Color(1, 0.5, 0, 0.3)
 
 var _type: String
-var _name: String
+var _name: StringName
 var _icon: Texture2D
 var _file_dialog: FileDialog
 
@@ -36,7 +36,7 @@ func _ready() -> void:
 
 func setup(type: String, name: String, icon: Texture2D) -> void:
 	_type = type
-	_name = name
+	_name = StringName(name)
 	_icon = icon
 	
 	# Update UI
@@ -92,7 +92,7 @@ func get_type() -> String:
 	return _type
 
 # Get the name of this editor item
-func get_name() -> String:
+func get_name() -> StringName:
 	return _name
 
 # Highlight this item when selected from preview

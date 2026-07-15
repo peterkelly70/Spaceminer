@@ -1,0 +1,12 @@
+[
+  {"key": "ore", "display_name": "Ore", "description": "Raw ore.", "color": "#ffd21a"},
+  {"key": "wood", "display_name": "Wood", "description": "Timber.", "color": "#8cff00"},
+  {"key": "food", "display_name": "Food", "description": "Rations.", "color": "#f4f4f4"},
+  {"key": "gold", "display_name": "Gold", "description": "Coinage.", "color": "#ffd21a"},
+  {"key": "gems", "display_name": "Gems", "description": "Shiny stones.", "color": "#00d7ff"},
+  {"key": "mana", "display_name": "Mana", "description": "Arcane charge.", "color": "#5a2dff"},
+  {"key": "crown", "display_name": "Crown", "description": "Royal authority.", "color": "#ff00c8"},
+  {"key": "lore", "display_name": "Lore", "description": "Ancient knowledge.", "color": "#ff8a00"},
+  {"key": "runes", "display_name": "Runes", "description": "Carved power.", "color": "#00d66b"},
+  {"key": "warrior", "display_name": "Warrior", "description": "Military strength.", "color": "#ff1e2d"}
+]

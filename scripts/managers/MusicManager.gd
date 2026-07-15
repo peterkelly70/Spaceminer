@@ -20,45 +20,45 @@ func _ready() -> void:
 	# Get reference to AudioManager
 	audio_manager = get_node_or_null("/root/Audio_Manager")
 	if not audio_manager:
-		Logger.error(self, "AudioManager not found!")
+		push_error("AudioManager not found!")
 		return
 	add_to_group("music_manager")
 	
-	Logger.info(self, "Initialized")
+	print("Initialized")
 
 ## Load a music collection from a resource file or create it programmatically
 func load_music_collection(collection_path: String) -> bool:
-	Logger.info(self, "Loading music collection: %s" % collection_path)
+	print("Loading music collection: %s" % collection_path)
 	
 	# Try to load from resource file first
 	var collection = load(collection_path) as MusicCollection
 	if not collection:
-		Logger.warn(self, "Resource file failed to load, creating Karl Casey collection programmatically")
+		push_warning("Resource file failed to load, creating Karl Casey collection programmatically")
 		collection = _create_karl_casey_collection()
 		if not collection:
-			Logger.error(self, "Failed to create Karl Casey collection")
+			push_error("Failed to create Karl Casey collection")
 			return false
 	return _load_collection(collection)
 
 func load_music_collection_from_directory(preferred_directory: String = "", root_path: String = MUSIC_ROOT) -> bool:
-	Logger.info(self, "Scanning music root: %s" % root_path)
+	print("Scanning music root: %s" % root_path)
 	var directories := DirAccess.get_directories_at(root_path)
 	directories.sort()
 	if directories.is_empty():
-		Logger.error(self, "No music directories found under: %s" % root_path)
+		push_error("No music directories found under: %s" % root_path)
 		return false
 	var target_directory := preferred_directory
 	if target_directory.is_empty() or not directories.has(target_directory):
 		target_directory = directories[0]
-	Logger.info(self, "Selected music directory: %s" % target_directory)
+	print("Selected music directory: %s" % target_directory)
 	var collection := _create_collection_from_directory(root_path, target_directory)
 	if collection.tracks.is_empty():
-		Logger.error(self, "Music directory is empty: %s" % target_directory)
+		push_error("Music directory is empty: %s" % target_directory)
 		if target_directory != directories[0]:
-			Logger.warn(self, "Falling back to alphabetical first directory: %s" % directories[0])
+			push_warning("Falling back to alphabetical first directory: %s" % directories[0])
 			var fallback_collection := _create_collection_from_directory(root_path, directories[0])
 			if fallback_collection.tracks.is_empty():
-				Logger.error(self, "Fallback directory also empty: %s" % directories[0])
+				push_error("Fallback directory also empty: %s" % directories[0])
 				return false
 			return _load_collection(fallback_collection)
 		return false
@@ -66,7 +66,7 @@ func load_music_collection_from_directory(preferred_directory: String = "", root
 
 func _create_collection_from_directory(root_path: String, directory_name: String) -> MusicCollection:
 	var absolute_directory := root_path.path_join(directory_name)
-	Logger.info(self, "Creating collection from directory: %s" % absolute_directory)
+	print("Creating collection from directory: %s" % absolute_directory)
 	var file_paths := DirAccess.get_files_at(absolute_directory)
 	file_paths.sort()
 	var collection := MusicCollection.new()
@@ -85,6 +85,10 @@ func _create_collection_from_directory(root_path: String, directory_name: String
 		track.album = directory_name
 		track.file_path = absolute_directory.path_join(file_name)
 		collection.add_track(track)
+	
+	var should_loop := collection.tracks.size() <= 1
+	for track in collection.tracks:
+		track.loop = should_loop
 	return collection
 
 func _humanize_track_name(value: String) -> String:
@@ -98,22 +102,24 @@ func _load_collection(collection: MusicCollection) -> bool:
 	var loaded_count := 0
 	for track in collection.get_valid_tracks():
 		if not audio_manager.has_method("load_music"):
-			Logger.error(self, "AudioManager missing load_music method")
+			push_error("AudioManager missing load_music method")
 			return false
 		audio_manager.load_music(track.track_name, track.file_path)
+		if audio_manager.has_method("set_music_loop"):
+			audio_manager.set_music_loop(track.track_name, track.loop)
 		loaded_count += 1
-		Logger.info(self, "Loaded track: %s" % track.display_name)
+		print("Loaded track: %s" % track.display_name)
 	if loaded_count == 0:
-		Logger.error(self, "No playable audio files found in collection: %s" % collection.collection_name)
+		push_error("No playable audio files found in collection: %s" % collection.collection_name)
 		current_collection = null
 		return false
-	Logger.info(self, "Loaded %s tracks from collection: %s" % [loaded_count, collection.collection_name])
+	print("Loaded %s tracks from collection: %s" % [loaded_count, collection.collection_name])
 	collection_loaded.emit(collection)
 	return true
 
 ## Create the Karl Casey collection programmatically
 func _create_karl_casey_collection() -> MusicCollection:
-	Logger.info(self, "Creating Karl Casey collection programmatically")
+	print("Creating Karl Casey collection programmatically")
 	
 	var collection = MusicCollection.new()
 	collection.collection_name = "Karl Casey - Dark Synthwave Collection Vol. 1"
@@ -144,20 +150,20 @@ func _create_karl_casey_collection() -> MusicCollection:
 		track.album = "Dark Synthwave Collection Vol. 1"
 		track.file_path = "res://assets/audio/music/Karl Casey - Dark Synthwave Collection Vol. 1/" + track_info.file
 		track.duration = 0.0  # Will be set by AudioManager when loaded
-		track.loop = true
+		track.loop = false
 		track.volume = 1.0
 		track.category = "general"
 		
 		collection.tracks.append(track)
-		Logger.info(self, "Created track: %s" % track.display_name)
+		print("Created track: %s" % track.display_name)
 	
-	Logger.info(self, "Created collection with %s tracks" % collection.tracks.size())
+	print("Created collection with %s tracks" % collection.tracks.size())
 	return collection
 
 ## Play a random track from the current collection
 func play_random_track(category: String = "") -> bool:
 	if not current_collection:
-		Logger.error(self, "No music collection loaded")
+		push_error("No music collection loaded")
 		return false
 	
 	var available_tracks: Array[MusicTrack]
@@ -168,7 +174,7 @@ func play_random_track(category: String = "") -> bool:
 		available_tracks = current_collection.get_tracks_by_category(category)
 	
 	if available_tracks.is_empty():
-		Logger.warn(self, "No tracks available for category: %s" % category)
+		push_warning("No tracks available for category: %s" % category)
 		return false
 	
 	var selected_track = available_tracks[randi() % available_tracks.size()]
@@ -177,35 +183,35 @@ func play_random_track(category: String = "") -> bool:
 ## Play a specific track
 func play_track(track: MusicTrack) -> bool:
 	if not track or not track.is_valid():
-		Logger.error(self, "Invalid track provided")
+		push_error("Invalid track provided")
 		return false
 	
 	if not audio_manager or not audio_manager.has_method("play_music"):
-		Logger.error(self, "AudioManager not available or missing play_music method")
+		push_error("AudioManager not available or missing play_music method")
 		return false
 	
-	Logger.info(self, "Playing track: %s" % track.get_display_string())
+	print("Playing track: %s" % track.get_display_string())
 	
 	# Play the track through AudioManager
 	audio_manager.play_music(track.track_name)
 	current_track = track
 	
 	# Emit signal with debugging
-	Logger.debug(self, "Emitting track_changed signal for: %s" % track.display_name)
+	print("Emitting track_changed signal for: %s" % track.display_name)
 	track_changed.emit(track)
-	Logger.debug(self, "Signal emitted successfully")
+	print("Signal emitted successfully")
 	
 	return true
 
 ## Play a track by name
 func play_track_by_name(track_name: String) -> bool:
 	if not current_collection:
-		Logger.error(self, "No music collection loaded")
+		push_error("No music collection loaded")
 		return false
 	
 	var track = current_collection.get_track_by_name(track_name)
 	if not track:
-		Logger.error(self, "Track not found: %s" % track_name)
+		push_error("Track not found: %s" % track_name)
 		return false
 	
 	return play_track(track)
@@ -251,8 +257,6 @@ func setup_auto_switching(enabled: bool = true) -> void:
 			audio_manager.track_finished.disconnect(_on_track_finished)
 
 ## Called when a track finishes playing
-func _on_track_finished() -> void:
-	Logger.info(self, "Track finished, switching to next random track")
-	# Wait a moment before switching to next track
-	await get_tree().create_timer(1.0).timeout
+func _on_track_finished(_track_name: String = "") -> void:
+	print("Track finished, switching to next random track")
 	play_random_track()

@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="SpriteFrames" path="res://assets/sprite/space_miner_enemy_frames.tres" id="1_enemy_frames"]
+[ext_resource type="Script" path="res://scripts/controllers/rooms/PatrolDrone.gd" id="2_drone_script"]
+
+[sub_resource type="CircleShape2D" id="1_shape"]
+radius = 10.0
+
+[node name="PatrolDrone" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+monitorable = true
+script = ExtResource("2_drone_script")
+path_points = PackedVector2Array(0, 0, 160, 0, 160, 72, 0, 72)
+speed = 72.0
+pause_time = 0.3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1_shape")
+
+[node name="Body" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_enemy_frames")
+animation = &"patrol"
+autoplay = "patrol"
+scale = Vector2(0.75, 0.75)

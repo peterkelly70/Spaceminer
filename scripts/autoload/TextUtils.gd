@@ -10,7 +10,7 @@ func get_tooltip_bbcode(title: String, description: String) -> String:
 ## Assigns or appends text to a Label or RichTextLabel, handling BBCode when enabled.
 static func assign(node: Control, text: String, append: bool = false) -> void:
 	if node == null:
-		Logger.warn(null, "assign(): Node is null")
+		push_warning("assign(): Node is null")
 		return
 
 	if node is RichTextLabel:
@@ -25,12 +25,12 @@ static func assign(node: Control, text: String, append: bool = false) -> void:
 		var l = node as Label
 		l.text = l.text + text if append else text
 	else:
-		Logger.warn(null, "assign(): Node '%s' does not support text assignment" % node.name)
+		push_warning("assign(): Node '%s' does not support text assignment" % node.name)
 
 ## Appends story-style text with optional newlines.
 static func append_story(node: Control, text: String, add_newlines: bool = true) -> void:
 	if node == null:
-		Logger.warn(null, "append_story(): Node is null")
+		push_warning("append_story(): Node is null")
 		return
 
 	if node is RichTextLabel:
@@ -53,22 +53,22 @@ static func append_story(node: Control, text: String, add_newlines: bool = true)
 		var prefix = current_text + separator if not current_text.is_empty() else ""
 		l.text = prefix + text
 	else:
-		Logger.warn(null, "append_story(): Node '%s' does not support text assignment" % node.name)
+		push_warning("append_story(): Node '%s' does not support text assignment" % node.name)
 
 ## Auto-scales font size to fit within node bounds.
 static func font_scale(text: String, node: Control, min_size: int = 8, max_size: int = 64) -> void:
 	if node == null:
-		Logger.warn(null, "font_scale(): Node is null")
+		push_warning("font_scale(): Node is null")
 		return
 
 	var label := node as Label
 	if not label:
-		Logger.warn(null, "font_scale(): Node '%s' is not a Label or RichTextLabel" % node.name)
+		push_warning("font_scale(): Node '%s' is not a Label or RichTextLabel" % node.name)
 		return
 
 	var theme_font := label.get_theme_font("font")
 	if not theme_font:
-		Logger.warn(null, "font_scale(): No font found for node '%s'" % node.name)
+		push_warning("font_scale(): No font found for node '%s'" % node.name)
 		return
 
 	var container_size := node.size
@@ -85,18 +85,18 @@ static func font_scale(text: String, node: Control, min_size: int = 8, max_size:
 ## Applies a custom font.
 static func apply_font(custom_font: Font, node: Control) -> void:
 	if node == null:
-		Logger.warn(null, "apply_font(): Node is null")
+		push_warning("apply_font(): Node is null")
 		return
 
 	if node is Label or node is RichTextLabel:
 		node.add_theme_font_override("font", custom_font)
 	else:
-		Logger.warn(null, "apply_font(): Node '%s' does not support font override" % node.name)
+		push_warning("apply_font(): Node '%s' does not support font override" % node.name)
 
 ## Clears the text of a Label or RichTextLabel.
 static func clear(node: Node) -> void:
 	if node == null:
-		Logger.warn(null, "clear(): Node is null")
+		push_warning("clear(): Node is null")
 		return
 
 	if node is RichTextLabel:
@@ -104,7 +104,7 @@ static func clear(node: Node) -> void:
 	elif node is Label:
 		node.text = ""
 	else:
-		Logger.warn(null, "clear(): Node '%s' does not support text clearing" % node.name)
+		push_warning("clear(): Node '%s' does not support text clearing" % node.name)
 
 ## Formats a resource display string.
 static func format_resource_display(current_amount: int, generation_amount: int) -> String:

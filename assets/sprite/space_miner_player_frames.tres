@@ -1,0 +1,53 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://b346qm48jscpx"]
+
+[ext_resource type="Texture2D" uid="uid://b7g4gho5lnjwa" path="res://assets/images/willyinspace/SpaceMiner1.png" id="1_frame_a"]
+[ext_resource type="Texture2D" uid="uid://cqh3h7y5b177s" path="res://assets/images/willyinspace/SpaceMiner2.png" id="2_frame_b"]
+[ext_resource type="Texture2D" uid="uid://cvyq8qk5hn3is" path="res://assets/images/willyinspace/SpaceMiner3.png" id="3_frame_c"]
+[ext_resource type="Texture2D" uid="uid://c1lkrfpb7tuub" path="res://assets/images/willyinspace/SpaceMiner4.png" id="4_frame_d"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_frame_d")
+}],
+"loop": false,
+"name": &"dead",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_frame_a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_frame_b")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_frame_b")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_frame_a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_frame_b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_frame_c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_frame_d")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]

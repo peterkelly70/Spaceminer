@@ -1,8 +1,6 @@
 extends CharacterBody2D
 signal killed
 
-const Logger = preload("res://scripts/class/Logger.gd")
-
 @export var max_speed: float = 200.0
 @export var accel_lerp: float = 5.0
 @export var turn_speed: float = 8.0
